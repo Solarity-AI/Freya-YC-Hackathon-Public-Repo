@@ -1,0 +1,90 @@
+{
+ "id": "RH-RAWA-09",
+ "case": {
+  "id": "RAWA-09",
+  "variables": {
+   "first_name": "Victor",
+   "last_name": "Ionescu",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1981-08-11",
+   "phone_last4": "5560"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 2100.0,
+    "days_late": 28,
+    "instalment_amount": 700.0
+   }
+  ],
+  "expected": {
+   "outcome": "transferred",
+   "reason": "restructuring",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "restructuring"
+    }
+   ]
+  }
+ },
+ "mode": "sim",
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "The eleventh of August, nineteen eighty-one.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "The eleventh of August, nineteen eighty-one"
+   }
+  },
+  {
+   "say": "5560.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "5560"
+   }
+  },
+  {
+   "say": "I can't pay this amount. I want lower instalments.",
+   "x": {
+    "u_act": "refuse",
+    "u_topic": "restructure_request"
+   }
+  },
+  {
+   "say": "Thank you, goodbye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 12,
+  "must": [
+   [
+    -1,
+    "restructuring"
+   ]
+  ],
+  "must_not": [
+   [
+    -1,
+    "promise is recorded"
+   ]
+  ]
+ },
+ "_script": "Verified. Says he cannot pay this amount and wants lower instalments."
+}

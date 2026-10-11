@@ -1,0 +1,63 @@
+{
+ "id": "AB-PUB-11",
+ "spec": "ab",
+ "pub": "PUB-11",
+ "mode": "sim",
+ "twin": {
+  "bool_style": "title",
+  "list_style": "pyrepr",
+  "flat_keys": "tool"
+ },
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "The third of June, 1987.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "The third of June, 1987"
+   }
+  },
+  {
+   "say": "2288.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "2288"
+   }
+  },
+  {
+   "say": "No, not today. But I can pay all three this Friday.",
+   "x": {
+    "u_act": "proposal",
+    "u_date": "this Friday"
+   }
+  },
+  {
+   "say": "Yes, I confirm.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "Thank you, goodbye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 20,
+  "must": [
+   [
+    -1,
+    "16 October"
+   ]
+  ]
+ }
+}

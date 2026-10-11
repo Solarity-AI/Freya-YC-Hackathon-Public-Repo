@@ -1,0 +1,759 @@
+{
+  "_about": "Expected CORE leaves for testbed/mut-c (brief.md + openapi.json). Key paths follow tests/golden/spec-ab.json. Leaves not listed are free. Wording leaves marked verbatim must match exactly; others are listed for reference. '_derived' is not a Spec path: it holds resolved values a correct calendar must produce. Key suffix conventions: '*_must_include' = the extracted list must contain these items (it may hold more); '*_must_convey' / 'say_must_convey' = the line must carry this meaning, wording free; '_must_cover' = the intent's examples/keywords must cover these triggers; 'scope_must_include' = the intent's scope must contain these states.",
+  "bank": {
+    "name": "Northwind Credit Union",
+    "assistant_self": "Northwind Credit Union's automated assistant"
+  },
+  "call_variables": {
+    "customer_key": "customer_id",
+    "now": "now"
+  },
+  "addressing": {
+    "customer": "<v:title> <v:last_name>"
+  },
+  "opening": {
+    "line": "Hello, this is the automated assistant of Northwind Credit Union, and this call is recorded.",
+    "verbatim": true
+  },
+  "banned": {
+    "before_verification_must_include": [
+      "arrears",
+      "debt",
+      "payment",
+      "overdue",
+      "late",
+      "owe",
+      "credit card",
+      "overdraft",
+      "auto loan"
+    ],
+    "never_offer_must_include": [
+      "discount",
+      "waiver",
+      "interest freeze",
+      "payment plan"
+    ],
+    "never_ask": [
+      "how much can you pay"
+    ]
+  },
+  "right_party": {
+    "ask": "Am I speaking with <v:first_name> <v:last_name>?",
+    "max_asks": 2,
+    "on_unresolved": "S_UNCLEAR",
+    "accept_own_name": true,
+    "bare_no": "third_party"
+  },
+  "third_party": {
+    "relative_may_verify": false,
+    "relative_may_pay": false,
+    "callback": {
+      "date_rule": {
+        "include_today": true,
+        "today_must_be_business_day": true,
+        "business_days_ahead": 2,
+        "calendar_days_ahead": 0
+      },
+      "windows": [
+        {
+          "from": "09:00",
+          "to": "17:30",
+          "inclusive_from": true,
+          "inclusive_to": true,
+          "days": "business"
+        }
+      ],
+      "after_now": true,
+      "reask_limit": 1
+    },
+    "situations": {
+      "callback": "S_CALLBACK",
+      "no_callback": "S_NO_CALLBACK"
+    }
+  },
+  "identity": {
+    "questions": [
+      {
+        "key": "dob",
+        "field_value": "date_of_birth",
+        "kind": "date",
+        "numeric_order": "DMY",
+        "wire_format": "%Y-%m-%d",
+        "max_wrong": 0
+      },
+      {
+        "key": "postcode",
+        "field_value": "postcode",
+        "kind": "alnum",
+        "numeric_order": "DMY",
+        "wire_format": "upper",
+        "length": 0,
+        "pattern": "^[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][A-Z]{2}$",
+        "max_wrong": 0,
+        "_note": "wire = capitals with exactly one space before the last three characters ('LS6 2QT'); any wire_format/pattern pair producing that is correct"
+      }
+    ],
+    "one_at_a_time": true,
+    "max_wrong_total": 2,
+    "hints": [
+      {
+        "value": "day_month_swapped",
+        "counts_as_wrong": false,
+        "max": 1
+      }
+    ],
+    "decline": {
+      "explain_times": 1,
+      "max_declines": 2,
+      "purpose_question_counts": true
+    },
+    "on_failed": "S_ID_FAILED",
+    "on_declined": "S_ID_DECLINED"
+  },
+  "products": {
+    "max": 3,
+    "fields": {
+      "list": "products",
+      "id": "product_id",
+      "type": "type",
+      "past_due": "past_due",
+      "days_late": "days_late"
+    },
+    "types": {
+      "credit_card": {
+        "spoken": "credit card ending <f:card_last4>",
+        "floor": {
+          "kind": "percent_of_full",
+          "pct": 25,
+          "rounding": "ceil"
+        }
+      },
+      "overdraft": {
+        "spoken": "overdraft",
+        "floor": {
+          "kind": "full"
+        }
+      },
+      "auto_loan": {
+        "spoken": "auto loan",
+        "floor": {
+          "kind": "field",
+          "field": "instalment_amount"
+        }
+      }
+    },
+    "_must_not": "credit_card floor must NOT be {kind: field, field: minimum_payment}"
+  },
+  "statement": {
+    "intro": "I am calling from the Northwind arrears team about missed payments."
+  },
+  "calendar": {
+    "business_weekdays": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "holidays": [
+      "2026-10-19"
+    ],
+    "holiday_rules": [
+      {
+        "kind": "nth_weekday",
+        "month": 11,
+        "weekday": 0,
+        "n": 1,
+        "observed": "none"
+      },
+      {
+        "kind": "fixed_md",
+        "month": 12,
+        "day": 25,
+        "observed": "next_monday"
+      },
+      {
+        "kind": "fixed_md",
+        "month": 12,
+        "day": 26,
+        "observed": "next_monday"
+      },
+      {
+        "kind": "fixed_md",
+        "month": 1,
+        "day": 1,
+        "observed": "next_monday"
+      }
+    ],
+    "week_start": 0,
+    "count_from": "after_today",
+    "numeric_order": "DMY",
+    "this_next": {
+      "this": "current_week",
+      "next": "following_week"
+    },
+    "_equivalent": "Expanding the rules into calendar.holidays is also correct if every date in _derived.holidays_2026_2027 is present"
+  },
+  "bands": [
+    {
+      "key": "early",
+      "days_late_min": 1,
+      "days_late_max": 10,
+      "deadline": {
+        "kind": "nth_business_day_after_today",
+        "n": 10
+      },
+      "attempts": 1
+    },
+    {
+      "key": "middle",
+      "days_late_min": 11,
+      "days_late_max": 30,
+      "deadline": {
+        "kind": "nth_business_day_after_today",
+        "n": 5
+      },
+      "attempts": 2
+    },
+    {
+      "key": "serious",
+      "days_late_min": 31,
+      "days_late_max": 60,
+      "deadline": {
+        "kind": "nth_business_day_after_today",
+        "n": 3
+      },
+      "attempts": 2
+    }
+  ],
+  "promise_date": {
+    "earliest": {
+      "kind": "today"
+    },
+    "latest": {
+      "kind": "deadline"
+    },
+    "business_day_only": true,
+    "non_business_within_deadline": "offer_next_business_day",
+    "after_deadline": "offer_deadline",
+    "offered_date_refused": "flat_refusal",
+    "vague": {
+      "ask_exact_times": 1,
+      "then": "propose_deadline"
+    }
+  },
+  "amounts": {
+    "first": {
+      "kind": "full"
+    },
+    "never_ask_customer": true,
+    "too_much": {
+      "offer": {
+        "kind": "floor"
+      },
+      "times": 1,
+      "date": "attempt_1",
+      "say_rest": "The rest stays outstanding.",
+      "refusal": "flat_refusal"
+    },
+    "accept_min": {
+      "kind": "floor"
+    },
+    "accept_max": {
+      "kind": "full"
+    },
+    "below_floor": {
+      "offer": {
+        "kind": "floor"
+      },
+      "times": 1,
+      "then": "flat_refusal"
+    },
+    "above_full": "offer_full"
+  },
+  "negotiation": {
+    "first_ask": {
+      "single": "Could you pay the full amount today?",
+      "multi": "Could you pay all of them today?",
+      "consumes_attempt": false
+    },
+    "ladder": [
+      {
+        "key": "r1",
+        "attempt": 1,
+        "bands": [
+          "all"
+        ],
+        "amount": {
+          "kind": "floor_if_too_much_else_full"
+        },
+        "date": {
+          "kind": "min",
+          "args": [
+            {
+              "kind": "last_business_day_of_week",
+              "if_today": "next_week"
+            },
+            {
+              "kind": "deadline"
+            }
+          ]
+        }
+      },
+      {
+        "key": "r2",
+        "attempt": 2,
+        "bands": [
+          "middle",
+          "serious"
+        ],
+        "amount": {
+          "kind": "floor"
+        },
+        "date": {
+          "kind": "deadline"
+        }
+      }
+    ],
+    "no_repeat_refused_offer": true,
+    "non_answer_counts_as_refusal": true,
+    "on_exhausted": "S_REFUSED_EXHAUSTED"
+  },
+  "intents_required": [
+    {
+      "id": "deceased",
+      "action": {
+        "kind": "close_now",
+        "say": "Please accept our condolences.",
+        "situation": "S_DECEASED"
+      }
+    },
+    {
+      "id": "wrong_number",
+      "action": {
+        "kind": "close_now",
+        "situation": "S_WRONG_NUMBER"
+      }
+    },
+    {
+      "id": "insolvency",
+      "action": {
+        "kind": "resolve_product_or_close",
+        "say": "Thank you for telling us. Our specialist team will write to you.",
+        "situation": "S_INSOLVENCY",
+        "_semantics": "call-level: ends negotiation on ALL remaining products, drops agreed-unrecorded promises, notes every unpromised product 'insolvency', precedence above hardship",
+        "_schema_gap": "builder/spec/schema.json Action.kind has no call-level, non-transfer kind that ends negotiation on every remaining product with a per-product note. 'resolve_product_or_close' names the required behaviour, not a schema enum value: a correct build must reproduce the semantics in _semantics (by schema extension or an equivalent mapping); close_now (skips notes) and resolve_product (one product only) are both wrong."
+      }
+    },
+    {
+      "id": "hardship",
+      "action": {
+        "kind": "offer_transfer",
+        "queue": "support",
+        "accept_situation": "S_HARDSHIP_TRANSFER",
+        "decline_situation": "S_HARDSHIP_DECLINED",
+        "suspend_persuasion": true
+      },
+      "_must_cover": [
+        "illness",
+        "injury",
+        "hospital",
+        "death in the family",
+        "job loss",
+        "working hours cut"
+      ]
+    },
+    {
+      "id": "restructure",
+      "action": {
+        "kind": "transfer",
+        "queue": "restructuring",
+        "situation": "S_RESTRUCTURE_TRANSFER",
+        "keep_recorded": true,
+        "drop_unrecorded": true,
+        "suppress_notes": true
+      }
+    },
+    {
+      "id": "complaint",
+      "action": {
+        "kind": "transfer",
+        "say": "I will put you through to our complaints team.",
+        "queue": "complaints",
+        "situation": "S_COMPLAINT_TRANSFER",
+        "keep_recorded": true,
+        "drop_unrecorded": true,
+        "suppress_notes": true
+      },
+      "scope_must_include": [
+        "id",
+        "neg",
+        "conf"
+      ]
+    },
+    {
+      "id": "dispute",
+      "action": {
+        "kind": "resolve_product",
+        "situation": "S_DISPUTE"
+      },
+      "product_scoped": true
+    },
+    {
+      "id": "paid",
+      "action": {
+        "kind": "resolve_product",
+        "say_must_convey": "payments can take two business days to appear",
+        "situation": "S_PAID"
+      },
+      "product_scoped": true
+    },
+    {
+      "id": "human",
+      "action": {
+        "kind": "ask_then_transfer",
+        "queue": "general",
+        "situation": "S_HUMAN_TRANSFER"
+      }
+    },
+    {
+      "id": "refuse_talk",
+      "action": {
+        "kind": "count_then_close",
+        "limit": 2,
+        "situation": "S_REFUSED_TO_TALK",
+        "situation_pre_verification": "S_ID_DECLINED"
+      }
+    },
+    {
+      "id": "too_much",
+      "action": {
+        "kind": "too_much"
+      }
+    },
+    {
+      "id": "robot",
+      "action": {
+        "kind": "answer_continue",
+        "say": "I am Northwind Credit Union's automated assistant."
+      }
+    },
+    {
+      "id": "scam",
+      "action": {
+        "kind": "answer_continue",
+        "say_must_convey": "phone the number on the back of their Northwind card"
+      }
+    }
+  ],
+  "situations": {
+    "S_PROMISE": {
+      "outcome": "promise_to_pay",
+      "reason": "",
+      "queue": "",
+      "note_reason": ""
+    },
+    "S_PAID": {
+      "outcome": "paid",
+      "reason": "",
+      "queue": "",
+      "note_reason": "already_paid"
+    },
+    "S_RESTRUCTURE_TRANSFER": {
+      "outcome": "transferred",
+      "reason": "restructuring",
+      "queue": "restructuring",
+      "note_reason": ""
+    },
+    "S_COMPLAINT_TRANSFER": {
+      "outcome": "transferred",
+      "reason": "complaint",
+      "queue": "complaints",
+      "note_reason": ""
+    },
+    "S_HUMAN_TRANSFER": {
+      "outcome": "transferred",
+      "reason": "human",
+      "queue": "general",
+      "note_reason": ""
+    },
+    "S_HARDSHIP_TRANSFER": {
+      "outcome": "transferred",
+      "reason": "support",
+      "queue": "support",
+      "note_reason": ""
+    },
+    "S_REFUSED_EXHAUSTED": {
+      "outcome": "no_promise_to_pay",
+      "reason": "refused",
+      "queue": "",
+      "note_reason": "refused"
+    },
+    "S_REFUSED_TO_TALK": {
+      "outcome": "no_promise_to_pay",
+      "reason": "refused",
+      "queue": "",
+      "note_reason": "refused"
+    },
+    "S_HARDSHIP_DECLINED": {
+      "outcome": "no_promise_to_pay",
+      "reason": "hardship",
+      "queue": "",
+      "note_reason": "hardship"
+    },
+    "S_DISPUTE": {
+      "outcome": "no_promise_to_pay",
+      "reason": "dispute",
+      "queue": "",
+      "note_reason": "dispute"
+    },
+    "S_SERVICE_ERROR": {
+      "outcome": "no_promise_to_pay",
+      "reason": "service_error",
+      "queue": "",
+      "note_reason": "service_error"
+    },
+    "S_INSOLVENCY": {
+      "outcome": "no_promise_to_pay",
+      "reason": "insolvency",
+      "queue": "",
+      "note_reason": "insolvency"
+    },
+    "S_ID_FAILED": {
+      "outcome": "id_failed",
+      "reason": "wrong_answers",
+      "queue": "",
+      "note_reason": ""
+    },
+    "S_ID_DECLINED": {
+      "outcome": "id_failed",
+      "reason": "declined",
+      "queue": "",
+      "note_reason": ""
+    },
+    "S_CALLBACK": {
+      "outcome": "no_contact",
+      "reason": "callback_booked",
+      "queue": "",
+      "note_reason": ""
+    },
+    "S_NO_CALLBACK": {
+      "outcome": "no_contact",
+      "reason": "no_callback",
+      "queue": "",
+      "note_reason": ""
+    },
+    "S_WRONG_NUMBER": {
+      "outcome": "no_contact",
+      "reason": "wrong_number",
+      "queue": "",
+      "note_reason": ""
+    },
+    "S_DECEASED": {
+      "outcome": "no_contact",
+      "reason": "deceased",
+      "queue": "",
+      "note_reason": ""
+    },
+    "S_UNCLEAR": {
+      "outcome": "no_contact",
+      "reason": "unclear",
+      "queue": "",
+      "note_reason": ""
+    }
+  },
+  "outcomes": {
+    "reasonless_outcomes": [
+      "promise_to_pay",
+      "paid"
+    ],
+    "precedence": [
+      {
+        "when": "transfer_done",
+        "use": "transfer_situation"
+      },
+      {
+        "when": "any_promise_recorded",
+        "use": "situation:S_PROMISE"
+      },
+      {
+        "when": "call_situation",
+        "use": "call_situation"
+      },
+      {
+        "when": "all_products:S_PAID",
+        "use": "situation:S_PAID"
+      },
+      {
+        "when": "else",
+        "use": "first_product_excluding:S_PAID"
+      }
+    ],
+    "unresolved_product_situation": "S_REFUSED_EXHAUSTED"
+  },
+  "notes": {
+    "enabled": true,
+    "scope": "product",
+    "when": "no_promise_recorded",
+    "skip_if_transfer": true
+  },
+  "multi_product": {
+    "state_all_first": true,
+    "ask_all_today_first": true,
+    "order": "api",
+    "attempts_per_product": true,
+    "one_date_for_all": "clamp_to_own_deadline_and_say",
+    "readback_together": true,
+    "hardship_applies_to": "all_remaining",
+    "dispute_or_paid_continues": true
+  },
+  "confirmation": {
+    "question": "Is that correct?",
+    "verbatim_question": true,
+    "on_change": "revalidate_then_readback",
+    "recorded_cannot_change_must_convey": "change it in the Northwind app"
+  },
+  "recording": {
+    "tries": 2,
+    "on_all_failed": "S_SERVICE_ERROR"
+  },
+  "required_sentences": [
+    {
+      "text": "You will receive an email confirming this promise.",
+      "verbatim": true,
+      "trigger": "after_promise_recorded",
+      "once": true
+    },
+    {
+      "text": "Please accept our condolences.",
+      "verbatim": true,
+      "trigger": "on_situation:S_DECEASED",
+      "once": true
+    },
+    {
+      "text": "Thank you for telling us. Our specialist team will write to you.",
+      "verbatim": true,
+      "trigger": "on_situation:S_INSOLVENCY",
+      "once": true
+    },
+    {
+      "text": "I will put you through to our complaints team.",
+      "verbatim": true,
+      "trigger": "on_situation:S_COMPLAINT_TRANSFER",
+      "once": true
+    }
+  ],
+  "closing": {
+    "goodbye": "Thank you for your time, and thank you for choosing Northwind Credit Union. Goodbye.",
+    "_verbatim": true
+  },
+  "interpretation": {
+    "notes_scope": "every_product_without_promise",
+    "notes_timing": "before_close",
+    "floor_offer_date": "attempt_1",
+    "transfer_beats_promise": true,
+    "floor_ge_full": "skip_floor",
+    "reasonless": "omit_reason_leaf",
+    "past_closure_is_dispute": true
+  },
+  "_tool_binding": {
+    "verify_identity.field": [
+      "date_of_birth",
+      "postcode"
+    ],
+    "get_account.products[].type": [
+      "credit_card",
+      "overdraft",
+      "auto_loan"
+    ],
+    "create_promise.request": {
+      "amount": "amount_cents",
+      "amount_type": "integer",
+      "amount_scale": 100,
+      "date": "promise_date"
+    },
+    "add_note.reason": [
+      "refused",
+      "hardship",
+      "dispute",
+      "already_paid",
+      "service_error",
+      "insolvency"
+    ],
+    "transfer_to_agent.queue": [
+      "restructuring",
+      "general",
+      "support",
+      "complaints"
+    ],
+    "close_call.outcome": [
+      "promise_to_pay",
+      "no_promise_to_pay",
+      "transferred",
+      "paid",
+      "id_failed",
+      "no_contact"
+    ],
+    "close_call.reason": [
+      "restructuring",
+      "complaint",
+      "human",
+      "support",
+      "refused",
+      "hardship",
+      "dispute",
+      "service_error",
+      "insolvency",
+      "wrong_answers",
+      "declined",
+      "callback_booked",
+      "no_callback",
+      "wrong_number",
+      "deceased",
+      "unclear"
+    ]
+  },
+  "_derived": {
+    "holidays_2026_2027": [
+      "2026-10-19",
+      "2026-11-02",
+      "2026-12-25",
+      "2026-12-28",
+      "2027-01-01"
+    ],
+    "holiday_notes": "26 Dec 2026 is a Saturday -> observed Monday 28 Dec; 25 Dec 2026 and 1 Jan 2027 are Fridays (no shift)",
+    "deadlines": {
+      "now 2026-10-16 (Fri)": {
+        "early": "2026-11-03",
+        "middle": "2026-10-26",
+        "serious": "2026-10-22"
+      },
+      "now 2026-10-30 (Fri)": {
+        "early": "2026-11-16",
+        "middle": "2026-11-09",
+        "serious": "2026-11-05"
+      },
+      "now 2026-11-30 (Mon)": {
+        "early": "2026-12-14",
+        "middle": "2026-12-07",
+        "serious": "2026-12-03"
+      },
+      "now 2026-12-24 (Thu)": {
+        "early": "2027-01-12",
+        "middle": "2027-01-05",
+        "serious": "2026-12-31"
+      }
+    },
+    "attempt_1_date": {
+      "now 2026-12-24 (Thu)": "2026-12-31",
+      "now 2026-11-30 (Mon), serious": "2026-12-03",
+      "now 2026-10-30 (Fri), middle": "2026-11-06"
+    },
+    "floors": {
+      "credit_card 1234.57": "308.65",
+      "credit_card 96.30": "24.08",
+      "credit_card 101.01": "25.26",
+      "credit_card 402.18": "100.55"
+    }
+  }
+}

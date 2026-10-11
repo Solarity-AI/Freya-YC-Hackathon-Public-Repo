@@ -1,0 +1,124 @@
+{
+ "id": "TRF-01",
+ "title": "Ekstre borcunun tamamı bugün",
+ "mode": "sim",
+ "case": {
+  "id": "TRF-01",
+  "variables": {
+   "musteri_no": "FB-240117",
+   "ad": "Ayşe",
+   "soyad": "Yılmaz",
+   "hitap": "Hanım",
+   "now": "2026-10-21T10:30"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "14.02.1986",
+   "TCKN_SON4": "3058"
+  },
+  "products": [
+   {
+    "kart_id": "KRT-240117-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "7319",
+    "ekstre_borcu": 8450.75,
+    "asgari_odeme_tutari": 3380.3,
+    "son_odeme_tarihi": "2026-10-15",
+    "gecikme_gun_sayisi": 6
+   }
+  ]
+ },
+ "expect": {
+  "outcome": "SOZ_ALINDI",
+  "reason": null,
+  "promises": [
+   {
+    "product_id": "KRT-240117-01",
+    "amount": 8450.75,
+    "date": "2026-10-21"
+   }
+  ],
+  "notes": [],
+  "callbacks": [],
+  "transfers": []
+ },
+ "turns": [
+  {
+   "say": "Evet, benim.",
+   "x": {
+    "u_text": "Evet, benim.",
+    "u_en": "Yes, it's me.",
+    "u_act": "yes",
+    "u_topic": "none"
+   }
+  },
+  {
+   "say": "On dört Şubat seksen altı.",
+   "x": {
+    "u_text": "On dört Şubat seksen altı.",
+    "u_en": "Fourteenth of February, eighty-six.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "1986-02-14",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "Üç sıfır beş sekiz.",
+   "x": {
+    "u_text": "Üç sıfır beş sekiz.",
+    "u_en": "Three zero five eight.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "3058",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "Evet, bugün tamamını yatırırım.",
+   "x": {
+    "u_text": "Evet, bugün tamamını yatırırım.",
+    "u_en": "Yes, I'll pay all of it today.",
+    "u_act": "yes",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "relative_days",
+    "u_dval": "0",
+    "u_dwhich": "bare",
+    "u_kind": "yes"
+   }
+  },
+  {
+   "say": "Evet, onaylıyorum.",
+   "x": {
+    "u_text": "Evet, onaylıyorum.",
+    "u_en": "Yes, I confirm.",
+    "u_act": "yes",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "none",
+    "u_dval": "",
+    "u_dwhich": "bare",
+    "u_kind": "yes"
+   }
+  },
+  {
+   "say": "Yok, teşekkürler.",
+   "x": {
+    "u_text": "Yok, teşekkürler.",
+    "u_en": "No, thanks.",
+    "u_act": "no",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "none",
+    "u_dval": "",
+    "u_dwhich": "bare",
+    "u_kind": "no"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 24
+ }
+}

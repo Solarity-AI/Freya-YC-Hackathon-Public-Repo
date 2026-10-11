@@ -1,0 +1,125 @@
+{
+ "id": "TRF-07",
+ "title": "Söz kaydı iki kez başarısız",
+ "mode": "sim",
+ "case": {
+  "id": "TRF-07",
+  "variables": {
+   "musteri_no": "FB-240744",
+   "ad": "Selin",
+   "soyad": "Aydın",
+   "hitap": "Hanım",
+   "now": "2026-10-21T11:30"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "04.08.1995",
+   "TCKN_SON4": "5530"
+  },
+  "products": [
+   {
+    "kart_id": "KRT-240744-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "9064",
+    "ekstre_borcu": 4100.0,
+    "asgari_odeme_tutari": 1640.0,
+    "son_odeme_tarihi": "2026-10-15",
+    "gecikme_gun_sayisi": 6
+   }
+  ]
+ },
+ "expect": {
+  "outcome": "SOZ_ALINAMADI",
+  "reason": "SISTEM_HATASI",
+  "promises": [],
+  "notes": [],
+  "callbacks": [],
+  "transfers": []
+ },
+ "turns": [
+  {
+   "say": "Evet, benim.",
+   "x": {
+    "u_text": "Evet, benim.",
+    "u_en": "Yes, it's me.",
+    "u_act": "yes",
+    "u_topic": "none"
+   }
+  },
+  {
+   "say": "Dört Ağustos doksan beş.",
+   "x": {
+    "u_text": "Dört Ağustos doksan beş.",
+    "u_en": "Fourth of August, ninety-five.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "1995-08-04",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "Beş beş üç sıfır.",
+   "x": {
+    "u_text": "Beş beş üç sıfır.",
+    "u_en": "Five five three zero.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "5530",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "Evet, bugün tamamını öderim.",
+   "x": {
+    "u_text": "Evet, bugün tamamını öderim.",
+    "u_en": "Yes, I'll pay all of it today.",
+    "u_act": "yes",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "relative_days",
+    "u_dval": "0",
+    "u_dwhich": "bare",
+    "u_kind": "yes"
+   }
+  },
+  {
+   "say": "Evet.",
+   "x": {
+    "u_text": "Evet.",
+    "u_en": "Yes.",
+    "u_act": "yes",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "none",
+    "u_dval": "",
+    "u_dwhich": "bare",
+    "u_kind": "yes"
+   }
+  },
+  {
+   "say": "Peki.",
+   "x": {
+    "u_text": "Peki.",
+    "u_en": "Okay.",
+    "u_act": "chatter_only",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "none",
+    "u_dval": "",
+    "u_dwhich": "bare",
+    "u_kind": "smalltalk"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 24
+ },
+ "faults": [
+  {
+   "tool": "create_promise",
+   "fail_first_n": 9,
+   "mode": "http500"
+  }
+ ]
+}

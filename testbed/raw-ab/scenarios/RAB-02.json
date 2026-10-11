@@ -1,0 +1,140 @@
+{
+ "id": "RAB-02",
+ "spec": "raw-ab",
+ "mode": "sim",
+ "about": "Gives the date of birth correctly. Gives last four digits 4401 first, then 4410. Will pay the credit card tomorrow. Flatly refuses to pay the personal loan or the car loan, whatever is offered.",
+ "case": {
+  "id": "RAB-02",
+  "brief": "raw-ab",
+  "family": "Multi-product",
+  "level": "hard",
+  "title": "Promises one product, refuses two",
+  "variables": {
+   "first_name": "Marcus",
+   "last_name": "Bell",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1983-10-19",
+   "phone_last4": "4410"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "9015",
+    "past_due": 510.0,
+    "days_late": 16,
+    "minimum_payment": 153.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 1320.0,
+    "days_late": 16,
+    "instalment_amount": 440.0
+   },
+   {
+    "type": "car_loan",
+    "past_due": 140.0,
+    "days_late": 7,
+    "instalment_amount": 46.0
+   }
+  ],
+  "script": "Gives the date of birth correctly. Gives last four digits 4401 first, then 4410. Will pay the credit card tomorrow. Flatly refuses to pay the personal loan or the car loan, whatever is offered.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 510.0,
+     "date": "2026-10-15"
+    }
+   ],
+   "notes": [
+    {
+     "product_id": "p2",
+     "reason": "refused"
+    },
+    {
+     "product_id": "p3",
+     "reason": "refused"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "mirrors": "PUB-12"
+ },
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "The nineteenth of October, 1983.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "The nineteenth of October, 1983"
+   }
+  },
+  {
+   "say": "4401.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "4401"
+   }
+  },
+  {
+   "say": "4410.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "4410"
+   }
+  },
+  {
+   "say": "No. I'll pay the credit card tomorrow, but I'm not paying the personal loan or the car loan.",
+   "x": {
+    "u_act": "proposal",
+    "u_date": "tomorrow"
+   }
+  },
+  {
+   "say": "No.",
+   "x": {
+    "u_act": "no"
+   }
+  },
+  {
+   "say": "No, I'm not paying the loan.",
+   "x": {
+    "u_act": "no"
+   }
+  },
+  {
+   "say": "No.",
+   "x": {
+    "u_act": "no"
+   }
+  },
+  {
+   "say": "Yes, I confirm.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "Thank you, goodbye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 20
+ }
+}

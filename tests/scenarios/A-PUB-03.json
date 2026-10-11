@@ -1,0 +1,58 @@
+{
+ "id": "A-PUB-03",
+ "spec": "a",
+ "pub": "PUB-03",
+ "mode": "sim",
+ "turns": [
+  {
+   "say": "Yes, that's me.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "12 July 1991.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "12 July 1991"
+   }
+  },
+  {
+   "say": "21 August 1992.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "21 August 1992"
+   }
+  },
+  {
+   "say": "21 July 1990.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "21 July 1990"
+   }
+  },
+  {
+   "say": "This is ridiculous. How much do I even owe?",
+   "x": {
+    "u_act": "question"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 12,
+  "must": [
+   [
+    -1,
+    "branch"
+   ]
+  ],
+  "must_not": [
+   [
+    -1,
+    "95"
+   ]
+  ]
+ }
+}

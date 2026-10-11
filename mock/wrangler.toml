@@ -1,0 +1,18 @@
+# Bank mock (Cloudflare Worker). Deploy with tools/mockgen/deploy.sh (needs Workers Paid for Durable Objects).
+name = "freya-bank-mock-ali"
+main = "src/worker.js"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+# Ledger store: one SQLite-backed Durable Object per customer id (strongly consistent, single writer per customer).
+# The class Ledger is exported from src/worker.js. Workers KV is no longer used (it is eventually consistent:
+# a verify could be invisible to the next get_account for up to ~60 s).
+[[durable_objects.bindings]]
+name = "LEDGER_DO"
+class_name = "Ledger"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Ledger"]
+
+# Optional: set a secret to protect /reset and /admin/fault:  npx wrangler secret put ADMIN_TOKEN

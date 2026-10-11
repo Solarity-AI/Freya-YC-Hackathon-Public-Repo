@@ -1,0 +1,706 @@
+{
+  "_about": "Expected CORE leaves for testbed/mut-d (Harbor Bank). Key paths follow tests/golden/spec-a.json. Keys starting with '_' are not spec leaves: they carry values the schema cannot hold (effective-dated memo rules, the raw code list) or grading notes.",
+  "bank": {
+    "name": "Harbor Bank",
+    "assistant_self": "Harbor Bank's digital assistant",
+    "currency": {
+      "symbol": "$",
+      "word": "dollars"
+    }
+  },
+  "call_variables": {
+    "customer_key": "customer_id",
+    "now": "now",
+    "declared_names": [
+      "customer_id",
+      "first_name",
+      "last_name",
+      "title",
+      "now"
+    ]
+  },
+  "addressing": {
+    "customer": "<v:title> <v:last_name>"
+  },
+  "opening": {
+    "must_convey": [
+      "assistant",
+      "bank",
+      "recorded",
+      "purpose_free"
+    ]
+  },
+  "banned": {
+    "before_verification": [
+      "collections",
+      "debt",
+      "overdue",
+      "late",
+      "payment",
+      "credit card",
+      "personal loan",
+      "auto loan",
+      "loan"
+    ],
+    "_before_verification_allowed": [
+      "account number (identity question 3.1 names it)"
+    ],
+    "never_offer": [
+      "discount",
+      "waiver",
+      "payment plan"
+    ],
+    "never_ask": [
+      "how much can you pay"
+    ],
+    "_before_verification_note": "Policy 2.1 also bans any product and any amount before verification, so the product names are banned. The bare word 'card' is NOT banned: the identity-fail line (3.4) and the scam line (7.8) say it and can be spoken before verification."
+  },
+  "right_party": {
+    "ask": "Am I speaking with <v:first_name> <v:last_name>?",
+    "max_asks": 2,
+    "on_unresolved": "S_UNCLEAR",
+    "accept_own_name": true
+  },
+  "third_party": {
+    "disclose": "nothing_beyond_opening",
+    "relative_may_verify": false,
+    "relative_may_pay": false,
+    "_callbacks_allowed": false,
+    "_ask_when_reachable": false,
+    "_closing_line": "Thank you, we will try again another time. Goodbye.",
+    "_situation_for_every_third_party": "S_THIRD_PARTY",
+    "callback": null,
+    "_note": "No callback window exists in this brief: schedule_callback must never be called. A builder that keeps Brief A's 10:00-19:00 today/next-business-day window has extracted a rule that is not in the brief."
+  },
+  "identity": {
+    "questions": [
+      {
+        "key": "account",
+        "field_value": "account_last4",
+        "kind": "digits",
+        "wire_format": "digits",
+        "length": 4,
+        "pattern": "^[0-9]{4}$",
+        "_order": 1,
+        "_must_not_accept": "card_last4 from get_account (a card number is not an account number)"
+      },
+      {
+        "key": "birth_year",
+        "field_value": "birth_year",
+        "kind": "year",
+        "wire_format": "%Y",
+        "length": 4,
+        "pattern": "^[0-9]{4}$",
+        "_order": 2,
+        "_two_digit_year": "ask for the full year, never send, not counted as wrong"
+      }
+    ],
+    "one_at_a_time": true,
+    "max_wrong_total": 3,
+    "hints": [],
+    "decline": {
+      "explain": "These questions keep your account safe.",
+      "explain_times": 1,
+      "max_declines": 2,
+      "purpose_question_counts": true
+    },
+    "fail_line": "I'm sorry, I could not verify your identity. Please call the number on the back of your card or visit a branch.",
+    "on_failed": "S_ID_FAILED",
+    "on_declined": "S_ID_DECLINED"
+  },
+  "products": {
+    "max": 3,
+    "fields": {
+      "list": "products",
+      "id": "product_id",
+      "type": "type",
+      "past_due": "past_due",
+      "days_late": "days_late"
+    },
+    "types": {
+      "credit_card": {
+        "spoken": "credit card ending <f:card_last4>",
+        "floor": {
+          "kind": "max",
+          "args": [
+            {
+              "kind": "field",
+              "field": "minimum_due"
+            },
+            {
+              "kind": "percent_of_full",
+              "pct": 25,
+              "rounding": "half_up"
+            }
+          ]
+        }
+      },
+      "personal_loan": {
+        "spoken": "personal loan",
+        "floor": {
+          "kind": "field",
+          "field": "monthly_payment"
+        }
+      },
+      "auto_loan": {
+        "spoken": "auto loan",
+        "floor": {
+          "kind": "field",
+          "field": "monthly_payment"
+        }
+      }
+    },
+    "_absent_fields": [
+      "minimum_payment",
+      "instalment_amount",
+      "car_loan"
+    ]
+  },
+  "statement": {
+    "intro": "I'm calling from Harbor Bank's collections department about an overdue payment."
+  },
+  "calendar": {
+    "business_weekdays": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "holidays": [
+      "2026-11-03",
+      "2026-11-11",
+      "2026-11-26",
+      "2026-11-27",
+      "2026-12-25",
+      "2027-01-01"
+    ],
+    "holiday_rules": [],
+    "count_from": "after_today",
+    "this_next": {
+      "this": "next_occurrence",
+      "next": "first_after_today"
+    },
+    "_holiday_2026-11-27": "added by memo COL-2026-031, effective for calls on/after 2026-11-16; no case before that date can reach 2026-11-27, so listing it unconditionally is also correct for this fixture",
+    "_this_next_source": "Policy 4.6: 'next <weekday>' = first such day after today; 'this <weekday>' = nearest such day from today on, today included"
+  },
+  "bands": [
+    {
+      "key": "early",
+      "days_late_min": 1,
+      "days_late_max": 14,
+      "deadline": {
+        "kind": "nth_calendar_day_after_today",
+        "n": 14,
+        "roll": "prev_bd"
+      },
+      "attempts": 1
+    },
+    {
+      "key": "late",
+      "days_late_min": 15,
+      "days_late_max": 45,
+      "deadline": {
+        "kind": "nth_calendar_day_after_today",
+        "n": 7,
+        "roll": "prev_bd"
+      },
+      "attempts": 2
+    }
+  ],
+  "promise_date": {
+    "earliest": {
+      "kind": "today"
+    },
+    "latest": {
+      "kind": "deadline"
+    },
+    "business_day_only": true,
+    "non_business_within_deadline": "offer_next_business_day",
+    "after_deadline": "offer_deadline",
+    "offered_date_refused": "flat_refusal",
+    "vague": {
+      "ask_exact_times": 1,
+      "then": "propose_deadline"
+    }
+  },
+  "amounts": {
+    "first": {
+      "kind": "full"
+    },
+    "never_ask_customer": true,
+    "too_much": {
+      "offer": {
+        "kind": "floor"
+      },
+      "times": 1,
+      "date": "attempt_1",
+      "say_rest": "The remaining balance stays overdue.",
+      "refusal": "flat_refusal"
+    },
+    "accept_min": {
+      "kind": "floor"
+    },
+    "accept_max": {
+      "kind": "full"
+    },
+    "below_floor": {
+      "say": "I can't record an amount below <floor>.",
+      "offer": {
+        "kind": "floor"
+      },
+      "times": 1,
+      "then": "flat_refusal"
+    }
+  },
+  "negotiation": {
+    "first_ask": {
+      "single": "Can you pay this today?",
+      "multi": "Can you pay all of them today?",
+      "amount": {
+        "kind": "full"
+      },
+      "date": {
+        "kind": "today"
+      },
+      "consumes_attempt": false
+    },
+    "ladder": [
+      {
+        "key": "r1",
+        "attempt": 1,
+        "bands": [
+          "all"
+        ],
+        "amount": {
+          "kind": "floor_if_too_much_else_full"
+        },
+        "date": {
+          "kind": "last_business_day_of_week",
+          "if_today": "next_week"
+        }
+      },
+      {
+        "key": "r2",
+        "attempt": 2,
+        "bands": [
+          "late"
+        ],
+        "amount": {
+          "kind": "floor"
+        },
+        "date": {
+          "kind": "deadline"
+        }
+      }
+    ],
+    "forbidden_offers": [
+      "discount",
+      "waiver",
+      "payment plan"
+    ]
+  },
+  "intents_actions": {
+    "deceased": {
+      "kind": "close_now",
+      "say": "I am sorry for your loss.",
+      "situation": "S_DECEASED"
+    },
+    "wrong_number": {
+      "kind": "close_now",
+      "situation": "S_WRONG_NUMBER"
+    },
+    "hardship": {
+      "kind": "offer_transfer",
+      "queue": "care",
+      "accept_situation": "S_HARDSHIP_TRANSFER",
+      "decline_situation": "S_HARDSHIP_DECLINED",
+      "suspend_persuasion": true,
+      "_causes": [
+        "illness",
+        "hospital stay",
+        "death in the family",
+        "job loss"
+      ]
+    },
+    "restructure": {
+      "kind": "transfer",
+      "queue": "restructuring",
+      "situation": "S_RESTRUCTURE_TRANSFER",
+      "keep_recorded": true,
+      "drop_unrecorded": true,
+      "suppress_notes": true
+    },
+    "dispute": {
+      "kind": "resolve_product",
+      "situation": "S_DISPUTE"
+    },
+    "paid": {
+      "kind": "resolve_product",
+      "say": "Thank you. Payments can take up to two business days to appear.",
+      "situation": "S_PAID"
+    },
+    "human": {
+      "kind": "transfer",
+      "say": "I will put you through to a colleague.",
+      "queue": "agent",
+      "situation": "S_HUMAN_TRANSFER",
+      "_scope": [
+        "id",
+        "neg",
+        "conf"
+      ],
+      "_not": "ask_then_transfer (Brief A asks first; Harbor 7.6 forbids it)"
+    },
+    "refuse_talk": {
+      "kind": "count_then_close",
+      "limit": 2,
+      "situation": "S_REFUSED_TO_TALK",
+      "situation_pre_verification": "S_ID_DECLINED"
+    },
+    "too_much": {
+      "kind": "too_much"
+    },
+    "robot": {
+      "kind": "answer_continue",
+      "say": "I am Harbor Bank's digital assistant."
+    },
+    "scam": {
+      "kind": "answer_continue",
+      "say": "You can check this call by phoning the number on the back of your Harbor Bank card."
+    },
+    "change_promise": {
+      "kind": "answer_continue",
+      "say": "A recorded promise cannot be changed on this call. You can change it in Harbor online banking."
+    },
+    "forbidden_offer": {
+      "kind": "answer_continue",
+      "say": "I'm afraid I can't offer that."
+    }
+  },
+  "situations": {
+    "S_PROMISE": {
+      "outcome": "promise_taken",
+      "reason": "",
+      "queue": "",
+      "note_reason": ""
+    },
+    "S_PAID": {
+      "outcome": "already_paid",
+      "reason": "",
+      "queue": "",
+      "note_reason": "paid"
+    },
+    "S_RESTRUCTURE_TRANSFER": {
+      "outcome": "transferred",
+      "reason": "restructuring",
+      "queue": "restructuring",
+      "note_reason": ""
+    },
+    "S_HUMAN_TRANSFER": {
+      "outcome": "transferred",
+      "reason": "agent",
+      "queue": "agent",
+      "note_reason": ""
+    },
+    "S_HARDSHIP_TRANSFER": {
+      "outcome": "transferred",
+      "reason": "care",
+      "queue": "care",
+      "note_reason": ""
+    },
+    "S_REFUSED_EXHAUSTED": {
+      "outcome": "no_promise",
+      "reason": "refused",
+      "queue": "",
+      "note_reason": "refused"
+    },
+    "S_REFUSED_TO_TALK": {
+      "outcome": "no_promise",
+      "reason": "refused",
+      "queue": "",
+      "note_reason": "refused"
+    },
+    "S_HARDSHIP_DECLINED": {
+      "outcome": "no_promise",
+      "reason": "hardship",
+      "queue": "",
+      "note_reason": "hardship"
+    },
+    "S_DISPUTE": {
+      "outcome": "no_promise",
+      "reason": "dispute",
+      "queue": "",
+      "note_reason": "dispute"
+    },
+    "S_SERVICE_ERROR": {
+      "outcome": "no_promise",
+      "reason": "system_error",
+      "queue": "",
+      "note_reason": "system_error"
+    },
+    "S_ID_FAILED": {
+      "outcome": "identity_failed",
+      "reason": "failed",
+      "queue": "",
+      "note_reason": ""
+    },
+    "S_ID_DECLINED": {
+      "outcome": "identity_failed",
+      "reason": "declined",
+      "queue": "",
+      "note_reason": ""
+    },
+    "S_THIRD_PARTY": {
+      "outcome": "no_contact",
+      "reason": "third_party",
+      "queue": "",
+      "note_reason": ""
+    },
+    "S_WRONG_NUMBER": {
+      "outcome": "no_contact",
+      "reason": "wrong_number",
+      "queue": "",
+      "note_reason": ""
+    },
+    "S_DECEASED": {
+      "outcome": "no_contact",
+      "reason": "deceased",
+      "queue": "",
+      "note_reason": ""
+    },
+    "S_UNCLEAR": {
+      "outcome": "no_contact",
+      "reason": "unclear",
+      "queue": "",
+      "note_reason": ""
+    }
+  },
+  "_must_not_appear_anywhere": {
+    "close_outcome": [
+      "promise",
+      "paid",
+      "not_verified",
+      "not_reached"
+    ],
+    "close_reason": [
+      "callback",
+      "no_callback",
+      "human",
+      "support",
+      "service_error"
+    ],
+    "queue": [
+      "general",
+      "support"
+    ],
+    "note_reason": [
+      "service_error"
+    ],
+    "codes_as_values": [
+      "PTP-00",
+      "NCT-CBK",
+      "XFR-AGT"
+    ]
+  },
+  "outcomes": {
+    "precedence": [
+      {
+        "when": "transfer_done",
+        "use": "transfer_situation"
+      },
+      {
+        "when": "any_promise_recorded",
+        "use": "situation:S_PROMISE"
+      },
+      {
+        "when": "call_situation",
+        "use": "call_situation"
+      },
+      {
+        "when": "all_products:S_PAID",
+        "use": "situation:S_PAID"
+      },
+      {
+        "when": "else",
+        "use": "first_product_excluding:S_PAID"
+      }
+    ],
+    "reasonless_outcomes": [
+      "promise_taken",
+      "already_paid"
+    ]
+  },
+  "notes": {
+    "enabled": true,
+    "scope": "product",
+    "when": "no_promise_recorded",
+    "reason_from": "product_situation",
+    "skip_if_transfer": true
+  },
+  "multi_product": {
+    "state_all_first": true,
+    "ask_all_today_first": true,
+    "order": "api",
+    "attempts_per_product": true,
+    "one_date_for_all": "clamp_to_own_deadline_and_say",
+    "readback_together": true,
+    "dispute_or_paid_continues": true,
+    "clamp_line": "For your <product>, the latest date I can record is <deadline>, so I will use that date."
+  },
+  "confirmation": {
+    "question": "Is that correct?",
+    "verbatim_question": true,
+    "recorded_cannot_change": "A recorded promise cannot be changed on this call. You can change it in Harbor online banking."
+  },
+  "recording": {
+    "tries": 2,
+    "failed_item": "I'm sorry, I could not record the promise for your <product>.",
+    "on_all_failed": "S_SERVICE_ERROR"
+  },
+  "required_sentences": [
+    {
+      "id": "email_confirmation",
+      "text": "Harbor Bank will send you a confirmation by email within one business day.",
+      "verbatim": true,
+      "trigger": "after_promise_recorded",
+      "once": true
+    },
+    {
+      "id": "sorry_loss",
+      "text": "I am sorry for your loss.",
+      "verbatim": true,
+      "trigger": "on_situation:S_DECEASED",
+      "once": true
+    }
+  ],
+  "_required_sentences_not": [
+    "You will receive a text message confirming this promise.",
+    "we'll e-mail you a confirmation"
+  ],
+  "closing": {
+    "goodbye": "Thank you for your time. Goodbye."
+  },
+  "_effective_dated": {
+    "source": "memo COL-2026-031, effective for calls with now >= 2026-11-16",
+    "products.types.credit_card.floor": {
+      "before_2026-11-16": {
+        "kind": "field",
+        "field": "minimum_due"
+      },
+      "from_2026-11-16": {
+        "kind": "max",
+        "args": [
+          {
+            "kind": "field",
+            "field": "minimum_due"
+          },
+          {
+            "kind": "percent_of_full",
+            "pct": 25,
+            "rounding": "half_up"
+          }
+        ]
+      }
+    },
+    "calendar.holidays.add": {
+      "from_2026-11-16": [
+        "2026-11-27"
+      ]
+    },
+    "cases_before": [
+      "HB-01",
+      "HB-02",
+      "HB-03",
+      "HB-04",
+      "HB-05",
+      "HB-06",
+      "HB-07"
+    ],
+    "cases_from": [
+      "HB-08",
+      "HB-09",
+      "HB-10",
+      "HB-11",
+      "HB-12"
+    ],
+    "_note": "The spec has one floor per type. A builder that keeps only the post-memo floor fails HB-07; one that keeps only the policy floor fails HB-08. A correct result either expresses the date condition or surfaces it as a residual rule / warning."
+  },
+  "_code_list": {
+    "PTP-00": [
+      "promise_taken",
+      null
+    ],
+    "PIF-00": [
+      "already_paid",
+      null
+    ],
+    "XFR-RST": [
+      "transferred",
+      "restructuring"
+    ],
+    "XFR-AGT": [
+      "transferred",
+      "agent"
+    ],
+    "XFR-CAR": [
+      "transferred",
+      "care"
+    ],
+    "NPR-REF": [
+      "no_promise",
+      "refused"
+    ],
+    "NPR-HRD": [
+      "no_promise",
+      "hardship"
+    ],
+    "NPR-DSP": [
+      "no_promise",
+      "dispute"
+    ],
+    "NPR-SYS": [
+      "no_promise",
+      "system_error"
+    ],
+    "IDF-FLD": [
+      "identity_failed",
+      "failed"
+    ],
+    "IDF-DCL": [
+      "identity_failed",
+      "declined"
+    ],
+    "NCT-3RD": [
+      "no_contact",
+      "third_party"
+    ],
+    "NCT-WRN": [
+      "no_contact",
+      "wrong_number"
+    ],
+    "NCT-DEC": [
+      "no_contact",
+      "deceased"
+    ],
+    "NCT-UNC": [
+      "no_contact",
+      "unclear"
+    ],
+    "_retired": [
+      "NCT-CBK"
+    ],
+    "_note_values": {
+      "N-REF": "refused",
+      "N-HRD": "hardship",
+      "N-DSP": "dispute",
+      "N-PD": "paid",
+      "N-SYS": "system_error"
+    }
+  },
+  "_distractors_in_brief": {
+    "mail says late band 'about 10 days'": "policy 4.1 says seven (7) calendar days; the mail defers to the policy",
+    "mail paraphrases the confirmation sentence": "policy 6.4 wording is verbatim",
+    "two-digit 'two (2)' inside the paid line": "spoken as 'two business days'"
+  }
+}

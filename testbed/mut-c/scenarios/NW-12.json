@@ -1,0 +1,132 @@
+{
+ "id": "MUTC-NW-12",
+ "spec": "mut-c",
+ "mode": "sim",
+ "case": {
+  "id": "NW-12",
+  "brief": "mut-c",
+  "family": "Insolvency",
+  "level": "hard",
+  "title": "Lost his job and is bankrupt: insolvency wins",
+  "variables": {
+   "first_name": "Owen",
+   "last_name": "Park",
+   "title": "Mr",
+   "now": "2026-11-10T09:15"
+  },
+  "identity": {
+   "date_of_birth": "1972-07-21",
+   "postcode": "CB2 1TN"
+  },
+  "products": [
+   {
+    "type": "overdraft",
+    "past_due": 735.9,
+    "days_late": 44
+   },
+   {
+    "type": "credit_card",
+    "card_last4": "0377",
+    "past_due": 402.18,
+    "days_late": 19,
+    "minimum_payment": 20.11
+   }
+  ],
+  "script": "Verified. Cannot pay all today. Says he lost his job in August and was declared bankrupt last month.",
+  "expected": {
+   "outcome": "no_promise_to_pay",
+   "reason": "insolvency",
+   "promises": [],
+   "notes": [
+    {
+     "product_id": "p1",
+     "reason": "insolvency"
+    },
+    {
+     "product_id": "p2",
+     "reason": "insolvency"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "insolvency sentence said verbatim",
+   "no support-team offer (rule 46 before rule 35)",
+   "no persuasion attempt",
+   "add_note 'insolvency' for both products before close_call"
+  ]
+ },
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "21 July 1972.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "21 July 1972"
+   }
+  },
+  {
+   "say": "C B two, one T N.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "C B two, one T N"
+   }
+  },
+  {
+   "say": "No, I can't pay all today.",
+   "x": {
+    "u_act": "no"
+   }
+  },
+  {
+   "say": "I lost my job in August and I was declared bankrupt last month.",
+   "x": {
+    "u_act": "answer",
+    "u_topic": "insolvency"
+   }
+  },
+  {
+   "say": "Okay.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  },
+  {
+   "say": "Bye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 24,
+  "must": [
+   [
+    -1,
+    "Thank you for telling us. Our specialist team will write to you."
+   ],
+   [
+    -1,
+    "Thank you for your time, and thank you for choosing Northwind Credit Union. Goodbye."
+   ]
+  ],
+  "must_not": [
+   [
+    -1,
+    "member support team"
+   ],
+   [
+    -1,
+    "Could you pay 402.18"
+   ]
+  ]
+ }
+}

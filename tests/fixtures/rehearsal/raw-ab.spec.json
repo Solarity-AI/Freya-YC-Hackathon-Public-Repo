@@ -1,0 +1,1442 @@
+{
+ "meta": {
+  "inputs": [
+   {
+    "path": "testbed/raw-ab/brief.md",
+    "sha256": "d6576e10c174b3ff9e378dde5e57ce4f7ec5747d2271f39be51dda84e4ff8037"
+   }
+  ],
+  "openapi_sha256": "9a8410b12e5c82b6c6a30e9ed7030574d6f919cafdb1e035cef7bd876b0badb8",
+  "decisions": [
+   "F1: Currency: the brief writes no amount with a currency sign or word, so position 'none' with empty symbol and word.",
+   "F1: Opening uses 'a digital assistant calling from <bank>' rather than <self> to follow 2.1's wording without repeating the bank name; not verbatim since the brief describes content, not an exact sentence.",
+   "F1: Callback window end 19:00 (Mail 2 correction replaces the 18:00 in Mail 1; this is an undated correction, not a dated amendment).",
+   "F1: Callback date rule: 'today or the next business day' read literally as include_today true with no business-day requirement on today (brief is silent), plus 1 business day ahead; windows apply on any allowed day.",
+   "F1: The 26 October 2026 holiday (memo OPS-26-118) affects callback dates via the shared calendar facet, not via this facet.",
+   "F1: banned.before_verification: the brief's three words plus product spoken names and generic purpose-revealing words, since the brief forbids naming the product before verification and the relative may not be told anything.",
+   "F1: right_party.reask equals the ask; brief says only 'Ask once more'. bare_no left to the default (third_party).",
+   "F1: reask_limit 1 per 3.3 ('ask once for another time'); vague_asks 1 and turn_budget 6 are generic defaults.",
+   "F1: No dated entries for this facet: the addendum's 14 October effective date changes notes/multi-product rules, not F1 values.",
+   "F2: Numeric-only dates read as DMY per 4.1 ('day, then month, then year').",
+   "F2: Phone question: length 4, pattern ^[0-9]{4}$, from 'last four digits' / 'four digits'.",
+   "F2: max_wrong per question 0: the brief only sets a total limit of three wrong answers 'whichever question they were on'.",
+   "F2: Hint day_month_swapped: counts_as_wrong false ('That retry does not count as a wrong answer'), max 1 since the brief gives no other number.",
+   "F2: max_declines 2: 'A second refusal or a second such question closes the call'; purpose questions count as declines.",
+   "F2: turn_budget and verified_prefix omitted (brief silent): generic defaults apply.",
+   "F2: All lines avoid 'collections', 'debt', 'payment' and product names, as 2.1 requires before verification.",
+   "F3: products.max = 1 in values because COL-P-07 v4 covers one product; the addendum A2 (effective 14 October 2026, 'one to three products') becomes a dated entry raising max to 3.",
+   "F3: The memo OPS-26-118 holiday (2026-10-26) has no separate effective date and names a single date, so it is added directly to calendar.holidays; the withdrawn 5 October draft (2 November) is ignored.",
+   "F3: Floors are product leaves: minimum_payment for credit_card, instalment_amount for personal_loan and car_loan; floor_missing = full.",
+   "F3: Statement intro paraphrases 5.2 ('calling from the collections team about a late payment'); item is one sentence per product per A2.2.",
+   "F3: count_from = after_today: 'the Nth business day after today' does not count today.",
+   "F3: numeric_order DMY from 4.1 and the DD/MM/YYYY holiday list; this_next current_week / following_week from 6.6.",
+   "F3: Band keys use the brief's names 'early' and 'late'; days ranges inclusive.",
+   "F4: promise_date.past_date omitted: the brief is silent on a past date beyond 'today or later'; the default applies.",
+   "F4: amounts.too_much.date = attempt_1: 7.3 does not tie the first floor offer to a specific date; only attempt 2 names the floor 'on the deadline'.",
+   "F4: The first ask is not a persuasion attempt (consumes_attempt false): 7.7 says a no to paying today is a flat refusal that then uses attempt 1.",
+   "F4: Ladder bands use the band keys 'early' and 'late' from the 6.2 table. Early has 1 rung (r1), late has 2 rungs (r1, r2), which matches the attempt counts 1 and 2.",
+   "F4: Attempt 2 offers the floor on the deadline even if the floor was already refused with the attempt-1 date. 7.3 allows this explicitly ('Attempt 2 may name the floor again, on the deadline'), so it counts as a different offer.",
+   "F4: The multi-product first ask comes from Addendum A2.4 (effective 14 October 2026). It was not added as a dated entry because it is only used for multi-product customers, which the addendum itself introduces. The multi_product facet holds that dating.",
+   "F4: above_full and decimals omitted: the brief is silent, so the defaults apply.",
+   "F4: forbidden_offers comes from 7.10 and the mail reminder 'Never quote a discount'.",
+   "F5: wants_human scoped id/neg/conf: the brief says 9.4 applies before and after verification, but transfer kinds never apply in rp/tp under the shared conventions; before the right party is confirmed nothing is transferred.",
+   "F5: Hardship precedence (800) is above restructuring (700) because 7.9 says it comes before 9.3; deceased/wrong_number are highest but scoped rp/tp only.",
+   "F5: Dispute precedence (550) is above already_paid (500) so that 'paid it off years ago' / 'closed' resolves as dispute per 9.2.",
+   "F5: Restructure transfer keeps recorded promises, drops unrecorded ones and suppresses notes per A2.10.",
+   "F5: Instalment-plan requests go to restructure_request (9.3 transfer); forbidden_offer covers discount/waiver requests (7.10, Mail 1).",
+   "F5: after_record set to ask_anything_else: the brief foresees a transfer after a recorded promise (10.1) and a request to change a recorded promise (8.3).",
+   "F5: Refuse-to-talk acknowledgement is a neutral 'I understand.'; dispute line avoids arguing; no pre-verification line contains banned words.",
+   "F6: recording.tries = 2: 'try once more' after a failed create_promise is one retry.",
+   "F6: Goodbye avoids <customer> because it is also said to third parties (relatives, wrong number) who are not the customer.",
+   "F6: Condolence sentence is a verbatim required sentence on S_DECEASED; 'ask nothing else' does not forbid the 10.3 thanks/goodbye, so S_DECEASED is not in no_goodbye.",
+   "F6: The 9.1 'payments can take one business day to appear' line is left to the paid intent's own say (it also fires per product in multi-product calls without closing), not duplicated in closing.per_situation.",
+   "F6: floor_offer adds 'The rest would stay overdue.' per 7.3; other lines keep generic defaults since the brief does not word them differently.",
+   "F6: The text-message sentence is said once (default once_after_all_creates) even with several promises.",
+   "F6: No dated entries: the addendum's multi-product read-back/recording rules only apply when several products exist and are expressed via readback/<items> and recorded_multi.",
+   "F7: Wire values taken from code list CL-COL-3 parts A-D (system values), never the internal codes; close_call.reason has no API enum so the code list's system values are used.",
+   "F7: Every situation's close reason comes from the result table in COL-P-07 10.1; PRM and PDA get reason '' because 'PRM and PDA take no reason.'",
+   "F7: S_REFUSED_TO_TALK maps to NOP / REF per 9.7 and gets note reason 'refused' (REF is in the A2.8 note-reason list). Refusing to talk before verification is S_ID_DECLINED (NVF / DCL).",
+   "F7: Transfer situations have note_reason '' because A2.10 says no notes on any transfer.",
+   "F7: notes.enabled is false in values (COL-P-07 10.2, policy as written). Addendum A2.8 turns it on from 2026-10-14 for every call, so that is a dated entry.",
+   "F7: Precedence: transfer_done -> transfer_situation comes first, as 10.1 says ('If a transfer follows a recorded promise, close with TRF') and A2.10 says (restructuring keeps earlier promises and closes TRF / RST). A2.13's 'PRM wins ... except under A2.10' is read as PRM beating no-promise products. It is not read as overriding 10.1's transfer rule, because A2.13 also says the 10.1 result table applies.",
+   "F7: Aggregation follows A2.13: all products PAID -> paid; otherwise NOP with the reason of the first product in API order whose situation is not PAID.",
+   "F7: unresolved_product_situation is S_REFUSED_EXHAUSTED (generic choice; the brief does not name one).",
+   "F7: multi_product values come straight from Addendum A2 and are not dated. Multi-product calls only exist under the addendum, which starts 2026-10-14. Before that, the standard covers one product only (1.1), so the multi-product keys have no effect.",
+   "F7: clamp_line keeps the generic wording. The brief only says to state the clamp in the read-back (A2.6) and gives no exact wording.",
+   "products.fields bound from the catalog: {\"days_late\": \"days_late\", \"id\": \"product_id\", \"list\": \"products\", \"past_due\": \"past_due\", \"type\": \"type\"}",
+   "interpretation.intent_tie derived from intent precedence: ['deceased', 'wrong_number', 'hardship', 'restructure_request', 'wants_human', 'dispute', 'already_paid', 'refuse_to_talk', 'too_much']"
+  ],
+  "warnings": [
+   "/intents/wants_human/keywords: '\\\\b(real|live) (person|human|agent)\\\\b' matches the intent's own negative 'Are you a real person?'"
+  ],
+  "residual_rules": [
+   {
+    "text": "2.3: If the customer asks a question during the right-party check, answer it first (2.4 robot/AI, 9.5 scam); the ask that follows is the second ask.",
+    "class": "flow",
+    "bound_to": "F1"
+   },
+   {
+    "text": "9.5 'Is this a scam?': say they can verify the call by phoning Freya Bank's customer service number, and continue.",
+    "class": "speech",
+    "bound_to": "F1"
+   },
+   {
+    "text": "9.7: a customer who says twice before verification that they do not want to talk is closed with NVF / DCL (S_ID_DECLINED).",
+    "class": "flow",
+    "bound_to": "F2"
+   },
+   {
+    "text": "API: an unreadable date_of_birth value is rejected with ok=false and is not counted as a wrong answer; ask again for the full date.",
+    "class": "flow",
+    "bound_to": "F2"
+   },
+   {
+    "text": "7.3: 'Attempt 2 may name the floor again, on the deadline' — repeating the floor amount with a new date (the deadline) is allowed even though the floor was refused before; no_repeat_refused_offer must compare amount and date together.",
+    "class": "flow",
+    "bound_to": "F4"
+   },
+   {
+    "text": "7.6: 'A date or an amount the customer proposes is never a refusal. Handle it with section 6 and 7.1 to 7.4.'",
+    "class": "flow",
+    "bound_to": "F4"
+   },
+   {
+    "text": "A2.4: 'Do not ask about today again for each product. Start each product at attempt 1 of COL-P-07 7.7.' and A2.5 'Persuasion attempts are counted per product.'",
+    "class": "flow",
+    "bound_to": "F4"
+   },
+   {
+    "text": "6.6: '\"Next <weekday>\" means that weekday in the following calendar week. \"This <weekday>\" means the one in the current week.'",
+    "class": "flow",
+    "bound_to": "F4"
+   },
+   {
+    "text": "9.6 A question the tools cannot answer: say you do not have that information. Do not invent figures, dates or reasons.",
+    "class": "speech",
+    "bound_to": "F5"
+   },
+   {
+    "text": "3.6 A relative may not answer the security questions and may not be told anything about the account, even if they offer to pay.",
+    "class": "flow",
+    "bound_to": "F5"
+   },
+   {
+    "text": "2.3 If the customer asks a question (robot/scam) during the who-is-on-the-line check, answer it first; the ask that follows is the second ask.",
+    "class": "flow",
+    "bound_to": "F5"
+   },
+   {
+    "text": "A2.12 A hardship mention covers every product that has no promise yet; if the customer declines support, each of those products is noted HRD.",
+    "class": "flow",
+    "bound_to": "F5"
+   },
+   {
+    "text": "A2.6: if one date named for everything is after one product's deadline, record that product on its own deadline and say so in the read-back.",
+    "class": "speech",
+    "bound_to": "F6"
+   },
+   {
+    "text": "8.4: say the promise is recorded only after create_promise returns ok: true.",
+    "class": "flow",
+    "bound_to": "F6"
+   },
+   {
+    "text": "A2.13: 'With several products, PRM wins whenever at least one promise was recorded, except under A2.10.' Taken literally, a human or support transfer after a recorded promise in a multi-product call could close as PRM. 10.1 says such a call closes TRF. The precedence rows cannot tell transfer types apart, so every transfer after a promise closes TRF.",
+    "class": "flow",
+    "bound_to": "F7"
+   },
+   {
+    "text": "A2.10: 'Promises agreed but not yet recorded are not recorded' when a restructuring request comes in. Agreed but unrecorded promises are dropped before the transfer.",
+    "class": "flow",
+    "bound_to": "F7"
+   },
+   {
+    "text": "A2.11: if one create_promise fails twice, keep the promises already recorded and note SVE for the failed product only. The call goes on with the other products.",
+    "class": "flow",
+    "bound_to": "F7"
+   }
+  ],
+  "sources": {
+   "/bank/name": "# Freya Bank: digital assistant for collections calls (vendor pack)",
+   "/bank/assistant_self": "The assistant always introduces itself as Freya Bank's digital assistant and says that the call is recorded.",
+   "/call_variables/declared": "1.2 Every call starts with the data below. Nothing else is known before the tools are called.",
+   "/call_variables/customer_key": "| `customer_id` | `c_4f2a...` | Pass it to every tool call. |",
+   "/call_variables/now": "| `now` | `2026-10-14T11:00` | The current date and time. Every date rule in this standard uses `now`, never the real clock. |",
+   "/addressing/customer": "| `title` | `Mr` or `Ms` | Address the customer as title plus last name. |",
+   "/addressing/name_vars": "| `first_name`, `last_name` | `Daniel`, `Reyes` | The person to ask for. |",
+   "/opening/line": "2.1 First sentence: the assistant says it is a digital assistant calling from Freya Bank, and that the call is recorded.",
+   "/opening/must_convey": "It does not say \"collections\", \"debt\", \"payment\" or the product before identity is verified. This applies to everyone, relatives included.",
+   "/banned/before_verification": "It does not say \"collections\", \"debt\", \"payment\" or the product before identity is verified.",
+   "/banned/never_ask": "Never ask \"how much can you pay?\". The assistant proposes every amount.",
+   "/banned/never_offer": "7.10 Never offer a discount, a waiver, an instalment plan or any term that is not in this standard. ... Never quote a discount. We got complaints every single time.",
+   "/right_party/ask": "2.2 It then asks: \"Am I speaking with {title} {last_name}?\"",
+   "/right_party/confirm_examples": "Only \"yes\", \"that's me\", \"speaking\" or the customer's own name counts as confirmation.",
+   "/right_party/accept_own_name": "or the customer's own name counts as confirmation",
+   "/right_party/non_confirm_examples": "\"Hello\", \"go ahead\" and \"who is this\" do not.",
+   "/right_party/max_asks": "Ask once more. If it is still unclear after the second ask, close with result NRC, reason UNC.",
+   "/right_party/on_unresolved": "If it is still unclear after the second ask, close with result NRC, reason UNC.",
+   "/right_party/answers/who": "2.4 If the customer asks whether they are talking to a robot or an AI, the assistant says that it is Freya Bank's digital assistant and continues.",
+   "/third_party/disclose": "3.1 Do not say why you are calling. Say nothing beyond the opening sentence of 2.1. Ask when the customer can be reached.",
+   "/third_party/mode": "Ask when the customer can be reached.",
+   "/third_party/reach_ask": "Ask when the customer can be reached.",
+   "/third_party/callback/date_rule": "3.2 A callback is for today or the next business day, from 10:00 to 19:00, both included, and later than `now`.",
+   "/third_party/callback/windows/0": "The callback window ends at **19:00**, not 18:00. I copied the old figure from the 2025 standard. 10:00 and 19:00 are both allowed.",
+   "/third_party/callback/after_now": "and later than `now`",
+   "/third_party/callback/reask_limit": "3.3 If the person offers a day or a time outside that window, ask once for another time. If that is also outside it, do not book anything. Close with NRC / NCB.",
+   "/third_party/reach_reask": "from 10:00 to 19:00, both included",
+   "/third_party/booked_line": "Book it with `schedule_callback` (date and time), then close with NRC / CBK.",
+   "/third_party/situations": "Book it with `schedule_callback` (date and time), then close with NRC / CBK.",
+   "/third_party/relative_may_verify": "3.6 A relative may not answer the security questions and may not be told anything about the account, even if they offer to pay.",
+   "/third_party/relative_may_pay": "may not be told anything about the account, even if they offer to pay.",
+   "/third_party/offer_to_pay_line": "may not be told anything about the account, even if they offer to pay.",
+   "/identity/questions": "Two security questions, one at a time: first the date of birth (ID1), then the last four digits of the phone number on file (ID2).",
+   "/identity/one_at_a_time": "Two security questions, one at a time",
+   "/identity/questions/0/field_value": "| ID1 | `date_of_birth` | Date of birth | `YYYY-MM-DD` |",
+   "/identity/questions/0/wire_format": "A date of birth is sent as `YYYY-MM-DD`, whatever way the customer said it.",
+   "/identity/questions/0/pattern": "A date of birth is sent as `YYYY-MM-DD`",
+   "/identity/questions/0/numeric_order": "A date given only as numbers is read as day, then month, then year.",
+   "/identity/questions/0/ask_full": "The service rejects anything it cannot read as a date.",
+   "/identity/questions/1/field_value": "| ID2 | `phone_last4` | Last four digits of the phone number on file | four digits |",
+   "/identity/questions/1/length": "the last four digits of the phone number on file (ID2)",
+   "/identity/questions/1/pattern": "Last four digits of the phone number on file | four digits |",
+   "/identity/questions/0/reask_wrong": "A wrong answer may be asked again.",
+   "/identity/questions/1/reask_wrong": "A wrong answer may be asked again.",
+   "/identity/max_wrong_total": "Three wrong answers in total end the check, whichever question they were on.",
+   "/identity/hints/0": "If the customer gives day and month the other way round, `verify_identity` returns hint H-DMS. Ask them to say the month as a word. That retry does not count as a wrong answer.",
+   "/identity/hints/0/value": "| H-DMS | `day_month_swapped` | Hint returned by `verify_identity`, not a question | n/a |",
+   "/identity/decline/explain": "If the customer does not want to answer, explain once that the questions protect their account.",
+   "/identity/decline/explain_times": "explain once that the questions protect their account",
+   "/identity/decline/max_declines": "A second refusal or a second such question closes the call.",
+   "/identity/decline/purpose_question_counts": "Asking what the call is about instead of answering counts as declining.",
+   "/identity/fail_line": "After three wrong answers, do not state the debt. Tell the customer to use the mobile app or a branch. Close with NVF / FLD.",
+   "/identity/on_failed": "Close with NVF / FLD.",
+   "/identity/on_declined": "If they still decline, close with NVF / DCL.",
+   "/products/max": "This extract covers calls about **one** product.",
+   "/products/types/credit_card/spoken": "| `credit_card` | \"credit card ending\" plus `card_last4` |",
+   "/products/types/personal_loan/spoken": "| `personal_loan` | \"personal loan\" |",
+   "/products/types/car_loan/spoken": "| `car_loan` | \"car loan\" |",
+   "/products/types/credit_card/floor": "| credit card | `minimum_payment` |",
+   "/products/types/personal_loan/floor": "| personal loan | `instalment_amount` |",
+   "/products/types/car_loan/floor": "| car loan | `instalment_amount` |",
+   "/statement/intro": "Say that you are calling from the collections team about a late payment.",
+   "/statement/item": "Name the product in words (code list, part E): for example \"credit card ending 4821\", \"personal loan\" or \"car loan\". State the past-due amount and how many days late it is. ... State every late product, one sentence each, before asking for anything.",
+   "/calendar/business_weekdays": "Business days are Monday to Friday, except Freya Bank holidays.",
+   "/calendar/holidays": "Holidays (DD/MM/YYYY): 11/11/2026, 26/11/2026, 25/12/2026, 01/01/2027.",
+   "/calendar/holidays/0": "**Monday 26 October 2026 is a Freya Bank holiday** for collections, for all products, and for single-product and multi-product customers alike.",
+   "/calendar/numeric_order": "A date given only as numbers is read as day, then month, then year.",
+   "/calendar/this_next": "\"Next <weekday>\" means that weekday in the following calendar week. \"This <weekday>\" means the one in the current week.",
+   "/calendar/count_from": "the 12th business day after today",
+   "/bands/0": "| 1 to 7 | early | the 12th business day after today | 1 |",
+   "/bands/1": "| 8 to 45 | late | the 7th business day after today | 2 |",
+   "/promise_date/earliest": "A promise date must be today or later, a business day, and not after the deadline.",
+   "/promise_date/latest": "The **deadline** (latest promise date) depends on how late the customer is.",
+   "/promise_date/business_day_only": "A promise date must be today or later, a business day, and not after the deadline.",
+   "/promise_date/non_business_within_deadline": "If the customer names a weekend day or a holiday that is not after the deadline, offer the next business day.",
+   "/promise_date/after_deadline": "If the customer asks for a date after the deadline, say the latest date you can record is the deadline and offer it.",
+   "/promise_date/offered_date_refused": "If the customer refuses the deadline, treat it as a flat refusal (7.7).",
+   "/promise_date/vague": "If the customer gives a vague period (\"next week\", \"end of the month\", \"when my salary comes\"), ask once for the exact day. If they still give none, propose the deadline.",
+   "/amounts/first": "Ask for the full past-due amount first.",
+   "/amounts/never_ask_customer": "Never ask \"how much can you pay?\". The assistant proposes every amount.",
+   "/amounts/too_much": "If the customer says the full amount is too much, offer the floor, once. Say that the rest stays overdue. If the customer refuses the floor, treat it as a flat refusal (7.7).",
+   "/amounts/too_much/say_rest": "Say that the rest stays overdue.",
+   "/amounts/accept_min": "If the customer proposes an amount from the floor up to the full amount, both included, accept it.",
+   "/amounts/accept_max": "If the customer proposes an amount from the floor up to the full amount, both included, accept it.",
+   "/amounts/below_floor": "Below the floor, say it cannot be recorded and offer the floor once. If the customer does not accept the floor, treat it as a flat refusal (7.7).",
+   "/negotiation/first_ask/single": "First ask: \"Can you make this payment today?\"",
+   "/negotiation/first_ask/multi": "First ask whether the customer can pay all of them today.",
+   "/negotiation/first_ask/amount": "Ask for the full past-due amount first.",
+   "/negotiation/first_ask/date": "First ask: \"Can you make this payment today?\"",
+   "/negotiation/first_ask/consumes_attempt": "A no to paying today with no date and no amount is a flat refusal.",
+   "/negotiation/ladder/0": "Attempt 1 is for the full past-due amount, or for the floor if the customer already said the full amount is too much.\n- Attempt 1: propose the last business day of this week. If today is that day, propose the last business day of next week.",
+   "/negotiation/ladder/0/date": "Attempt 1: propose the last business day of this week. If today is that day, propose the last business day of next week.",
+   "/negotiation/ladder/1": "Attempt 2, late band only: propose the floor amount on the deadline.",
+   "/negotiation/ladder": "| 1 to 7 | early | the 12th business day after today | 1 |",
+   "/negotiation/ladder/1/bands": "| 8 to 45 | late | the 7th business day after today | 2 |",
+   "/negotiation/no_repeat_refused_offer": "When the attempts are used up, stop. Do not repeat an offer the customer already refused.",
+   "/negotiation/non_answer_counts_as_refusal": "A flat refusal or a non-answer uses one persuasion attempt.",
+   "/negotiation/on_exhausted": "Close with NOP / REF.",
+   "/negotiation/forbidden_offers": "Never offer a discount, a waiver, an instalment plan or any term that is not in this standard.",
+   "/intents/0": "3.5 If the person says the customer has died, say \"I am sorry for your loss.\", ask nothing else, and close with NRC / DEC.",
+   "/intents/1": "3.4 If the person says the number does not belong to the customer, close with NRC / WRN.",
+   "/intents/2": "7.9 If the customer mentions illness, a death in the family or job loss, say one short sentence of sympathy and make no persuasion attempt. Offer to connect them with the customer support team.",
+   "/intents/2/action/queue": "If they accept, call `transfer_to_agent` with queue Q30 and close with TRF / SUP. If they decline, close with NOP / HRD.",
+   "/intents/2/precedence": "This rule comes before 7.7 and 9.3.",
+   "/intents/3": "9.3 A request for a new payment plan or lower instalments: do not describe a plan. Call `transfer_to_agent` with queue Q10 and close with TRF / RST.",
+   "/intents/3/action": "Promises recorded before the request stay. Promises agreed but not yet recorded are not recorded. Close with TRF / RST. On any transfer (restructuring, support or human) add no notes at all, before or after it.",
+   "/intents/4": "9.4 A request for a human: ask once whether you can help first. If they insist, call `transfer_to_agent` with queue Q20 and close with TRF / HUM.",
+   "/intents/5": "9.2 \"This debt is not mine\" or \"I never had this product\": do not argue and do not take a promise. Close with NOP / DSP. A claim that the product was closed or paid off in the past is a dispute.",
+   "/intents/6": "9.1 \"I already paid\": say that payments can take one business day to appear, take no promise, and close with PDA.",
+   "/intents/5/product_scoped": "A2.9 A dispute (9.2) or an \"already paid\" claim (9.1) on one product does not end the call. Note it and continue with the others.",
+   "/intents/7": "9.7 If the customer says twice that they do not want to talk, close with NOP / REF. Before identity is verified, the same customer is closed with NVF / DCL.",
+   "/intents/8": "A recorded promise cannot be changed or cancelled in the same call. If the customer asks, say they can change it in the mobile app.",
+   "/intents/9": "7.10 Never offer a discount, a waiver, an instalment plan or any term that is not in this standard.",
+   "/intents/10": "7.3 If the customer says the full amount is too much, offer the floor, once.",
+   "/intents/11": "2.4 If the customer asks whether they are talking to a robot or an AI, the assistant says that it is Freya Bank's digital assistant and continues.",
+   "/intents/12": "9.5 \"Is this a scam?\": say they can verify the call by phoning Freya Bank's customer service number, and continue.",
+   "/interpretation/after_record": "If a transfer follows a recorded promise, close with TRF and that transfer's reason.",
+   "/confirmation/question": "Read the product, the amount and the date back and ask \"Do you confirm?\". Call `create_promise` only after a clear yes.",
+   "/confirmation/readback_item": "Read the product, the amount and the date back",
+   "/confirmation/readback": "Read all promises back together and ask for one confirmation. Then call `create_promise` once per product.",
+   "/confirmation/on_change": "If the customer changes the date or the amount at this step, check the new value against sections 6 and 7 and read it back again.",
+   "/confirmation/recorded_cannot_change": "A recorded promise cannot be changed or cancelled in the same call. If the customer asks, say they can change it in the mobile app.",
+   "/recording/tries": "If it fails, try once more.",
+   "/recording/recorded": "Say the promise is recorded only after `create_promise` returns `ok: true`.",
+   "/recording/recorded_multi": "Then call `create_promise` once per product.",
+   "/recording/failed": "If it fails again, say you could not record it and close with NOP / SVE.",
+   "/recording/on_all_failed": "If it fails again, say you could not record it and close with NOP / SVE.",
+   "/recording/failed_item": "If one `create_promise` fails twice, keep the promises that were recorded and call `add_note` with note reason SVE for the failed product.",
+   "/required_sentences/0": "After a recorded promise, say this sentence word for word: \"You will receive a text message confirming this promise.\"",
+   "/required_sentences/1": "If the person says the customer has died, say \"I am sorry for your loss.\", ask nothing else, and close with NRC / DEC.",
+   "/closing/goodbye": "Thank the customer and say goodbye before `close_call`.",
+   "/closing/per_situation/S_ID_FAILED": "After three wrong answers, do not state the debt. Tell the customer to use the mobile app or a branch. Close with NVF / FLD.",
+   "/lines/floor_offer": "If the customer says the full amount is too much, offer the floor, once. Say that the rest stays overdue.",
+   "/situations/S_PROMISE": "| PRM | none | at least one promise was recorded |",
+   "/situations/S_PROMISE/outcome": "| PRM | `promise` | At least one promise recorded |",
+   "/situations/S_PAID": "| PDA | none | 9.1 |",
+   "/situations/S_PAID/outcome": "| PDA | `paid` | Customer says the amount is already paid |",
+   "/situations/S_PAID/note_reason": "| PDA | `paid` |",
+   "/situations/S_DISPUTE": "Close with NOP / DSP.",
+   "/situations/S_DISPUTE/reason": "| DSP | `dispute` | NOP |",
+   "/situations/S_DISPUTE/note_reason": "| DSP | `dispute` |",
+   "/situations/S_HARDSHIP_DECLINED": "If they decline, close with NOP / HRD.",
+   "/situations/S_HARDSHIP_DECLINED/reason": "| HRD | `hardship` | NOP |",
+   "/situations/S_HARDSHIP_DECLINED/note_reason": "If the customer declines the support team, each of those products is noted HRD.",
+   "/situations/S_HARDSHIP_TRANSFER": "If they accept, call `transfer_to_agent` with queue Q30 and close with TRF / SUP.",
+   "/situations/S_HARDSHIP_TRANSFER/reason": "| SUP | `support` | TRF |",
+   "/situations/S_HARDSHIP_TRANSFER/queue": "| Q30 | `support` | Customer support (vulnerable customers) |",
+   "/situations/S_HARDSHIP_TRANSFER/outcome": "| TRF | `transferred` | Call handed to a colleague |",
+   "/situations/S_RESTRUCTURE_TRANSFER": "Call `transfer_to_agent` with queue Q10 and close with TRF / RST.",
+   "/situations/S_RESTRUCTURE_TRANSFER/reason": "| RST | `restructuring` | TRF |",
+   "/situations/S_RESTRUCTURE_TRANSFER/queue": "| Q10 | `restructuring` | Restructuring team |",
+   "/situations/S_HUMAN_TRANSFER": "If they insist, call `transfer_to_agent` with queue Q20 and close with TRF / HUM.",
+   "/situations/S_HUMAN_TRANSFER/reason": "| HUM | `human` | TRF |",
+   "/situations/S_HUMAN_TRANSFER/queue": "| Q20 | `general` | General customer service |",
+   "/situations/S_REFUSED_EXHAUSTED": "When the attempts are used up, stop. Do not repeat an offer the customer already refused. Close with NOP / REF.",
+   "/situations/S_REFUSED_EXHAUSTED/reason": "| REF | `refused` | NOP |",
+   "/situations/S_REFUSED_EXHAUSTED/outcome": "| NOP | `no_promise` | Customer verified, no promise |",
+   "/situations/S_REFUSED_EXHAUSTED/note_reason": "| REF | `refused` |",
+   "/situations/S_REFUSED_TO_TALK": "If the customer says twice that they do not want to talk, close with NOP / REF.",
+   "/situations/S_REFUSED_TO_TALK/note_reason": "a note reason (code list, part D): REF, HRD, DSP, PDA or SVE",
+   "/situations/S_SERVICE_ERROR": "If it fails again, say you could not record it and close with NOP / SVE.",
+   "/situations/S_SERVICE_ERROR/reason": "| SVE | `service_error` | NOP |",
+   "/situations/S_SERVICE_ERROR/note_reason": "call `add_note` with note reason SVE for the failed product",
+   "/situations/S_ID_FAILED": "Tell the customer to use the mobile app or a branch. Close with NVF / FLD.",
+   "/situations/S_ID_FAILED/reason": "| FLD | `failed` | NVF |",
+   "/situations/S_ID_FAILED/outcome": "| NVF | `not_verified` | Identity not verified |",
+   "/situations/S_ID_DECLINED": "If they still decline, close with NVF / DCL.",
+   "/situations/S_ID_DECLINED/reason": "| DCL | `declined` | NVF |",
+   "/situations/S_CALLBACK": "Book it with `schedule_callback` (date and time), then close with NRC / CBK.",
+   "/situations/S_CALLBACK/reason": "| CBK | `callback` | NRC |",
+   "/situations/S_CALLBACK/outcome": "| NRC | `not_reached` | The customer was not reached |",
+   "/situations/S_NO_CALLBACK": "do not book anything. Close with NRC / NCB.",
+   "/situations/S_NO_CALLBACK/reason": "| NCB | `no_callback` | NRC |",
+   "/situations/S_WRONG_NUMBER": "If the person says the number does not belong to the customer, close with NRC / WRN.",
+   "/situations/S_WRONG_NUMBER/reason": "| WRN | `wrong_number` | NRC |",
+   "/situations/S_DECEASED": "ask nothing else, and close with NRC / DEC.",
+   "/situations/S_DECEASED/reason": "| DEC | `deceased` | NRC |",
+   "/situations/S_UNCLEAR": "If it is still unclear after the second ask, close with result NRC, reason UNC.",
+   "/situations/S_UNCLEAR/reason": "| UNC | `unclear` | NRC |",
+   "/outcomes/precedence/0": "If a transfer follows a recorded promise, close with TRF and that transfer's reason.",
+   "/outcomes/precedence/1": "With several products, PRM wins whenever at least one promise was recorded, except under A2.10.",
+   "/outcomes/precedence/3": "With no promise recorded: if every product is noted PDA, close with PDA.",
+   "/outcomes/precedence/4": "Otherwise close with NOP and the reason of the first product, in `get_account` order, whose note is not PDA.",
+   "/outcomes/reasonless_outcomes": "PRM and PDA take no reason.",
+   "/notes/enabled": "10.2 Notes (`add_note`) are not used under this standard.",
+   "/notes/scope": "For each product without a promise, call `add_note` with that `product_id` and a note reason (code list, part D)",
+   "/notes/skip_if_transfer": "On any transfer (restructuring, support or human) add no notes at all, before or after it.",
+   "/multi_product/state_all_first": "State every late product, one sentence each, before asking for anything.",
+   "/multi_product/ask_all_today_first": "First ask whether the customer can pay all of them today.",
+   "/multi_product/order": "go through the products one by one, in the order `get_account` returned them",
+   "/multi_product/attempts_per_product": "Persuasion attempts are counted per product.",
+   "/multi_product/one_date_for_all": "If the customer names one date for everything and it is after one product's deadline, record that product on its own deadline and say so in the read-back.",
+   "/multi_product/clamp_line": "record that product on its own deadline and say so in the read-back",
+   "/multi_product/readback_together": "Read all promises back together and ask for one confirmation. Then call `create_promise` once per product.",
+   "/multi_product/hardship_applies_to": "A mention of illness, a death in the family or job loss (COL-P-07 7.9) covers every product that has no promise yet.",
+   "/multi_product/dispute_or_paid_continues": "A dispute (9.2) or an \"already paid\" claim (9.1) on one product does not end the call. Note it and continue with the others."
+  },
+  "defaults_applied": [
+   "/amounts/above_full",
+   "/amounts/decimals",
+   "/identity/turn_budget",
+   "/identity/verified_prefix",
+   "/interpretation/agreed_before_terminal",
+   "/interpretation/attempt_definition",
+   "/interpretation/callback_today_nonbd",
+   "/interpretation/decline_counting",
+   "/interpretation/floor_ge_full",
+   "/interpretation/floor_offer_date",
+   "/interpretation/hardship_requires_cause",
+   "/interpretation/hedge_is_non_answer",
+   "/interpretation/hedged_time",
+   "/interpretation/malformed_identity",
+   "/interpretation/notes_scope",
+   "/interpretation/notes_timing",
+   "/interpretation/paid_requires_completed_tense",
+   "/interpretation/partial_today",
+   "/interpretation/past_closure_is_dispute",
+   "/interpretation/proposal_beats_too_much",
+   "/interpretation/readback_no",
+   "/interpretation/reasonless",
+   "/interpretation/refuse_to_talk_requires_talk_words",
+   "/interpretation/refused_corrective_offer",
+   "/interpretation/rp_greeting_first_turn",
+   "/interpretation/rp_question_after_last_ask",
+   "/interpretation/text_message_sentence",
+   "/interpretation/transfer_beats_promise",
+   "/interpretation/weekend_now_attempt1",
+   "/lines/above_full_offer",
+   "/lines/account_error",
+   "/lines/ack",
+   "/lines/anything_else",
+   "/lines/cannot_offer",
+   "/lines/clarify",
+   "/lines/continue_prompt",
+   "/lines/date_ask_exact",
+   "/lines/deadline_offer",
+   "/lines/hold",
+   "/lines/neutral_reask",
+   "/lines/next_bd_offer",
+   "/lines/no_info",
+   "/lines/past_date",
+   "/lines/pay_on_date_question",
+   "/promise_date/past_date",
+   "/right_party/bare_no"
+  ]
+ },
+ "bank": {
+  "name": "Freya Bank",
+  "assistant_self": "<bank>'s digital assistant",
+  "currency": {
+   "symbol": "",
+   "word": "",
+   "position": "none"
+  },
+  "language": "en"
+ },
+ "call_variables": {
+  "customer_key": "customer_id",
+  "now": "now",
+  "declared": [
+   {
+    "name": "customer_id",
+    "meaning": "Identifier of the customer, passed to every tool call."
+   },
+   {
+    "name": "first_name",
+    "meaning": "The customer's first name."
+   },
+   {
+    "name": "last_name",
+    "meaning": "The customer's last name."
+   },
+   {
+    "name": "title",
+    "meaning": "The customer's title (Mr or Ms), used with the last name to address them."
+   },
+   {
+    "name": "now",
+    "meaning": "The current date and time of the call, ISO YYYY-MM-DDTHH:MM; every date rule uses it."
+   }
+  ]
+ },
+ "addressing": {
+  "customer": "<v:title> <v:last_name>",
+  "name_vars": [
+   "first_name",
+   "last_name"
+  ]
+ },
+ "opening": {
+  "line": "Hello, I am a digital assistant calling from <bank>, and this call is recorded.",
+  "must_convey": [
+   "assistant",
+   "bank",
+   "recorded",
+   "purpose_free"
+  ],
+  "verbatim": false
+ },
+ "banned": {
+  "always": [],
+  "before_verification": [
+   "collections",
+   "collection",
+   "debt",
+   "payment",
+   "credit card",
+   "personal loan",
+   "car loan",
+   "overdue",
+   "late",
+   "owe",
+   "amount",
+   "balance",
+   "loan",
+   "card",
+   "arrears"
+  ],
+  "never_ask": [
+   "how much can you pay?"
+  ],
+  "never_offer": [
+   "discount",
+   "waiver",
+   "instalment plan",
+   "any term that is not in this standard"
+  ]
+ },
+ "right_party": {
+  "ask": "Am I speaking with <customer>?",
+  "reask": "Am I speaking with <customer>?",
+  "confirm_examples": [
+   "yes",
+   "that's me",
+   "speaking",
+   "<own name>"
+  ],
+  "non_confirm_examples": [
+   "hello",
+   "go ahead",
+   "who is this"
+  ],
+  "accept_own_name": true,
+  "max_asks": 2,
+  "on_unresolved": "S_UNCLEAR",
+  "answers": {
+   "who": "I am <self>.",
+   "why": "I'm sorry, I can only discuss that with <customer>.",
+   "other": "I'm sorry, I need to know who I am speaking with first."
+  },
+  "bare_no": "third_party"
+ },
+ "third_party": {
+  "mode": "callback",
+  "disclose": "nothing_beyond_opening",
+  "reach_ask": "When would be a good time to reach <customer>?",
+  "reach_reask": "I can arrange a call back today or on the next business day, between 10:00 and 19:00. What time would suit?",
+  "outside_line": "I'm sorry, I can't arrange a call back at that time.",
+  "vague_line": "Could you tell me the exact day and time?",
+  "time_ask": "What time on that day would suit, between 10:00 and 19:00?",
+  "booked_line": "Thank you, we will call back on <date> at <time>.",
+  "offer_to_pay_line": "Thank you, but I can only speak with <customer> about this.",
+  "relative_may_verify": false,
+  "relative_may_pay": false,
+  "callback": {
+   "date_rule": {
+    "include_today": true,
+    "today_must_be_business_day": false,
+    "business_days_ahead": 1,
+    "calendar_days_ahead": 0
+   },
+   "windows": [
+    {
+     "from": "10:00",
+     "to": "19:00",
+     "inclusive_from": true,
+     "inclusive_to": true,
+     "days": "any"
+    }
+   ],
+   "after_now": true,
+   "min_lead_minutes": 0,
+   "reask_limit": 1,
+   "vague_asks": 1
+  },
+  "situations": {
+   "callback": "S_CALLBACK",
+   "no_callback": "S_NO_CALLBACK"
+  },
+  "turn_budget": 6
+ },
+ "identity": {
+  "questions": [
+   {
+    "key": "dob",
+    "field_value": "date_of_birth",
+    "kind": "date",
+    "numeric_order": "DMY",
+    "wire_format": "%Y-%m-%d",
+    "length": 0,
+    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+    "ask": "For security, could you please tell me your date of birth?",
+    "reask_wrong": "I'm sorry, that does not match our records. Could you tell me your date of birth again?",
+    "ask_full": "Could you please give me your full date of birth, with the day, the month and the year?",
+    "max_wrong": 0
+   },
+   {
+    "key": "phone_last4",
+    "field_value": "phone_last4",
+    "kind": "digits",
+    "numeric_order": "DMY",
+    "wire_format": "digits",
+    "length": 4,
+    "pattern": "^[0-9]{4}$",
+    "ask": "Thank you. Could you please tell me the last four digits of the phone number we have on file for you?",
+    "reask_wrong": "I'm sorry, that does not match our records. Could you tell me the last four digits of your phone number on file again?",
+    "ask_full": "Could you please give me all four of the last four digits of your phone number on file?",
+    "max_wrong": 0
+   }
+  ],
+  "max_wrong_total": 3,
+  "one_at_a_time": true,
+  "hints": [
+   {
+    "value": "day_month_swapped",
+    "counts_as_wrong": false,
+    "say": "Could you say your date of birth again, with the month as a word?",
+    "max": 1
+   }
+  ],
+  "decline": {
+   "explain": "These questions are there to protect your account.",
+   "explain_times": 1,
+   "max_declines": 2,
+   "purpose_question_counts": true
+  },
+  "fail_line": "I'm sorry, I was not able to verify your identity. Please use the mobile app or visit a branch.",
+  "on_failed": "S_ID_FAILED",
+  "on_declined": "S_ID_DECLINED",
+  "turn_budget": 12,
+  "verified_prefix": "Thank you."
+ },
+ "products": {
+  "max": 1,
+  "types": {
+   "credit_card": {
+    "spoken": "credit card ending <f:card_last4>",
+    "floor": {
+     "kind": "field",
+     "field": "minimum_payment"
+    }
+   },
+   "personal_loan": {
+    "spoken": "personal loan",
+    "floor": {
+     "kind": "field",
+     "field": "instalment_amount"
+    }
+   },
+   "car_loan": {
+    "spoken": "car loan",
+    "floor": {
+     "kind": "field",
+     "field": "instalment_amount"
+    }
+   }
+  },
+  "floor_missing": "full",
+  "unknown_type_spoken": "account",
+  "fields": {
+   "list": "products",
+   "id": "product_id",
+   "type": "type",
+   "past_due": "past_due",
+   "days_late": "days_late"
+  }
+ },
+ "statement": {
+  "intro": "I am calling from the collections team at <bank> about a late payment.",
+  "item": "Your <product> has a past-due amount of <past_due>, and it is <days_late> days late."
+ },
+ "calendar": {
+  "business_weekdays": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "holidays": [
+   "2026-10-26",
+   "2026-11-11",
+   "2026-11-26",
+   "2026-12-25",
+   "2027-01-01"
+  ],
+  "holiday_rules": [],
+  "week_start": 0,
+  "count_from": "after_today",
+  "numeric_order": "DMY",
+  "this_next": {
+   "this": "current_week",
+   "next": "following_week"
+  }
+ },
+ "bands": [
+  {
+   "key": "early",
+   "days_late_min": 1,
+   "days_late_max": 7,
+   "deadline": {
+    "kind": "nth_business_day_after_today",
+    "n": 12
+   },
+   "attempts": 1
+  },
+  {
+   "key": "late",
+   "days_late_min": 8,
+   "days_late_max": 45,
+   "deadline": {
+    "kind": "nth_business_day_after_today",
+    "n": 7
+   },
+   "attempts": 2
+  }
+ ],
+ "dated": [
+  {
+   "from": "2026-10-14",
+   "path": "/products/max",
+   "value": 3,
+   "source": "A2.1 `get_account` returns one to three products."
+  },
+  {
+   "from": "2026-10-14",
+   "path": "/notes/enabled",
+   "value": true,
+   "source": "It applies to every call from 14 October 2026, including a customer who is late on one product only: COL-P-07 10.2 no longer applies."
+  }
+ ],
+ "promise_date": {
+  "earliest": {
+   "kind": "today"
+  },
+  "latest": {
+   "kind": "deadline"
+  },
+  "business_day_only": true,
+  "non_business_within_deadline": "offer_next_business_day",
+  "after_deadline": "offer_deadline",
+  "offered_date_refused": "flat_refusal",
+  "vague": {
+   "ask_exact_times": 1,
+   "then": "propose_deadline"
+  },
+  "past_date": "say_passed_and_ask"
+ },
+ "amounts": {
+  "first": {
+   "kind": "full"
+  },
+  "never_ask_customer": true,
+  "too_much": {
+   "offer": {
+    "kind": "floor"
+   },
+   "times": 1,
+   "date": "attempt_1",
+   "say_rest": "The rest of the amount stays overdue.",
+   "refusal": "flat_refusal"
+  },
+  "accept_min": {
+   "kind": "floor"
+  },
+  "accept_max": {
+   "kind": "full"
+  },
+  "below_floor": {
+   "say": "I'm sorry, <amount> is below the lowest amount I can record.",
+   "offer": {
+    "kind": "floor"
+   },
+   "times": 1,
+   "then": "flat_refusal"
+  },
+  "above_full": "offer_full",
+  "decimals": 2
+ },
+ "negotiation": {
+  "first_ask": {
+   "single": "Can you make this payment today?",
+   "multi": "Can you pay all of them today?",
+   "amount": {
+    "kind": "full"
+   },
+   "date": {
+    "kind": "today"
+   },
+   "consumes_attempt": false
+  },
+  "ladder": [
+   {
+    "key": "r1",
+    "attempt": 1,
+    "bands": [
+     "all"
+    ],
+    "amount": {
+     "kind": "floor_if_too_much_else_full"
+    },
+    "date": {
+     "kind": "last_business_day_of_week",
+     "if_today": "next_week"
+    },
+    "line": "Could you pay <amount> by <date>?"
+   },
+   {
+    "key": "r2",
+    "attempt": 2,
+    "bands": [
+     "late"
+    ],
+    "amount": {
+     "kind": "floor"
+    },
+    "date": {
+     "kind": "deadline"
+    },
+    "line": "Could you pay <amount> by <date>?"
+   }
+  ],
+  "no_repeat_refused_offer": true,
+  "non_answer_counts_as_refusal": true,
+  "on_exhausted": "S_REFUSED_EXHAUSTED",
+  "forbidden_offers": [
+   "discount",
+   "waiver",
+   "instalment plan"
+  ]
+ },
+ "intents": [
+  {
+   "id": "deceased",
+   "label": "Customer has died",
+   "description": "The person who answered says the customer has died.",
+   "examples": [
+    "I'm afraid he passed away last month.",
+    "She died in the spring."
+   ],
+   "negatives": [
+    "My uncle died last year, so money is tight."
+   ],
+   "keywords": [
+    "\\b(he|she) (has )?(passed away|died)\\b",
+    "\\b(he|she) is (dead|deceased)\\b",
+    "\\b(he|she)('s| is) no longer (with us|alive)\\b"
+   ],
+   "scope": [
+    "rp",
+    "tp"
+   ],
+   "precedence": 900,
+   "product_scoped": false,
+   "action": {
+    "kind": "close_now",
+    "say": "I am sorry for your loss.",
+    "situation": "S_DECEASED"
+   }
+  },
+  {
+   "id": "wrong_number",
+   "label": "Wrong number",
+   "description": "The person says the number does not belong to the customer.",
+   "examples": [
+    "You've got the wrong number.",
+    "Nobody by that name lives here, this isn't his phone."
+   ],
+   "negatives": [
+    "Wrong time, call me later."
+   ],
+   "keywords": [
+    "\\bwrong number\\b",
+    "\\b(nobody|no one|no-one) (by|with|called) that name\\b",
+    "\\b(this|it) is(n't| not) (his|her|their) (number|phone)\\b",
+    "\\bdon't know (anyone|anybody|him|her)( \\w+)? (called|named|by that name)\\b"
+   ],
+   "scope": [
+    "rp",
+    "tp"
+   ],
+   "precedence": 850,
+   "product_scoped": false,
+   "action": {
+    "kind": "close_now",
+    "say": "Thank you for letting me know, I apologise for the inconvenience.",
+    "situation": "S_WRONG_NUMBER"
+   }
+  },
+  {
+   "id": "hardship",
+   "label": "Hardship (illness, bereavement, job loss)",
+   "description": "The customer mentions illness, a death in the family or job loss as a reason they cannot pay.",
+   "examples": [
+    "I lost my job two weeks ago.",
+    "My father passed away and I've been in hospital myself."
+   ],
+   "negatives": [
+    "I can't afford the full amount this month."
+   ],
+   "keywords": [
+    "\\blost my job\\b",
+    "\\b(i was|i've been|i have been|i got|i've just been) (laid off|made redundant|fired|let go)\\b",
+    "\\b(i am|i'm) (now )?unemployed\\b",
+    "\\b(i am|i'm|i have been|i've been) (\\w+ )?(ill|sick|in hospital|in the hospital)\\b",
+    "\\bmy (\\w+ )?(passed away|died)\\b",
+    "\\bdeath in (the|my) family\\b"
+   ],
+   "scope": [
+    "neg",
+    "conf"
+   ],
+   "precedence": 800,
+   "product_scoped": false,
+   "action": {
+    "kind": "offer_transfer",
+    "say": "I am very sorry to hear that. Would you like me to connect you with our customer support team?",
+    "queue": "support",
+    "accept_situation": "S_HARDSHIP_TRANSFER",
+    "decline_situation": "S_HARDSHIP_DECLINED",
+    "suspend_persuasion": true,
+    "accept_say": "I will connect you with our customer support team now."
+   }
+  },
+  {
+   "id": "restructure_request",
+   "label": "New payment plan or lower instalments",
+   "description": "The customer asks for a new payment plan or lower instalments.",
+   "examples": [
+    "Can we set up a new payment plan?",
+    "I need lower instalments on this loan."
+   ],
+   "negatives": [
+    "I plan to pay on Friday."
+   ],
+   "keywords": [
+    "\\b(new|different|another) (payment |repayment )?plan\\b",
+    "\\bpayment plan\\b",
+    "\\blower (my |the )?(instalments?|installments?|monthly payments?)\\b",
+    "\\brestructur\\w*\\b",
+    "\\breduce (my |the )?(instalments?|installments?|monthly payments?)\\b"
+   ],
+   "scope": [
+    "neg",
+    "conf"
+   ],
+   "precedence": 700,
+   "product_scoped": false,
+   "action": {
+    "kind": "transfer",
+    "say": "I will connect you with our restructuring team now.",
+    "situation": "S_RESTRUCTURE_TRANSFER",
+    "queue": "restructuring",
+    "keep_recorded": true,
+    "drop_unrecorded": true,
+    "suppress_notes": true
+   }
+  },
+  {
+   "id": "wants_human",
+   "label": "Asks for a human",
+   "description": "The customer asks to speak with a person instead of the assistant.",
+   "examples": [
+    "I want to speak to a real person.",
+    "Put me through to a human, please."
+   ],
+   "negatives": [
+    "Are you a real person?"
+   ],
+   "keywords": [
+    "\\b(speak|talk)( \\w+)? (to|with) (a |an )?(human|real person|person|someone|somebody|agent|advisor|operator)\\b",
+    "\\b(put|transfer|connect) me (through )?(to|with) (a |an )?(human|person|someone|somebody|agent|advisor|operator)\\b",
+    "\\b(real|live) (person|human|agent)\\b"
+   ],
+   "scope": [
+    "id",
+    "neg",
+    "conf"
+   ],
+   "precedence": 600,
+   "product_scoped": false,
+   "action": {
+    "kind": "ask_then_transfer",
+    "question": "Can I help you with that first?",
+    "say": "I will connect you with a colleague now.",
+    "situation": "S_HUMAN_TRANSFER",
+    "queue": "general"
+   }
+  },
+  {
+   "id": "dispute",
+   "label": "Debt or product not mine",
+   "description": "The customer denies the debt or the product, or says the product was closed or paid off in the past.",
+   "examples": [
+    "This debt is not mine.",
+    "I closed that card years ago."
+   ],
+   "negatives": [
+    "I paid it yesterday."
+   ],
+   "keywords": [
+    "\\b(this|that|the) (debt|loan|card|account)( \\w+)? (is|isn't|is not) (not )?mine\\b",
+    "\\bnot my (debt|loan|card|account)\\b",
+    "\\bnever had (this|that|a|the|any)\\b",
+    "\\bpaid (it |that |this )?off\\b",
+    "\\b(i )?closed (it|that|this|the|my)( \\w+)?\\b",
+    "\\b(was|been) closed\\b"
+   ],
+   "scope": [
+    "neg",
+    "conf"
+   ],
+   "precedence": 550,
+   "product_scoped": true,
+   "action": {
+    "kind": "resolve_product",
+    "say": "I understand, I have noted that.",
+    "situation": "S_DISPUTE"
+   }
+  },
+  {
+   "id": "already_paid",
+   "label": "Already paid",
+   "description": "The customer says they have already paid this past-due amount (completed, past tense).",
+   "examples": [
+    "I already paid that.",
+    "I made the payment yesterday."
+   ],
+   "negatives": [
+    "I will pay it on Friday."
+   ],
+   "keywords": [
+    "\\b(i('ve| have)?|we('ve| have)?) already paid\\b",
+    "\\bi paid (it|that|this|the)\\b",
+    "\\b(made|sent) the payment\\b",
+    "\\balready (been )?paid\\b"
+   ],
+   "scope": [
+    "neg",
+    "conf"
+   ],
+   "precedence": 500,
+   "product_scoped": true,
+   "action": {
+    "kind": "resolve_product",
+    "say": "Payments can take one business day to appear.",
+    "situation": "S_PAID"
+   }
+  },
+  {
+   "id": "refuse_to_talk",
+   "label": "Does not want to talk",
+   "description": "The customer says they do not want to talk.",
+   "examples": [
+    "I don't want to talk about this.",
+    "Leave me alone, I'm not discussing it."
+   ],
+   "negatives": [
+    "I don't want to pay today."
+   ],
+   "keywords": [
+    "\\b(don't|do not|won't|will not) want to (talk|speak|discuss)\\b",
+    "\\b(not|won't be) (talking|discussing)( \\w+)? (this|it|that)\\b",
+    "\\bleave me alone\\b",
+    "\\bstop calling\\b"
+   ],
+   "scope": [
+    "id",
+    "neg",
+    "conf"
+   ],
+   "precedence": 400,
+   "product_scoped": false,
+   "action": {
+    "kind": "count_then_close",
+    "say": "I understand.",
+    "limit": 2,
+    "situation": "S_REFUSED_TO_TALK",
+    "situation_pre_verification": "S_ID_DECLINED"
+   }
+  },
+  {
+   "id": "change_recorded_promise",
+   "label": "Change a recorded promise",
+   "description": "The customer asks to change or cancel a promise that is already recorded.",
+   "examples": [
+    "Can I change the promise I just made?",
+    "Actually, cancel that promise."
+   ],
+   "negatives": [
+    "Can we change the date before you record it?"
+   ],
+   "keywords": [
+    "\\b(change|cancel|modify|move|update) (the |my |that |this )?(recorded )?promise\\b"
+   ],
+   "scope": [
+    "neg",
+    "conf"
+   ],
+   "precedence": 350,
+   "product_scoped": false,
+   "action": {
+    "kind": "answer_continue",
+    "say": "A recorded promise cannot be changed in this call, but you can change it in the mobile app."
+   }
+  },
+  {
+   "id": "forbidden_offer",
+   "label": "Asks for a discount or waiver",
+   "description": "The customer asks for a discount, a waiver or any term not in the standard.",
+   "examples": [
+    "Can you give me a discount?",
+    "Could you waive the late fees?"
+   ],
+   "negatives": [
+    "Can I pay the minimum instead?"
+   ],
+   "keywords": [
+    "\\bdiscount\\b",
+    "\\bwaive\\w*\\b",
+    "\\bwrite (it |this )?off\\b",
+    "\\b(reduce|lower|cut) (the |my )?(debt|balance|amount owed|fees?|interest)\\b"
+   ],
+   "scope": [
+    "neg",
+    "conf"
+   ],
+   "precedence": 300,
+   "product_scoped": false,
+   "action": {
+    "kind": "answer_continue",
+    "say": "I am sorry, I cannot offer a discount or a waiver."
+   }
+  },
+  {
+   "id": "too_much",
+   "label": "Full amount too much",
+   "description": "The customer says the full past-due amount is too much or they cannot afford it.",
+   "examples": [
+    "That's too much for me right now.",
+    "I can't afford the whole amount."
+   ],
+   "negatives": [
+    "I can afford it, but not today."
+   ],
+   "keywords": [
+    "\\btoo much\\b",
+    "\\bcan('t|not| not) afford\\b",
+    "\\bcan('t|not| not) pay (all|the full|the whole|that much)\\b",
+    "\\b(don't|do not) have (that|so) much\\b"
+   ],
+   "scope": [
+    "neg",
+    "conf"
+   ],
+   "precedence": 200,
+   "product_scoped": true,
+   "action": {
+    "kind": "too_much"
+   }
+  },
+  {
+   "id": "robot_question",
+   "label": "Asks if it is a robot or AI",
+   "description": "The caller asks whether they are talking to a robot or an AI.",
+   "examples": [
+    "Am I talking to a robot?",
+    "Are you an AI?"
+   ],
+   "negatives": [
+    "I want to talk to a person."
+   ],
+   "keywords": [
+    "\\bare (you|u) (a |an )?(robot|bot|ai|machine|computer|real person|human)\\b",
+    "\\b(talking|speaking) (to|with) (a |an )?(robot|bot|ai|machine|computer)\\b",
+    "\\bis this (a |an )?(robot|bot|ai|recording|machine)\\b"
+   ],
+   "scope": [
+    "rp",
+    "tp",
+    "id",
+    "neg",
+    "conf"
+   ],
+   "precedence": 150,
+   "product_scoped": false,
+   "action": {
+    "kind": "answer_continue",
+    "say": "I am <bank>'s digital assistant."
+   }
+  },
+  {
+   "id": "scam_question",
+   "label": "Asks if the call is a scam",
+   "description": "The caller asks whether the call is a scam.",
+   "examples": [
+    "Is this a scam?",
+    "How do I know this isn't fraud?"
+   ],
+   "negatives": [
+    "Someone scammed me once, but go on."
+   ],
+   "keywords": [
+    "\\b(is this|this is|sounds like|is it) (a |some )?(scam|fraud)\\b",
+    "\\b(isn't|is not) (a )?(scam|fraud)\\b",
+    "\\bhow do i know (this|you)( \\w+)? (is|are) (real|genuine|legit)\\b"
+   ],
+   "scope": [
+    "rp",
+    "tp",
+    "id",
+    "neg",
+    "conf"
+   ],
+   "precedence": 150,
+   "product_scoped": false,
+   "action": {
+    "kind": "answer_continue",
+    "say": "You can verify this call by phoning <bank>'s customer service number."
+   }
+  }
+ ],
+ "interpretation": {
+  "after_record": "ask_anything_else",
+  "intent_tie": [
+   "deceased",
+   "wrong_number",
+   "hardship",
+   "restructure_request",
+   "wants_human",
+   "dispute",
+   "already_paid",
+   "refuse_to_talk",
+   "too_much"
+  ],
+  "floor_offer_date": "attempt_1",
+  "decline_counting": "per_question_consecutive",
+  "rp_greeting_first_turn": "reask_counts",
+  "rp_question_after_last_ask": "counts_as_unclear",
+  "transfer_beats_promise": true,
+  "attempt_definition": "rungs_only",
+  "refused_corrective_offer": "flat_refusal",
+  "proposal_beats_too_much": true,
+  "floor_ge_full": "skip_floor",
+  "refuse_to_talk_requires_talk_words": true,
+  "paid_requires_completed_tense": true,
+  "past_closure_is_dispute": true,
+  "hardship_requires_cause": true,
+  "hedge_is_non_answer": true,
+  "readback_no": "ask_what_to_change",
+  "agreed_before_terminal": "drop",
+  "text_message_sentence": "once_after_all_creates",
+  "partial_today": "record_today_rest_from_attempt_1",
+  "notes_timing": "before_close",
+  "notes_scope": "every_product_without_promise",
+  "reasonless": "omit_reason_leaf",
+  "malformed_identity": "never_send_ask_rest",
+  "callback_today_nonbd": "allow",
+  "hedged_time": "exact",
+  "weekend_now_attempt1": "last_bd_of_next_week"
+ },
+ "confirmation": {
+  "readback": "So that is <items>.",
+  "readback_item": "<amount> for your <product> on <date>",
+  "question": "Do you confirm?",
+  "verbatim_question": true,
+  "on_change": "revalidate_then_readback",
+  "what_to_change": "What would you like to change?",
+  "recorded_cannot_change": "That promise is already recorded and can't be changed on this call, but you can change it in the mobile app."
+ },
+ "recording": {
+  "tries": 2,
+  "recorded": "Your promise is recorded.",
+  "recorded_multi": "Your promises are recorded.",
+  "failed": "I'm sorry, I could not record the promise.",
+  "failed_item": "I'm sorry, I could not record the promise for your <product>.",
+  "on_all_failed": "S_SERVICE_ERROR"
+ },
+ "required_sentences": [
+  {
+   "id": "text_message_confirmation",
+   "text": "You will receive a text message confirming this promise.",
+   "verbatim": true,
+   "trigger": "after_promise_recorded",
+   "once": true
+  },
+  {
+   "id": "condolences",
+   "text": "I am sorry for your loss.",
+   "verbatim": true,
+   "trigger": "on_situation:S_DECEASED",
+   "once": true
+  }
+ ],
+ "closing": {
+  "goodbye": "Thank you for your time. Goodbye.",
+  "per_situation": {
+   "S_ID_FAILED": "For your security, please use the mobile app or visit a branch."
+  },
+  "no_goodbye": []
+ },
+ "lines": {
+  "floor_offer": "I understand. Could you pay <floor> by <date>? The rest would stay overdue.",
+  "clarify": "Sorry, could you say that again?",
+  "no_info": "I'm sorry, I don't have that information.",
+  "ack": "I understand.",
+  "neutral_reask": "Would that work for you?",
+  "continue_prompt": "Yes?",
+  "date_ask_exact": "Which exact day would work for you?",
+  "next_bd_offer": "That day is not a business day. Could you pay <amount> on <date> instead?",
+  "deadline_offer": "The latest date I can record is <deadline>. Could you pay <amount> by then?",
+  "past_date": "That date has already passed. Which day would work for you?",
+  "above_full_offer": "The amount due is <past_due>. Shall I record <past_due>?",
+  "pay_on_date_question": "Would you like to pay on <date>?",
+  "cannot_offer": "I'm afraid I can't offer that.",
+  "account_error": "I'm sorry, I can't access the account details right now.",
+  "hold": "One moment, please.",
+  "anything_else": "Is there anything else I can help you with?"
+ },
+ "situations": {
+  "S_PROMISE": {
+   "outcome": "promise",
+   "reason": "",
+   "queue": "",
+   "note_reason": ""
+  },
+  "S_PAID": {
+   "outcome": "paid",
+   "reason": "",
+   "queue": "",
+   "note_reason": "paid"
+  },
+  "S_DISPUTE": {
+   "outcome": "no_promise",
+   "reason": "dispute",
+   "queue": "",
+   "note_reason": "dispute"
+  },
+  "S_HARDSHIP_DECLINED": {
+   "outcome": "no_promise",
+   "reason": "hardship",
+   "queue": "",
+   "note_reason": "hardship"
+  },
+  "S_HARDSHIP_TRANSFER": {
+   "outcome": "transferred",
+   "reason": "support",
+   "queue": "support",
+   "note_reason": ""
+  },
+  "S_RESTRUCTURE_TRANSFER": {
+   "outcome": "transferred",
+   "reason": "restructuring",
+   "queue": "restructuring",
+   "note_reason": ""
+  },
+  "S_HUMAN_TRANSFER": {
+   "outcome": "transferred",
+   "reason": "human",
+   "queue": "general",
+   "note_reason": ""
+  },
+  "S_REFUSED_EXHAUSTED": {
+   "outcome": "no_promise",
+   "reason": "refused",
+   "queue": "",
+   "note_reason": "refused"
+  },
+  "S_REFUSED_TO_TALK": {
+   "outcome": "no_promise",
+   "reason": "refused",
+   "queue": "",
+   "note_reason": "refused"
+  },
+  "S_SERVICE_ERROR": {
+   "outcome": "no_promise",
+   "reason": "service_error",
+   "queue": "",
+   "note_reason": "service_error"
+  },
+  "S_ID_FAILED": {
+   "outcome": "not_verified",
+   "reason": "failed",
+   "queue": "",
+   "note_reason": ""
+  },
+  "S_ID_DECLINED": {
+   "outcome": "not_verified",
+   "reason": "declined",
+   "queue": "",
+   "note_reason": ""
+  },
+  "S_CALLBACK": {
+   "outcome": "not_reached",
+   "reason": "callback",
+   "queue": "",
+   "note_reason": ""
+  },
+  "S_NO_CALLBACK": {
+   "outcome": "not_reached",
+   "reason": "no_callback",
+   "queue": "",
+   "note_reason": ""
+  },
+  "S_WRONG_NUMBER": {
+   "outcome": "not_reached",
+   "reason": "wrong_number",
+   "queue": "",
+   "note_reason": ""
+  },
+  "S_DECEASED": {
+   "outcome": "not_reached",
+   "reason": "deceased",
+   "queue": "",
+   "note_reason": ""
+  },
+  "S_UNCLEAR": {
+   "outcome": "not_reached",
+   "reason": "unclear",
+   "queue": "",
+   "note_reason": ""
+  }
+ },
+ "outcomes": {
+  "precedence": [
+   {
+    "when": "transfer_done",
+    "use": "transfer_situation"
+   },
+   {
+    "when": "any_promise_recorded",
+    "use": "situation:S_PROMISE"
+   },
+   {
+    "when": "call_situation",
+    "use": "call_situation"
+   },
+   {
+    "when": "all_products:S_PAID",
+    "use": "situation:S_PAID"
+   },
+   {
+    "when": "else",
+    "use": "first_product_excluding:S_PAID"
+   }
+  ],
+  "reasonless_outcomes": [
+   "promise",
+   "paid"
+  ],
+  "unresolved_product_situation": "S_REFUSED_EXHAUSTED"
+ },
+ "notes": {
+  "enabled": false,
+  "scope": "product",
+  "when": "no_promise_recorded",
+  "reason_from": "product_situation",
+  "skip_if_transfer": true,
+  "text": ""
+ },
+ "multi_product": {
+  "state_all_first": true,
+  "ask_all_today_first": true,
+  "order": "api",
+  "attempts_per_product": true,
+  "one_date_for_all": "clamp_to_own_deadline_and_say",
+  "readback_together": true,
+  "hardship_applies_to": "all_remaining",
+  "dispute_or_paid_continues": true,
+  "clamp_line": "For your <product>, the latest date I can record is <deadline>, so I will use that date."
+ },
+ "spec_version": "mvp-1"
+}

@@ -1,0 +1,122 @@
+{
+ "id": "MUTC-NW-08",
+ "spec": "mut-c",
+ "mode": "sim",
+ "case": {
+  "id": "NW-08",
+  "brief": "mut-c",
+  "family": "Restructuring",
+  "level": "hard",
+  "title": "Friday month end: agrees 'next Friday' on the card, then wants lower loan instalments",
+  "variables": {
+   "first_name": "Victor",
+   "last_name": "Ionescu",
+   "title": "Mr",
+   "now": "2026-10-30T13:00"
+  },
+  "identity": {
+   "date_of_birth": "1981-08-11",
+   "postcode": "EH3 9DR"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "7314",
+    "past_due": 640.0,
+    "days_late": 12,
+    "minimum_payment": 32.0
+   },
+   {
+    "type": "auto_loan",
+    "past_due": 1180.0,
+    "days_late": 27,
+    "instalment_amount": 590.0
+   }
+  ],
+  "script": "Verified. Cannot pay both today. Agrees to pay the full card amount next Friday. For the auto loan says he cannot keep paying 590 a month and wants lower monthly instalments.",
+  "expected": {
+   "outcome": "transferred",
+   "reason": "restructuring",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "restructuring"
+    }
+   ]
+  },
+  "checks": [
+   "'next Friday' on a Friday = 6 November (inside the card deadline 9 November)",
+   "the agreed card promise is not recorded (no read-back happened before the request)",
+   "create_promise never called",
+   "no add_note at all",
+   "transfer_to_agent queue 'restructuring'"
+  ]
+ },
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "11 August 1981.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "11 August 1981"
+   }
+  },
+  {
+   "say": "E H three, nine D R.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "E H three, nine D R"
+   }
+  },
+  {
+   "say": "Not both today, no.",
+   "x": {
+    "u_act": "no"
+   }
+  },
+  {
+   "say": "I can pay the full card amount next Friday.",
+   "x": {
+    "u_act": "proposal",
+    "u_date": "next Friday",
+    "u_amt": "the full card amount"
+   }
+  },
+  {
+   "say": "I can't keep paying 590 a month on the auto loan, I want lower monthly instalments.",
+   "x": {
+    "u_act": "question",
+    "u_topic": "restructure_request"
+   }
+  },
+  {
+   "say": "Okay.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 24,
+  "must": [
+   [
+    -1,
+    "6 November"
+   ],
+   [
+    -1,
+    "Thank you for your time, and thank you for choosing Northwind Credit Union. Goodbye."
+   ]
+  ],
+  "must_not": []
+ }
+}

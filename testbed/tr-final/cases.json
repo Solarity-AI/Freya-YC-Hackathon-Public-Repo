@@ -1,0 +1,2010 @@
+[
+ {
+  "id": "TRF-01",
+  "brief": "tr-final",
+  "family": "Mutlu yol",
+  "title": "Ekstre borcunun tamamı bugün",
+  "source": "ornek-konusma-1.md",
+  "mock_customer": "FB-240117",
+  "variables": {
+   "musteri_no": "FB-240117",
+   "ad": "Ayşe",
+   "soyad": "Yılmaz",
+   "hitap": "Hanım",
+   "now": "2026-10-21T10:30"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "14.02.1986",
+   "TCKN_SON4": "3058"
+  },
+  "products": [
+   {
+    "product_id": "KRT-240117-01",
+    "type": "credit_card",
+    "card_last4": "7319",
+    "past_due": 8450.75,
+    "days_late": 6,
+    "minimum_payment": 3380.3
+   }
+  ],
+  "faults": {},
+  "customer_lines": [
+   "Evet, benim.",
+   "On dört Şubat seksen altı.",
+   "Üç sıfır beş sekiz.",
+   "Evet, bugün tamamını yatırırım.",
+   "Evet, onaylıyorum.",
+   "Yok, teşekkürler."
+  ],
+  "agent_lines_reference": [
+   "Merhaba, ben Freya Bank'ın dijital asistanıyım. Bu görüşme kalite amacıyla kayıt altına alınmaktadır. Ayşe Yılmaz ile mi görüşüyorum?",
+   "Teşekkürler. Güvenliğiniz için iki soru soracağım. Önce doğum tarihinizi söyler misiniz?",
+   "Teşekkürler. T.C. kimlik numaranızın son dört hanesini söyler misiniz?",
+   "Teşekkür ederim Ayşe Hanım. Freya Bank tahsilat biriminden arıyorum. 7319 ile biten kredi kartınızın ekstre borcu 8.450,75 TL; son ödeme tarihi 15 Ekim idi ve ödeme 6 gündür gecikmede. Bu ödemeyi bugün yapabilir misiniz?",
+   "Özetliyorum: 7319 ile biten kredi kartınız için 8.450,75 TL, ödeme tarihi 21 Ekim 2026 Çarşamba. Onaylıyor musunuz?",
+   "Ödeme sözünüz kaydedildi. Bu ödeme sözünü onaylayan bir SMS alacaksınız. Başka bir sorunuz var mı?",
+   "Zaman ayırdığınız için teşekkür ederim, iyi günler dilerim."
+  ],
+  "service_calls": [
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240117",
+     "soru": "DOGUM_TARIHI",
+     "cevap": "14.02.1986"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": false
+    },
+    "http": 200
+   },
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240117",
+     "soru": "TCKN_SON4",
+     "cevap": "3058"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": true
+    },
+    "http": 200
+   },
+   {
+    "op": "EkstreBorcSorgula",
+    "body": {
+     "musteri_no": "FB-240117"
+    },
+    "response": {
+     "basarili": true,
+     "kartlar": [
+      {
+       "kart_id": "KRT-240117-01",
+       "urun": "KREDI_KARTI",
+       "kart_son4": "7319",
+       "ekstre_borcu": 8450.75,
+       "asgari_odeme_tutari": 3380.3,
+       "son_odeme_tarihi": "2026-10-15",
+       "gecikme_gun_sayisi": 6
+      }
+     ]
+    },
+    "http": 200
+   },
+   {
+    "op": "OdemeSozuKaydet",
+    "body": {
+     "musteri_no": "FB-240117",
+     "kart_id": "KRT-240117-01",
+     "tutar": 8450.75,
+     "odeme_tarihi": "2026-10-21",
+     "soz_tipi": "TAMAMI"
+    },
+    "response": {
+     "basarili": true,
+     "soz_no": "SZ-1001"
+    },
+    "http": 200
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240117",
+     "sonuc_kodu": "SOZ_ALINDI"
+    },
+    "response": {
+     "basarili": true
+    },
+    "http": 200
+   }
+  ],
+  "expected_ledger": [
+   {
+    "op": "OdemeSozuKaydet",
+    "body": {
+     "musteri_no": "FB-240117",
+     "kart_id": "KRT-240117-01",
+     "tutar": 8450.75,
+     "odeme_tarihi": "2026-10-21",
+     "soz_tipi": "TAMAMI"
+    }
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240117",
+     "sonuc_kodu": "SOZ_ALINDI"
+    }
+   }
+  ],
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "KRT-240117-01",
+     "amount": 8450.75,
+     "date": "2026-10-21"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "opening sentence verbatim; right-party question with {ad} {soyad}",
+   "no banned word (with suffixes) before both questions pass",
+   "DOB sent as 14.02.1986 (GG.AA.YYYY)",
+   "first ask verbatim; promise read back with 'Onaylıyor musunuz?'",
+   "soz_tipi TAMAMI",
+   "SMS sentence after the promise",
+   "GorusmeKapat last, SOZ_ALINDI without gerekce"
+  ]
+ },
+ {
+  "id": "TRF-02",
+  "brief": "tr-final",
+  "family": "Asgari ödeme + tatil",
+  "title": "Asgari ödeme; 29 Ekim tatil, 30 Ekim önerilir",
+  "source": "ornek-konusma-2.md",
+  "mock_customer": "FB-240233",
+  "variables": {
+   "musteri_no": "FB-240233",
+   "ad": "Mehmet",
+   "soyad": "Kaya",
+   "hitap": "Bey",
+   "now": "2026-10-27T14:00"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "03.01.1985",
+   "TCKN_SON4": "6614"
+  },
+  "products": [
+   {
+    "product_id": "KRT-240233-01",
+    "type": "credit_card",
+    "card_last4": "2290",
+    "past_due": 5350.0,
+    "days_late": 22,
+    "minimum_payment": 2140.0
+   }
+  ],
+  "faults": {},
+  "customer_lines": [
+   "Buyurun.",
+   "Evet, Mehmet Kaya benim.",
+   "Üç Ocak bin dokuz yüz seksen beş.",
+   "Altı altı bir dört.",
+   "Bugün olmaz, hem tamamı benim için çok fazla.",
+   "Asgariyi 29 Ekim'de yatırırım.",
+   "Olur, cuma yatırırım.",
+   "Evet.",
+   "Tamam, sağ olun."
+  ],
+  "agent_lines_reference": [
+   "Merhaba, ben Freya Bank'ın dijital asistanıyım. Bu görüşme kalite amacıyla kayıt altına alınmaktadır. Mehmet Kaya ile mi görüşüyorum?",
+   "Kusura bakmayın, Mehmet Kaya ile mi görüşüyorum?",
+   "Teşekkürler. Güvenliğiniz için iki soru soracağım. Önce doğum tarihinizi söyler misiniz?",
+   "Teşekkürler. T.C. kimlik numaranızın son dört hanesini söyler misiniz?",
+   "Teşekkür ederim Mehmet Bey. Freya Bank tahsilat biriminden arıyorum. 2290 ile biten kredi kartınızın ekstre borcu 5.350,00 TL; son ödeme tarihi 5 Ekim idi ve ödeme 22 gündür gecikmede. Bu ödemeyi bugün yapabilir misiniz?",
+   "Anlıyorum. O halde asgari ödeme tutarı olan 2.140,00 TL ödenebilir. Kalan tutar gecikmede kalmaya devam eder. Bu tutarı hangi gün ödeyebilirsiniz?",
+   "29 Ekim resmi tatil. Bir sonraki iş günü olan 30 Ekim 2026 Cuma günü ödeyebilir misiniz?",
+   "Özetliyorum: 2290 ile biten kredi kartınız için 2.140,00 TL, ödeme tarihi 30 Ekim 2026 Cuma. Onaylıyor musunuz?",
+   "Ödeme sözünüz kaydedildi. Bu ödeme sözünü onaylayan bir SMS alacaksınız.",
+   "Zaman ayırdığınız için teşekkür ederim, iyi günler dilerim."
+  ],
+  "service_calls": [
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240233",
+     "soru": "DOGUM_TARIHI",
+     "cevap": "03.01.1985"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": false
+    },
+    "http": 200
+   },
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240233",
+     "soru": "TCKN_SON4",
+     "cevap": "6614"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": true
+    },
+    "http": 200
+   },
+   {
+    "op": "EkstreBorcSorgula",
+    "body": {
+     "musteri_no": "FB-240233"
+    },
+    "response": {
+     "basarili": true,
+     "kartlar": [
+      {
+       "kart_id": "KRT-240233-01",
+       "urun": "KREDI_KARTI",
+       "kart_son4": "2290",
+       "ekstre_borcu": 5350.0,
+       "asgari_odeme_tutari": 2140.0,
+       "son_odeme_tarihi": "2026-10-05",
+       "gecikme_gun_sayisi": 22
+      }
+     ]
+    },
+    "http": 200
+   },
+   {
+    "op": "OdemeSozuKaydet",
+    "body": {
+     "musteri_no": "FB-240233",
+     "kart_id": "KRT-240233-01",
+     "tutar": 2140.0,
+     "odeme_tarihi": "2026-10-30",
+     "soz_tipi": "ASGARI"
+    },
+    "response": {
+     "basarili": true,
+     "soz_no": "SZ-1002"
+    },
+    "http": 200
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240233",
+     "sonuc_kodu": "SOZ_ALINDI"
+    },
+    "response": {
+     "basarili": true
+    },
+    "http": 200
+   }
+  ],
+  "expected_ledger": [
+   {
+    "op": "OdemeSozuKaydet",
+    "body": {
+     "musteri_no": "FB-240233",
+     "kart_id": "KRT-240233-01",
+     "tutar": 2140.0,
+     "odeme_tarihi": "2026-10-30",
+     "soz_tipi": "ASGARI"
+    }
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240233",
+     "sonuc_kodu": "SOZ_ALINDI"
+    }
+   }
+  ],
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "KRT-240233-01",
+     "amount": 2140.0,
+     "date": "2026-10-30"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "'Buyurun.' is not a confirmation: right-party question asked a second time",
+   "after 'too much' the minimum is offered once with 'Kalan tutar gecikmede kalmaya devam eder.'",
+   "29 Ekim is a holiday: the next business day 30 Ekim is proposed (deadline 2 Kasım)",
+   "soz_tipi ASGARI"
+  ]
+ },
+ {
+  "id": "TRF-03",
+  "brief": "tr-final",
+  "family": "Üçüncü kişi",
+  "title": "Eşi açıyor; arife günü akşamı yerine sabah geri arama",
+  "source": "ornek-konusma-3.md",
+  "mock_customer": "FB-240318",
+  "variables": {
+   "musteri_no": "FB-240318",
+   "ad": "Zeynep",
+   "soyad": "Demir",
+   "hitap": "Hanım",
+   "now": "2026-10-27T17:15"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "21.07.1992",
+   "TCKN_SON4": "4402"
+  },
+  "products": [
+   {
+    "product_id": "KRT-240318-01",
+    "type": "credit_card",
+    "card_last4": "6045",
+    "past_due": 12780.4,
+    "days_late": 12,
+    "minimum_payment": 5112.16
+   }
+  ],
+  "faults": {},
+  "customer_lines": [
+   "Ben eşiyim, Zeynep şu an müsait değil. Ne için aramıştınız?",
+   "Bir ödeme meselesiyse ben hallederim, söyleyin.",
+   "Yarın akşam yedi gibi arayın.",
+   "O zaman yarın sabah on bir olsun."
+  ],
+  "agent_lines_reference": [
+   "Merhaba, ben Freya Bank'ın dijital asistanıyım. Bu görüşme kalite amacıyla kayıt altına alınmaktadır. Zeynep Demir ile mi görüşüyorum?",
+   "Bunu yalnızca Zeynep Hanım ile görüşebilirim. Zeynep Hanım'a ne zaman ulaşabiliriz?",
+   "Teşekkür ederim, ancak bu konuyu yalnızca Zeynep Hanım ile görüşebilirim. Ne zaman aramamız uygun olur?",
+   "Yarın arife olduğu için yalnızca 09:00 ile 12:30 arasında arayabiliyoruz; bugün de saat 20:00'ye kadar arayabiliriz. Bu saatlerden biri uygun olur mu?",
+   "Teşekkür ederim. Zeynep Hanım'ı 28 Ekim 2026 Çarşamba saat 11:00'de arayacağız. İyi akşamlar dilerim."
+  ],
+  "service_calls": [
+   {
+    "op": "GeriAramaPlanla",
+    "body": {
+     "musteri_no": "FB-240318",
+     "tarih": "2026-10-28",
+     "saat": "11:00"
+    },
+    "response": {
+     "basarili": true,
+     "randevu_no": "GA-2001"
+    },
+    "http": 200
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240318",
+     "sonuc_kodu": "ULASILAMADI",
+     "gerekce_kodu": "GERI_ARAMA"
+    },
+    "response": {
+     "basarili": true
+    },
+    "http": 200
+   }
+  ],
+  "expected_ledger": [
+   {
+    "op": "GeriAramaPlanla",
+    "body": {
+     "musteri_no": "FB-240318",
+     "tarih": "2026-10-28",
+     "saat": "11:00"
+    }
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240318",
+     "sonuc_kodu": "ULASILAMADI",
+     "gerekce_kodu": "GERI_ARAMA"
+    }
+   }
+  ],
+  "expected": {
+   "outcome": "not_reached",
+   "reason": "callback",
+   "promises": [],
+   "notes": [],
+   "callbacks": [
+    {
+     "date": "2026-10-28",
+     "time": "11:00"
+    }
+   ],
+   "transfers": []
+  },
+  "checks": [
+   "nothing about the reason is said to the spouse; no banned word",
+   "relative's offer to pay is declined",
+   "28 Ekim is arife: 19:00 is outside 09:00-12:30, one re-ask, 11:00 booked",
+   "ULASILAMADI / GERI_ARAMA"
+  ]
+ },
+ {
+  "id": "TRF-04",
+  "brief": "tr-final",
+  "family": "Kimlik + zaten ödedim",
+  "title": "Gün-ay ters ipucu; sonra 'dün ödedim'",
+  "source": "ornek-konusma-4.md",
+  "mock_customer": "FB-240402",
+  "variables": {
+   "musteri_no": "FB-240402",
+   "ad": "Can",
+   "soyad": "Öztürk",
+   "hitap": "Bey",
+   "now": "2026-10-22T11:00"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "09.04.1979",
+   "TCKN_SON4": "9127"
+  },
+  "products": [
+   {
+    "product_id": "KRT-240402-01",
+    "type": "credit_card",
+    "card_last4": "3376",
+    "past_due": 2315.6,
+    "days_late": 7,
+    "minimum_payment": 926.24
+   }
+  ],
+  "faults": {},
+  "customer_lines": [
+   "Benim, buyurun.",
+   "Dört dokuz yetmiş dokuz.",
+   "Dokuz Nisan bin dokuz yüz yetmiş dokuz.",
+   "Dokuz bir iki yedi.",
+   "Ben onu dün internet bankacılığından ödedim ama.",
+   "Tamam."
+  ],
+  "agent_lines_reference": [
+   "Merhaba, ben Freya Bank'ın dijital asistanıyım. Bu görüşme kalite amacıyla kayıt altına alınmaktadır. Can Öztürk ile mi görüşüyorum?",
+   "Teşekkürler. Güvenliğiniz için iki soru soracağım. Önce doğum tarihinizi söyler misiniz?",
+   "Doğum tarihinizi ayın adıyla söyler misiniz? Örneğin on beş Mart gibi.",
+   "Teşekkürler. T.C. kimlik numaranızın son dört hanesini söyler misiniz?",
+   "Teşekkür ederim Can Bey. Freya Bank tahsilat biriminden arıyorum. 3376 ile biten kredi kartınızın ekstre borcu 2.315,60 TL; son ödeme tarihi 15 Ekim idi ve ödeme 7 gündür gecikmede. Bu ödemeyi bugün yapabilir misiniz?",
+   "Ödemelerin sisteme yansıması bir iş günü sürebilir. Bilginizi not alıyorum.",
+   "Zaman ayırdığınız için teşekkür ederim, iyi günler dilerim."
+  ],
+  "service_calls": [
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240402",
+     "soru": "DOGUM_TARIHI",
+     "cevap": "04.09.1979"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": false,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": false,
+     "ipucu": "GUN_AY_YER_DEGISTI"
+    },
+    "http": 200
+   },
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240402",
+     "soru": "DOGUM_TARIHI",
+     "cevap": "09.04.1979"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": false
+    },
+    "http": 200
+   },
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240402",
+     "soru": "TCKN_SON4",
+     "cevap": "9127"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": true
+    },
+    "http": 200
+   },
+   {
+    "op": "EkstreBorcSorgula",
+    "body": {
+     "musteri_no": "FB-240402"
+    },
+    "response": {
+     "basarili": true,
+     "kartlar": [
+      {
+       "kart_id": "KRT-240402-01",
+       "urun": "KREDI_KARTI",
+       "kart_son4": "3376",
+       "ekstre_borcu": 2315.6,
+       "asgari_odeme_tutari": 926.24,
+       "son_odeme_tarihi": "2026-10-15",
+       "gecikme_gun_sayisi": 7
+      }
+     ]
+    },
+    "http": 200
+   },
+   {
+    "op": "NotEkle",
+    "body": {
+     "musteri_no": "FB-240402",
+     "kart_id": "KRT-240402-01",
+     "not_tipi": "ODENDI_BEYANI",
+     "aciklama": "Müşteri ekstre borcunu 21.10.2026 tarihinde internet bankacılığından ödediğini belirtti."
+    },
+    "response": {
+     "basarili": true,
+     "not_no": "NT-3001"
+    },
+    "http": 200
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240402",
+     "sonuc_kodu": "ODEME_YAPILMIS"
+    },
+    "response": {
+     "basarili": true
+    },
+    "http": 200
+   }
+  ],
+  "expected_ledger": [
+   {
+    "op": "NotEkle",
+    "body": {
+     "musteri_no": "FB-240402",
+     "kart_id": "KRT-240402-01",
+     "not_tipi": "ODENDI_BEYANI",
+     "aciklama": "Müşteri ekstre borcunu 21.10.2026 tarihinde internet bankacılığından ödediğini belirtti."
+    }
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240402",
+     "sonuc_kodu": "ODEME_YAPILMIS"
+    }
+   }
+  ],
+  "expected": {
+   "outcome": "paid",
+   "reason": null,
+   "promises": [],
+   "notes": [
+    {
+     "product_id": "KRT-240402-01",
+     "reason": "paid"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "04.09.1979 sent first (numeric date read day-month-year)",
+   "ipucu GUN_AY_YER_DEGISTI: month asked by name, not counted",
+   "paid-delay sentence; NotEkle ODENDI_BEYANI with kart_id",
+   "no promise; ODEME_YAPILMIS without gerekce"
+  ]
+ },
+ {
+  "id": "TRF-05",
+  "brief": "tr-final",
+  "family": "Zor durum",
+  "title": "Robot sorusu; iş kaybı, Finansal Destek'e aktarım",
+  "source": "ornek-konusma-5.md",
+  "mock_customer": "FB-240561",
+  "variables": {
+   "musteri_no": "FB-240561",
+   "ad": "Elif",
+   "soyad": "Şahin",
+   "hitap": "Hanım",
+   "now": "2026-10-21T15:00"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "30.11.1990",
+   "TCKN_SON4": "0285"
+  },
+  "products": [
+   {
+    "product_id": "KRT-240561-01",
+    "type": "credit_card",
+    "card_last4": "8812",
+    "past_due": 19640.0,
+    "days_late": 34,
+    "minimum_payment": 7856.0
+   }
+  ],
+  "faults": {},
+  "customer_lines": [
+   "Siz robot musunuz?",
+   "Evet, benim.",
+   "Otuz Kasım doksan.",
+   "Sıfır iki sekiz beş.",
+   "Bugün ödeyemem. Geçen ay işten çıkarıldım, şu an hiç gelirim yok.",
+   "Evet, lütfen."
+  ],
+  "agent_lines_reference": [
+   "Merhaba, ben Freya Bank'ın dijital asistanıyım. Bu görüşme kalite amacıyla kayıt altına alınmaktadır. Elif Şahin ile mi görüşüyorum?",
+   "Freya Bank'ın dijital asistanıyım. Elif Şahin ile mi görüşüyorum?",
+   "Teşekkürler. Güvenliğiniz için iki soru soracağım. Önce doğum tarihinizi söyler misiniz?",
+   "Teşekkürler. T.C. kimlik numaranızın son dört hanesini söyler misiniz?",
+   "Teşekkür ederim Elif Hanım. Freya Bank tahsilat biriminden arıyorum. 8812 ile biten kredi kartınızın ekstre borcu 19.640,00 TL; son ödeme tarihi 17 Eylül idi ve ödeme 34 gündür gecikmede. Bu ödemeyi bugün yapabilir misiniz?",
+   "Geçmiş olsun. İsterseniz sizi Finansal Destek Ekibimize aktarabilirim; durumunuza uygun seçenekleri onlar değerlendirir. Aktarmamı ister misiniz?",
+   "Sizi şimdi Finansal Destek Ekibimize aktarıyorum. Zaman ayırdığınız için teşekkür ederim, iyi günler dilerim."
+  ],
+  "service_calls": [
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240561",
+     "soru": "DOGUM_TARIHI",
+     "cevap": "30.11.1990"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": false
+    },
+    "http": 200
+   },
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240561",
+     "soru": "TCKN_SON4",
+     "cevap": "0285"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": true
+    },
+    "http": 200
+   },
+   {
+    "op": "EkstreBorcSorgula",
+    "body": {
+     "musteri_no": "FB-240561"
+    },
+    "response": {
+     "basarili": true,
+     "kartlar": [
+      {
+       "kart_id": "KRT-240561-01",
+       "urun": "KREDI_KARTI",
+       "kart_son4": "8812",
+       "ekstre_borcu": 19640.0,
+       "asgari_odeme_tutari": 7856.0,
+       "son_odeme_tarihi": "2026-09-17",
+       "gecikme_gun_sayisi": 34
+      }
+     ]
+    },
+    "http": 200
+   },
+   {
+    "op": "CagriAktar",
+    "body": {
+     "musteri_no": "FB-240561",
+     "kuyruk": "FINANSAL_DESTEK"
+    },
+    "response": {
+     "basarili": true
+    },
+    "http": 200
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240561",
+     "sonuc_kodu": "AKTARILDI",
+     "gerekce_kodu": "FINANSAL_DESTEK"
+    },
+    "response": {
+     "basarili": true
+    },
+    "http": 200
+   }
+  ],
+  "expected_ledger": [
+   {
+    "op": "CagriAktar",
+    "body": {
+     "musteri_no": "FB-240561",
+     "kuyruk": "FINANSAL_DESTEK"
+    }
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240561",
+     "sonuc_kodu": "AKTARILDI",
+     "gerekce_kodu": "FINANSAL_DESTEK"
+    }
+   }
+  ],
+  "expected": {
+   "outcome": "transferred",
+   "reason": "support",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "support"
+    }
+   ]
+  },
+  "checks": [
+   "robot answer verbatim, then the right-party question again",
+   "'Geçmiş olsun.'; no persuasion; transfer offered and accepted",
+   "CagriAktar FINANSAL_DESTEK, then AKTARILDI / FINANSAL_DESTEK"
+  ]
+ },
+ {
+  "id": "TRF-06",
+  "brief": "tr-final",
+  "family": "İki kart + duyuru",
+  "title": "Dolandırıcılık sorusu; iki kart: biri söz (son tarih), biri itiraz",
+  "source": "ornek-konusma-6.md",
+  "mock_customer": "FB-240699",
+  "variables": {
+   "musteri_no": "FB-240699",
+   "ad": "Burak",
+   "soyad": "Arslan",
+   "hitap": "Bey",
+   "now": "2026-11-03T10:00"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "02.06.1983",
+   "TCKN_SON4": "7751"
+  },
+  "products": [
+   {
+    "product_id": "KRT-240699-01",
+    "type": "credit_card",
+    "card_last4": "5502",
+    "past_due": 14200.0,
+    "days_late": 40,
+    "minimum_payment": 5680.0
+   },
+   {
+    "product_id": "KRT-240699-02",
+    "type": "credit_card",
+    "card_last4": "1187",
+    "past_due": 3120.9,
+    "days_late": 8,
+    "minimum_payment": 1248.36
+   }
+  ],
+  "faults": {},
+  "customer_lines": [
+   "Bu bir dolandırıcılık olmasın?",
+   "Evet benim.",
+   "İki altı seksen üç.",
+   "Yedi yedi beş bir.",
+   "Bugün olmaz.",
+   "Tamam, perşembe öderim.",
+   "Evet, onaylıyorum.",
+   "O karttaki harcamaları ben yapmadım, bankaya itiraz ettim zaten."
+  ],
+  "agent_lines_reference": [
+   "Merhaba, ben Freya Bank'ın dijital asistanıyım. Bu görüşme kalite amacıyla kayıt altına alınmaktadır. Burak Arslan ile mi görüşüyorum?",
+   "Bu aramayı Freya Bank müşteri hizmetleri numarasını arayarak doğrulayabilirsiniz. Burak Arslan ile mi görüşüyorum?",
+   "Teşekkürler. Güvenliğiniz için iki soru soracağım. Önce doğum tarihinizi söyler misiniz?",
+   "Teşekkürler. T.C. kimlik numaranızın son dört hanesini söyler misiniz?",
+   "Teşekkür ederim Burak Bey. Freya Bank tahsilat biriminden arıyorum. İki kredi kartınızda gecikme var; önce en çok geciken kartla başlayacağım. 5502 ile biten kredi kartınızın ekstre borcu 14.200,00 TL; son ödeme tarihi 24 Eylül idi ve ödeme 40 gündür gecikmede. Bu ödemeyi bugün yapabilir misiniz?",
+   "14.200,00 TL tutarın tamamını 5 Kasım 2026 Perşembe günü ödeyebilir misiniz?",
+   "Özetliyorum: 5502 ile biten kredi kartınız için 14.200,00 TL, ödeme tarihi 5 Kasım 2026 Perşembe. Onaylıyor musunuz?",
+   "Ödeme sözünüz kaydedildi. Bu ödeme sözünü onaylayan bir SMS alacaksınız. Bir de 1187 ile biten kredi kartınızın ekstre borcu 3.120,90 TL; son ödeme tarihi 26 Ekim idi ve ödeme 8 gündür gecikmede. Bu ödemeyi bugün yapabilir misiniz?",
+   "Anlıyorum, itirazınızı not alıyorum.",
+   "Zaman ayırdığınız için teşekkür ederim, iyi günler dilerim."
+  ],
+  "service_calls": [
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240699",
+     "soru": "DOGUM_TARIHI",
+     "cevap": "02.06.1983"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": false
+    },
+    "http": 200
+   },
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240699",
+     "soru": "TCKN_SON4",
+     "cevap": "7751"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": true
+    },
+    "http": 200
+   },
+   {
+    "op": "EkstreBorcSorgula",
+    "body": {
+     "musteri_no": "FB-240699"
+    },
+    "response": {
+     "basarili": true,
+     "kartlar": [
+      {
+       "kart_id": "KRT-240699-01",
+       "urun": "KREDI_KARTI",
+       "kart_son4": "5502",
+       "ekstre_borcu": 14200.0,
+       "asgari_odeme_tutari": 5680.0,
+       "son_odeme_tarihi": "2026-09-24",
+       "gecikme_gun_sayisi": 40
+      },
+      {
+       "kart_id": "KRT-240699-02",
+       "urun": "KREDI_KARTI",
+       "kart_son4": "1187",
+       "ekstre_borcu": 3120.9,
+       "asgari_odeme_tutari": 1248.36,
+       "son_odeme_tarihi": "2026-10-26",
+       "gecikme_gun_sayisi": 8
+      }
+     ]
+    },
+    "http": 200
+   },
+   {
+    "op": "OdemeSozuKaydet",
+    "body": {
+     "musteri_no": "FB-240699",
+     "kart_id": "KRT-240699-01",
+     "tutar": 14200.0,
+     "odeme_tarihi": "2026-11-05",
+     "soz_tipi": "TAMAMI"
+    },
+    "response": {
+     "basarili": true,
+     "soz_no": "SZ-1006"
+    },
+    "http": 200
+   },
+   {
+    "op": "NotEkle",
+    "body": {
+     "musteri_no": "FB-240699",
+     "kart_id": "KRT-240699-02",
+     "not_tipi": "ITIRAZ",
+     "aciklama": "Müşteri 1187 ile biten karttaki harcamaları kendisinin yapmadığını ve itiraz ettiğini söyledi."
+    },
+    "response": {
+     "basarili": true,
+     "not_no": "NT-3006"
+    },
+    "http": 200
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240699",
+     "sonuc_kodu": "SOZ_ALINDI"
+    },
+    "response": {
+     "basarili": true
+    },
+    "http": 200
+   }
+  ],
+  "expected_ledger": [
+   {
+    "op": "OdemeSozuKaydet",
+    "body": {
+     "musteri_no": "FB-240699",
+     "kart_id": "KRT-240699-01",
+     "tutar": 14200.0,
+     "odeme_tarihi": "2026-11-05",
+     "soz_tipi": "TAMAMI"
+    }
+   },
+   {
+    "op": "NotEkle",
+    "body": {
+     "musteri_no": "FB-240699",
+     "kart_id": "KRT-240699-02",
+     "not_tipi": "ITIRAZ",
+     "aciklama": "Müşteri 1187 ile biten karttaki harcamaları kendisinin yapmadığını ve itiraz ettiğini söyledi."
+    }
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240699",
+     "sonuc_kodu": "SOZ_ALINDI"
+    }
+   }
+  ],
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "KRT-240699-01",
+     "amount": 14200.0,
+     "date": "2026-11-05"
+    }
+   ],
+   "notes": [
+    {
+     "product_id": "KRT-240699-02",
+     "reason": "dispute"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "scam answer before verification contains no banned word",
+   "most overdue card (5502, 40 days) first",
+   "DUY-2026-034 in force (now 2026-11-03): geç deadline = 2nd business day = 5 Kasım",
+   "attempt 1 date = min(this week's last business day 6 Kasım, deadline 5 Kasım) = 5 Kasım",
+   "second card disputed: NotEkle ITIRAZ with its kart_id, no promise for it",
+   "SOZ_ALINDI (one promise recorded)"
+  ]
+ },
+ {
+  "id": "TRF-07",
+  "brief": "tr-final",
+  "family": "Servis hatası",
+  "title": "Söz kaydı iki kez başarısız",
+  "source": null,
+  "mock_customer": "FB-240744",
+  "variables": {
+   "musteri_no": "FB-240744",
+   "ad": "Selin",
+   "soyad": "Aydın",
+   "hitap": "Hanım",
+   "now": "2026-10-21T11:30"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "04.08.1995",
+   "TCKN_SON4": "5530"
+  },
+  "products": [
+   {
+    "product_id": "KRT-240744-01",
+    "type": "credit_card",
+    "card_last4": "9064",
+    "past_due": 4100.0,
+    "days_late": 6,
+    "minimum_payment": 1640.0
+   }
+  ],
+  "faults": {
+   "OdemeSozuKaydet": "E500"
+  },
+  "customer_lines": [
+   "Evet, benim.",
+   "Dört Ağustos doksan beş.",
+   "Beş beş üç sıfır.",
+   "Evet, bugün tamamını öderim.",
+   "Evet.",
+   "Peki."
+  ],
+  "agent_lines_reference": [
+   "Merhaba, ben Freya Bank'ın dijital asistanıyım. Bu görüşme kalite amacıyla kayıt altına alınmaktadır. Selin Aydın ile mi görüşüyorum?",
+   "Teşekkürler. Güvenliğiniz için iki soru soracağım. Önce doğum tarihinizi söyler misiniz?",
+   "Teşekkürler. T.C. kimlik numaranızın son dört hanesini söyler misiniz?",
+   "Teşekkür ederim Selin Hanım. Freya Bank tahsilat biriminden arıyorum. 9064 ile biten kredi kartınızın ekstre borcu 4.100,00 TL; son ödeme tarihi 15 Ekim idi ve ödeme 6 gündür gecikmede. Bu ödemeyi bugün yapabilir misiniz?",
+   "Özetliyorum: 9064 ile biten kredi kartınız için 4.100,00 TL, ödeme tarihi 21 Ekim 2026 Çarşamba. Onaylıyor musunuz?",
+   "Üzgünüm, şu anda sözünüzü sisteme kaydedemedim. Ödemenizi mobil uygulamamızdan yapabilirsiniz.",
+   "Zaman ayırdığınız için teşekkür ederim, iyi günler dilerim."
+  ],
+  "service_calls": [
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240744",
+     "soru": "DOGUM_TARIHI",
+     "cevap": "04.08.1995"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": false
+    },
+    "http": 200
+   },
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240744",
+     "soru": "TCKN_SON4",
+     "cevap": "5530"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": true
+    },
+    "http": 200
+   },
+   {
+    "op": "EkstreBorcSorgula",
+    "body": {
+     "musteri_no": "FB-240744"
+    },
+    "response": {
+     "basarili": true,
+     "kartlar": [
+      {
+       "kart_id": "KRT-240744-01",
+       "urun": "KREDI_KARTI",
+       "kart_son4": "9064",
+       "ekstre_borcu": 4100.0,
+       "asgari_odeme_tutari": 1640.0,
+       "son_odeme_tarihi": "2026-10-15",
+       "gecikme_gun_sayisi": 6
+      }
+     ]
+    },
+    "http": 200
+   },
+   {
+    "op": "OdemeSozuKaydet",
+    "body": {
+     "musteri_no": "FB-240744",
+     "kart_id": "KRT-240744-01",
+     "tutar": 4100.0,
+     "odeme_tarihi": "2026-10-21",
+     "soz_tipi": "TAMAMI"
+    },
+    "response": {
+     "basarili": false,
+     "hata_kodu": "E500"
+    },
+    "http": 500
+   },
+   {
+    "op": "OdemeSozuKaydet",
+    "body": {
+     "musteri_no": "FB-240744",
+     "kart_id": "KRT-240744-01",
+     "tutar": 4100.0,
+     "odeme_tarihi": "2026-10-21",
+     "soz_tipi": "TAMAMI"
+    },
+    "response": {
+     "basarili": false,
+     "hata_kodu": "E500"
+    },
+    "http": 500
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240744",
+     "sonuc_kodu": "SOZ_ALINAMADI",
+     "gerekce_kodu": "SISTEM_HATASI"
+    },
+    "response": {
+     "basarili": true
+    },
+    "http": 200
+   }
+  ],
+  "expected_ledger": [
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240744",
+     "sonuc_kodu": "SOZ_ALINAMADI",
+     "gerekce_kodu": "SISTEM_HATASI"
+    }
+   }
+  ],
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "service_error",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "OdemeSozuKaydet tried exactly twice",
+   "never says 'kaydedildi'; no SMS sentence",
+   "SOZ_ALINAMADI / SISTEM_HATASI"
+  ]
+ },
+ {
+  "id": "TRF-08",
+  "brief": "tr-final",
+  "family": "Kimlik",
+  "title": "Üç yanlış cevap",
+  "source": null,
+  "mock_customer": "FB-240927",
+  "variables": {
+   "musteri_no": "FB-240927",
+   "ad": "Gizem",
+   "soyad": "Koç",
+   "hitap": "Hanım",
+   "now": "2026-10-21T12:00"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "08.03.1988",
+   "TCKN_SON4": "1846"
+  },
+  "products": [
+   {
+    "product_id": "KRT-240927-01",
+    "type": "credit_card",
+    "card_last4": "2051",
+    "past_due": 3985.5,
+    "days_late": 9,
+    "minimum_payment": 1594.2
+   }
+  ],
+  "faults": {},
+  "customer_lines": [
+   "Evet.",
+   "Beş Mart seksen sekiz.",
+   "Yedi Mart seksen sekiz.",
+   "On sekiz Mart seksen sekiz o zaman."
+  ],
+  "agent_lines_reference": [
+   "Merhaba, ben Freya Bank'ın dijital asistanıyım. Bu görüşme kalite amacıyla kayıt altına alınmaktadır. Gizem Koç ile mi görüşüyorum?",
+   "Teşekkürler. Güvenliğiniz için iki soru soracağım. Önce doğum tarihinizi söyler misiniz?",
+   "Bu bilgi kayıtlarımızla eşleşmedi. Doğum tarihinizi tekrar söyler misiniz?",
+   "Bu bilgi de eşleşmedi. Doğum tarihinizi bir kez daha söyler misiniz?",
+   "Üzgünüm, kimliğinizi doğrulayamadım. Mobil uygulamamızdan veya bir şubemizden destek alabilirsiniz. Zaman ayırdığınız için teşekkür ederim, iyi günler dilerim."
+  ],
+  "service_calls": [
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240927",
+     "soru": "DOGUM_TARIHI",
+     "cevap": "05.03.1988"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": false,
+     "kalan_hak": 2,
+     "tum_sorular_tamam": false
+    },
+    "http": 200
+   },
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240927",
+     "soru": "DOGUM_TARIHI",
+     "cevap": "07.03.1988"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": false,
+     "kalan_hak": 1,
+     "tum_sorular_tamam": false
+    },
+    "http": 200
+   },
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240927",
+     "soru": "DOGUM_TARIHI",
+     "cevap": "18.03.1988"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": false,
+     "kalan_hak": 0,
+     "tum_sorular_tamam": false
+    },
+    "http": 200
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240927",
+     "sonuc_kodu": "DOGRULANAMADI",
+     "gerekce_kodu": "HATALI_CEVAP"
+    },
+    "response": {
+     "basarili": true
+    },
+    "http": 200
+   }
+  ],
+  "expected_ledger": [
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240927",
+     "sonuc_kodu": "DOGRULANAMADI",
+     "gerekce_kodu": "HATALI_CEVAP"
+    }
+   }
+  ],
+  "expected": {
+   "outcome": "not_verified",
+   "reason": "failed",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "three wrong DOB answers (none is the swapped date)",
+   "nothing about the account is said",
+   "app / branch advice; DOGRULANAMADI / HATALI_CEVAP"
+  ]
+ },
+ {
+  "id": "TRF-09",
+  "brief": "tr-final",
+  "family": "Ret",
+  "title": "Erken bant: tek ikna denemesi, ret",
+  "source": null,
+  "mock_customer": "FB-240927",
+  "variables": {
+   "musteri_no": "FB-240927",
+   "ad": "Gizem",
+   "soyad": "Koç",
+   "hitap": "Hanım",
+   "now": "2026-10-21T16:00"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "08.03.1988",
+   "TCKN_SON4": "1846"
+  },
+  "products": [
+   {
+    "product_id": "KRT-240927-01",
+    "type": "credit_card",
+    "card_last4": "2051",
+    "past_due": 3985.5,
+    "days_late": 9,
+    "minimum_payment": 1594.2
+   }
+  ],
+  "faults": {},
+  "customer_lines": [
+   "Evet benim.",
+   "Sekiz Mart seksen sekiz.",
+   "Bir sekiz dört altı.",
+   "Hayır, bugün olmaz.",
+   "Hayır, o da olmaz."
+  ],
+  "agent_lines_reference": [
+   "Merhaba, ben Freya Bank'ın dijital asistanıyım. Bu görüşme kalite amacıyla kayıt altına alınmaktadır. Gizem Koç ile mi görüşüyorum?",
+   "Teşekkürler. Güvenliğiniz için iki soru soracağım. Önce doğum tarihinizi söyler misiniz?",
+   "Teşekkürler. T.C. kimlik numaranızın son dört hanesini söyler misiniz?",
+   "Teşekkür ederim Gizem Hanım. Freya Bank tahsilat biriminden arıyorum. 2051 ile biten kredi kartınızın ekstre borcu 3.985,50 TL; son ödeme tarihi 12 Ekim idi ve ödeme 9 gündür gecikmede. Bu ödemeyi bugün yapabilir misiniz?",
+   "3.985,50 TL tutarın tamamını 23 Ekim 2026 Cuma günü ödeyebilir misiniz?",
+   "Anlıyorum. Zaman ayırdığınız için teşekkür ederim, iyi günler dilerim."
+  ],
+  "service_calls": [
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240927",
+     "soru": "DOGUM_TARIHI",
+     "cevap": "08.03.1988"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": false
+    },
+    "http": 200
+   },
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240927",
+     "soru": "TCKN_SON4",
+     "cevap": "1846"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": true
+    },
+    "http": 200
+   },
+   {
+    "op": "EkstreBorcSorgula",
+    "body": {
+     "musteri_no": "FB-240927"
+    },
+    "response": {
+     "basarili": true,
+     "kartlar": [
+      {
+       "kart_id": "KRT-240927-01",
+       "urun": "KREDI_KARTI",
+       "kart_son4": "2051",
+       "ekstre_borcu": 3985.5,
+       "asgari_odeme_tutari": 1594.2,
+       "son_odeme_tarihi": "2026-10-12",
+       "gecikme_gun_sayisi": 9
+      }
+     ]
+    },
+    "http": 200
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240927",
+     "sonuc_kodu": "SOZ_ALINAMADI",
+     "gerekce_kodu": "REDDETTI"
+    },
+    "response": {
+     "basarili": true
+    },
+    "http": 200
+   }
+  ],
+  "expected_ledger": [
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240927",
+     "sonuc_kodu": "SOZ_ALINAMADI",
+     "gerekce_kodu": "REDDETTI"
+    }
+   }
+  ],
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "refused",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "erken band (9 days): exactly one persuasion attempt (full, Fri 23 Ekim)",
+   "the refused offer is not repeated",
+   "SOZ_ALINAMADI / REDDETTI"
+  ]
+ },
+ {
+  "id": "TRF-10",
+  "brief": "tr-final",
+  "family": "Yapılandırma",
+  "title": "Taksitlendirme isteği, Yapılandırma Ekibine aktarım",
+  "source": null,
+  "mock_customer": "FB-240233",
+  "variables": {
+   "musteri_no": "FB-240233",
+   "ad": "Mehmet",
+   "soyad": "Kaya",
+   "hitap": "Bey",
+   "now": "2026-10-27T15:30"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "03.01.1985",
+   "TCKN_SON4": "6614"
+  },
+  "products": [
+   {
+    "product_id": "KRT-240233-01",
+    "type": "credit_card",
+    "card_last4": "2290",
+    "past_due": 5350.0,
+    "days_late": 22,
+    "minimum_payment": 2140.0
+   }
+  ],
+  "faults": {},
+  "customer_lines": [
+   "Evet, benim.",
+   "Üç bir seksen beş.",
+   "6614.",
+   "Bunu taksitlendirebilir miyiz? Borcumu yapılandırmak istiyorum."
+  ],
+  "agent_lines_reference": [
+   "Merhaba, ben Freya Bank'ın dijital asistanıyım. Bu görüşme kalite amacıyla kayıt altına alınmaktadır. Mehmet Kaya ile mi görüşüyorum?",
+   "Teşekkürler. Güvenliğiniz için iki soru soracağım. Önce doğum tarihinizi söyler misiniz?",
+   "Teşekkürler. T.C. kimlik numaranızın son dört hanesini söyler misiniz?",
+   "Teşekkür ederim Mehmet Bey. Freya Bank tahsilat biriminden arıyorum. 2290 ile biten kredi kartınızın ekstre borcu 5.350,00 TL; son ödeme tarihi 5 Ekim idi ve ödeme 22 gündür gecikmede. Bu ödemeyi bugün yapabilir misiniz?",
+   "Bu konuda sizi Yapılandırma Ekibimize aktarıyorum.",
+   "Zaman ayırdığınız için teşekkür ederim, iyi günler dilerim."
+  ],
+  "service_calls": [
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240233",
+     "soru": "DOGUM_TARIHI",
+     "cevap": "03.01.1985"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": false
+    },
+    "http": 200
+   },
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-240233",
+     "soru": "TCKN_SON4",
+     "cevap": "6614"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": true
+    },
+    "http": 200
+   },
+   {
+    "op": "EkstreBorcSorgula",
+    "body": {
+     "musteri_no": "FB-240233"
+    },
+    "response": {
+     "basarili": true,
+     "kartlar": [
+      {
+       "kart_id": "KRT-240233-01",
+       "urun": "KREDI_KARTI",
+       "kart_son4": "2290",
+       "ekstre_borcu": 5350.0,
+       "asgari_odeme_tutari": 2140.0,
+       "son_odeme_tarihi": "2026-10-05",
+       "gecikme_gun_sayisi": 22
+      }
+     ]
+    },
+    "http": 200
+   },
+   {
+    "op": "CagriAktar",
+    "body": {
+     "musteri_no": "FB-240233",
+     "kuyruk": "YAPILANDIRMA"
+    },
+    "response": {
+     "basarili": true
+    },
+    "http": 200
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240233",
+     "sonuc_kodu": "AKTARILDI",
+     "gerekce_kodu": "YAPILANDIRMA"
+    },
+    "response": {
+     "basarili": true
+    },
+    "http": 200
+   }
+  ],
+  "expected_ledger": [
+   {
+    "op": "CagriAktar",
+    "body": {
+     "musteri_no": "FB-240233",
+     "kuyruk": "YAPILANDIRMA"
+    }
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-240233",
+     "sonuc_kodu": "AKTARILDI",
+     "gerekce_kodu": "YAPILANDIRMA"
+    }
+   }
+  ],
+  "expected": {
+   "outcome": "transferred",
+   "reason": "restructuring",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "restructuring"
+    }
+   ]
+  },
+  "checks": [
+   "no plan is described or offered",
+   "CagriAktar YAPILANDIRMA; AKTARILDI / YAPILANDIRMA"
+  ]
+ },
+ {
+  "id": "TRF-11",
+  "brief": "tr-final",
+  "family": "Tarih + tutar",
+  "title": "'Gelecek çarşamba' (arife, iş günü) ve asgarinin altında tutar",
+  "source": null,
+  "mock_customer": "FB-241142",
+  "variables": {
+   "musteri_no": "FB-241142",
+   "ad": "Deniz",
+   "soyad": "Aksoy",
+   "hitap": "Hanım",
+   "now": "2026-10-22T09:45"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "19.05.1993",
+   "TCKN_SON4": "8076"
+  },
+  "products": [
+   {
+    "product_id": "KRT-241142-01",
+    "type": "credit_card",
+    "card_last4": "3608",
+    "past_due": 7260.25,
+    "days_late": 3,
+    "minimum_payment": 2904.1
+   }
+  ],
+  "faults": {},
+  "customer_lines": [
+   "Evet, Deniz Aksoy.",
+   "On dokuz Mayıs doksan üç.",
+   "Sekiz sıfır yedi altı.",
+   "Bugün olmaz ama gelecek çarşamba iki bin lira yatırabilirim.",
+   "Tamam, asgariyi öderim.",
+   "Evet."
+  ],
+  "agent_lines_reference": [
+   "Merhaba, ben Freya Bank'ın dijital asistanıyım. Bu görüşme kalite amacıyla kayıt altına alınmaktadır. Deniz Aksoy ile mi görüşüyorum?",
+   "Teşekkürler. Güvenliğiniz için iki soru soracağım. Önce doğum tarihinizi söyler misiniz?",
+   "Teşekkürler. T.C. kimlik numaranızın son dört hanesini söyler misiniz?",
+   "Teşekkür ederim Deniz Hanım. Freya Bank tahsilat biriminden arıyorum. 3608 ile biten kredi kartınızın ekstre borcu 7.260,25 TL; son ödeme tarihi 19 Ekim idi ve ödeme 3 gündür gecikmede. Bu ödemeyi bugün yapabilir misiniz?",
+   "2.000,00 TL'yi kaydedemiyorum; asgari ödeme tutarı 2.904,10 TL. Bu tutarı 28 Ekim 2026 Çarşamba günü ödeyebilir misiniz?",
+   "Özetliyorum: 3608 ile biten kredi kartınız için 2.904,10 TL, ödeme tarihi 28 Ekim 2026 Çarşamba. Onaylıyor musunuz?",
+   "Ödeme sözünüz kaydedildi. Bu ödeme sözünü onaylayan bir SMS alacaksınız.",
+   "Zaman ayırdığınız için teşekkür ederim, iyi günler dilerim."
+  ],
+  "service_calls": [
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-241142",
+     "soru": "DOGUM_TARIHI",
+     "cevap": "19.05.1993"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": false
+    },
+    "http": 200
+   },
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-241142",
+     "soru": "TCKN_SON4",
+     "cevap": "8076"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": true
+    },
+    "http": 200
+   },
+   {
+    "op": "EkstreBorcSorgula",
+    "body": {
+     "musteri_no": "FB-241142"
+    },
+    "response": {
+     "basarili": true,
+     "kartlar": [
+      {
+       "kart_id": "KRT-241142-01",
+       "urun": "KREDI_KARTI",
+       "kart_son4": "3608",
+       "ekstre_borcu": 7260.25,
+       "asgari_odeme_tutari": 2904.1,
+       "son_odeme_tarihi": "2026-10-19",
+       "gecikme_gun_sayisi": 3
+      }
+     ]
+    },
+    "http": 200
+   },
+   {
+    "op": "OdemeSozuKaydet",
+    "body": {
+     "musteri_no": "FB-241142",
+     "kart_id": "KRT-241142-01",
+     "tutar": 2904.1,
+     "odeme_tarihi": "2026-10-28",
+     "soz_tipi": "ASGARI"
+    },
+    "response": {
+     "basarili": true,
+     "soz_no": "SZ-1011"
+    },
+    "http": 200
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-241142",
+     "sonuc_kodu": "SOZ_ALINDI"
+    },
+    "response": {
+     "basarili": true
+    },
+    "http": 200
+   }
+  ],
+  "expected_ledger": [
+   {
+    "op": "OdemeSozuKaydet",
+    "body": {
+     "musteri_no": "FB-241142",
+     "kart_id": "KRT-241142-01",
+     "tutar": 2904.1,
+     "odeme_tarihi": "2026-10-28",
+     "soz_tipi": "ASGARI"
+    }
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-241142",
+     "sonuc_kodu": "SOZ_ALINDI"
+    }
+   }
+  ],
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "KRT-241142-01",
+     "amount": 2904.1,
+     "date": "2026-10-28"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "'gelecek çarşamba' on Thu 22 Ekim = Wed 28 Ekim (arife = business day, before deadline 3 Kasım)",
+   "2.000 TL below the minimum: not recordable, minimum offered once",
+   "soz_tipi ASGARI"
+  ]
+ },
+ {
+  "id": "TRF-12",
+  "brief": "tr-final",
+  "family": "Son tarih",
+  "title": "Son tarihten sonraki gün istenir; son tarih önerilir",
+  "source": null,
+  "mock_customer": "FB-241250",
+  "variables": {
+   "musteri_no": "FB-241250",
+   "ad": "Emre",
+   "soyad": "Polat",
+   "hitap": "Bey",
+   "now": "2026-10-21T13:00"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "12.09.1968",
+   "TCKN_SON4": "4925"
+  },
+  "products": [
+   {
+    "product_id": "KRT-241250-01",
+    "type": "credit_card",
+    "card_last4": "5124",
+    "past_due": 9875.0,
+    "days_late": 44,
+    "minimum_payment": 3950.0
+   }
+  ],
+  "faults": {},
+  "customer_lines": [
+   "Benim.",
+   "On iki Eylül altmış sekiz.",
+   "Dört dokuz iki beş.",
+   "Bugün olmaz. Ay sonunda, 30 Ekim'de tamamını öderim.",
+   "Peki, 26'sında öderim.",
+   "Evet."
+  ],
+  "agent_lines_reference": [
+   "Merhaba, ben Freya Bank'ın dijital asistanıyım. Bu görüşme kalite amacıyla kayıt altına alınmaktadır. Emre Polat ile mi görüşüyorum?",
+   "Teşekkürler. Güvenliğiniz için iki soru soracağım. Önce doğum tarihinizi söyler misiniz?",
+   "Teşekkürler. T.C. kimlik numaranızın son dört hanesini söyler misiniz?",
+   "Teşekkür ederim Emre Bey. Freya Bank tahsilat biriminden arıyorum. 5124 ile biten kredi kartınızın ekstre borcu 9.875,00 TL; son ödeme tarihi 7 Eylül idi ve ödeme 44 gündür gecikmede. Bu ödemeyi bugün yapabilir misiniz?",
+   "Kaydedebileceğim en geç tarih 26 Ekim 2026 Pazartesi. Tutarın tamamını o gün ödeyebilir misiniz?",
+   "Özetliyorum: 5124 ile biten kredi kartınız için 9.875,00 TL, ödeme tarihi 26 Ekim 2026 Pazartesi. Onaylıyor musunuz?",
+   "Ödeme sözünüz kaydedildi. Bu ödeme sözünü onaylayan bir SMS alacaksınız.",
+   "Zaman ayırdığınız için teşekkür ederim, iyi günler dilerim."
+  ],
+  "service_calls": [
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-241250",
+     "soru": "DOGUM_TARIHI",
+     "cevap": "12.09.1968"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": false
+    },
+    "http": 200
+   },
+   {
+    "op": "KimlikDogrula",
+    "body": {
+     "musteri_no": "FB-241250",
+     "soru": "TCKN_SON4",
+     "cevap": "4925"
+    },
+    "response": {
+     "basarili": true,
+     "dogrulandi": true,
+     "kalan_hak": 3,
+     "tum_sorular_tamam": true
+    },
+    "http": 200
+   },
+   {
+    "op": "EkstreBorcSorgula",
+    "body": {
+     "musteri_no": "FB-241250"
+    },
+    "response": {
+     "basarili": true,
+     "kartlar": [
+      {
+       "kart_id": "KRT-241250-01",
+       "urun": "KREDI_KARTI",
+       "kart_son4": "5124",
+       "ekstre_borcu": 9875.0,
+       "asgari_odeme_tutari": 3950.0,
+       "son_odeme_tarihi": "2026-09-07",
+       "gecikme_gun_sayisi": 44
+      }
+     ]
+    },
+    "http": 200
+   },
+   {
+    "op": "OdemeSozuKaydet",
+    "body": {
+     "musteri_no": "FB-241250",
+     "kart_id": "KRT-241250-01",
+     "tutar": 9875.0,
+     "odeme_tarihi": "2026-10-26",
+     "soz_tipi": "TAMAMI"
+    },
+    "response": {
+     "basarili": true,
+     "soz_no": "SZ-1012"
+    },
+    "http": 200
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-241250",
+     "sonuc_kodu": "SOZ_ALINDI"
+    },
+    "response": {
+     "basarili": true
+    },
+    "http": 200
+   }
+  ],
+  "expected_ledger": [
+   {
+    "op": "OdemeSozuKaydet",
+    "body": {
+     "musteri_no": "FB-241250",
+     "kart_id": "KRT-241250-01",
+     "tutar": 9875.0,
+     "odeme_tarihi": "2026-10-26",
+     "soz_tipi": "TAMAMI"
+    }
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-241250",
+     "sonuc_kodu": "SOZ_ALINDI"
+    }
+   }
+  ],
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "KRT-241250-01",
+     "amount": 9875.0,
+     "date": "2026-10-26"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "geç band before DUY-2026-034: deadline = 3rd business day = 26 Ekim",
+   "30 Ekim is after the deadline: the deadline is offered",
+   "soz_tipi TAMAMI"
+  ]
+ },
+ {
+  "id": "TRF-13",
+  "brief": "tr-final",
+  "family": "Üçüncü kişi + duyuru",
+  "title": "Oğlu açıyor; bugün 19:30 geri arama (genişletilmiş saat)",
+  "source": null,
+  "mock_customer": "FB-241250",
+  "variables": {
+   "musteri_no": "FB-241250",
+   "ad": "Emre",
+   "soyad": "Polat",
+   "hitap": "Bey",
+   "now": "2026-10-21T11:00"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "12.09.1968",
+   "TCKN_SON4": "4925"
+  },
+  "products": [
+   {
+    "product_id": "KRT-241250-01",
+    "type": "credit_card",
+    "card_last4": "5124",
+    "past_due": 9875.0,
+    "days_late": 44,
+    "minimum_payment": 3950.0
+   }
+  ],
+  "faults": {},
+  "customer_lines": [
+   "Ben oğluyum, babam şu an evde değil.",
+   "Bu akşam yedi buçukta evde olur."
+  ],
+  "agent_lines_reference": [
+   "Merhaba, ben Freya Bank'ın dijital asistanıyım. Bu görüşme kalite amacıyla kayıt altına alınmaktadır. Emre Polat ile mi görüşüyorum?",
+   "Emre Bey'e ne zaman ulaşabiliriz?",
+   "Teşekkür ederim. Emre Bey'i bugün saat 19:30'da arayacağız. İyi günler dilerim."
+  ],
+  "service_calls": [
+   {
+    "op": "GeriAramaPlanla",
+    "body": {
+     "musteri_no": "FB-241250",
+     "tarih": "2026-10-21",
+     "saat": "19:30"
+    },
+    "response": {
+     "basarili": true,
+     "randevu_no": "GA-2013"
+    },
+    "http": 200
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-241250",
+     "sonuc_kodu": "ULASILAMADI",
+     "gerekce_kodu": "GERI_ARAMA"
+    },
+    "response": {
+     "basarili": true
+    },
+    "http": 200
+   }
+  ],
+  "expected_ledger": [
+   {
+    "op": "GeriAramaPlanla",
+    "body": {
+     "musteri_no": "FB-241250",
+     "tarih": "2026-10-21",
+     "saat": "19:30"
+    }
+   },
+   {
+    "op": "GorusmeKapat",
+    "body": {
+     "musteri_no": "FB-241250",
+     "sonuc_kodu": "ULASILAMADI",
+     "gerekce_kodu": "GERI_ARAMA"
+    }
+   }
+  ],
+  "expected": {
+   "outcome": "not_reached",
+   "reason": "callback",
+   "promises": [],
+   "notes": [],
+   "callbacks": [
+    {
+     "date": "2026-10-21",
+     "time": "19:30"
+    }
+   ],
+   "transfers": []
+  },
+  "checks": [
+   "DUY-2026-031 in force (now 2026-10-21): 19:30 today is inside 09:00-20:00 and booked without a re-ask",
+   "a build with the BRIEF's stale 18:00 window would re-ask: fail",
+   "ULASILAMADI / GERI_ARAMA"
+  ]
+ }
+]

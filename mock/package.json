@@ -1,0 +1,6 @@
+{
+  "name": "bank-mock",
+  "private": true,
+  "type": "module",
+  "description": "Config-driven mock of the bank's services (Cloudflare Worker). Data files come from tools/mockgen/make_config.py."
+}

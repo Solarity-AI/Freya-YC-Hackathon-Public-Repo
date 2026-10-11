@@ -1,0 +1,517 @@
+{
+ "_about": "Core values a correct extraction of FreyaBank-Rehearsal/ must yield. 'leaves' are JSON pointers into the Spec (paths as tests/golden/spec-a.json) where the schema has a home for them; values are the rules in force at reference_now. Everything else is grouped by topic. Contract names (KimlikDogrula, sonuc_kodu, ...) must be used verbatim on the wire.",
+ "reference_now": "2026-10-21T10:30",
+ "leaves": {
+  "/bank/name": "Freya Bank",
+  "/bank/language": "tr",
+  "/call_variables/customer_key": "musteri_no",
+  "/call_variables/now": "now",
+  "/addressing/customer": "<v:ad> <v:hitap>",
+  "/right_party/max_asks": 2,
+  "/right_party/accept_own_name": true,
+  "/right_party/on_unresolved": "S_UNCLEAR",
+  "/identity/questions/0/field_value": "DOGUM_TARIHI",
+  "/identity/questions/0/kind": "date",
+  "/identity/questions/0/numeric_order": "DMY",
+  "/identity/questions/0/wire_format": "%d.%m.%Y",
+  "/identity/questions/1/field_value": "TCKN_SON4",
+  "/identity/questions/1/kind": "digits",
+  "/identity/questions/1/length": 4,
+  "/identity/one_at_a_time": true,
+  "/identity/max_wrong_total": 3,
+  "/identity/hints/0/value": "GUN_AY_YER_DEGISTI",
+  "/identity/hints/0/counts_as_wrong": false,
+  "/identity/decline/explain_times": 1,
+  "/identity/decline/max_declines": 2,
+  "/identity/decline/purpose_question_counts": true,
+  "/third_party/relative_may_verify": false,
+  "/third_party/relative_may_pay": false,
+  "/third_party/disclose": "nothing_beyond_opening",
+  "/third_party/callback/date_rule/include_today": true,
+  "/third_party/callback/date_rule/business_days_ahead": 1,
+  "/third_party/callback/windows/0/from": "09:00",
+  "/third_party/callback/windows/0/to": "20:00",
+  "/third_party/callback/after_now": true,
+  "/third_party/callback/reask_limit": 1,
+  "/products/fields/list": "kartlar",
+  "/products/fields/id": "kart_id",
+  "/products/fields/past_due": "ekstre_borcu",
+  "/products/fields/days_late": "gecikme_gun_sayisi",
+  "/products/types/KREDI_KARTI/floor/field": "asgari_odeme_tutari",
+  "/calendar/business_weekdays": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "/calendar/holidays": [
+   "2026-10-29",
+   "2027-01-01",
+   "2027-03-09",
+   "2027-03-10",
+   "2027-03-11",
+   "2027-04-23",
+   "2027-05-01",
+   "2027-05-16",
+   "2027-05-17",
+   "2027-05-18",
+   "2027-05-19"
+  ],
+  "/calendar/count_from": "after_today",
+  "/calendar/numeric_order": "DMY",
+  "/calendar/this_next": {
+   "this": "current_week",
+   "next": "following_week"
+  },
+  "/bands": [
+   {
+    "key": "erken",
+    "days_late_min": 1,
+    "days_late_max": 15,
+    "deadline": {
+     "kind": "nth_business_day_after_today",
+     "n": 7
+    },
+    "attempts": 1
+   },
+   {
+    "key": "geç",
+    "days_late_min": 16,
+    "days_late_max": 60,
+    "deadline": {
+     "kind": "nth_business_day_after_today",
+     "n": 3
+    },
+    "attempts": 2
+   }
+  ],
+  "/promise_date/earliest": {
+   "kind": "today"
+  },
+  "/promise_date/latest": {
+   "kind": "deadline"
+  },
+  "/promise_date/business_day_only": true,
+  "/promise_date/non_business_within_deadline": "offer_next_business_day",
+  "/promise_date/after_deadline": "offer_deadline",
+  "/promise_date/vague": {
+   "ask_exact_times": 1,
+   "then": "propose_deadline"
+  },
+  "/amounts/first": {
+   "kind": "full"
+  },
+  "/amounts/never_ask_customer": true,
+  "/amounts/too_much/offer": {
+   "kind": "floor"
+  },
+  "/amounts/too_much/times": 1,
+  "/amounts/accept_min": {
+   "kind": "floor"
+  },
+  "/amounts/accept_max": {
+   "kind": "full"
+  },
+  "/amounts/below_floor/times": 1,
+  "/amounts/below_floor/then": "flat_refusal",
+  "/negotiation/first_ask/single": "Bu ödemeyi bugün yapabilir misiniz?",
+  "/negotiation/ladder/0/attempt": 1,
+  "/negotiation/ladder/0/bands": [
+   "all"
+  ],
+  "/negotiation/ladder/0/amount": {
+   "kind": "floor_if_too_much_else_full"
+  },
+  "/negotiation/ladder/0/date": {
+   "kind": "last_business_day_of_week",
+   "if_today": "next_week",
+   "_capped_at": "deadline"
+  },
+  "/negotiation/ladder/1/attempt": 2,
+  "/negotiation/ladder/1/bands": [
+   "geç"
+  ],
+  "/negotiation/ladder/1/amount": {
+   "kind": "floor"
+  },
+  "/negotiation/ladder/1/date": {
+   "kind": "deadline"
+  },
+  "/negotiation/no_repeat_refused_offer": true,
+  "/confirmation/question": "Onaylıyor musunuz?",
+  "/recording/tries": 2,
+  "/recording/on_all_failed": "S_SERVICE_ERROR",
+  "/notes/enabled": true,
+  "/outcomes/reasonless_outcomes": [
+   "SOZ_ALINDI",
+   "ODEME_YAPILMIS"
+  ]
+ },
+ "tool_roles": {
+  "verify": "KimlikDogrula",
+  "account": "EkstreBorcSorgula",
+  "promise": "OdemeSozuKaydet",
+  "callback": "GeriAramaPlanla",
+  "transfer": "CagriAktar",
+  "note": "NotEkle",
+  "close": "GorusmeKapat"
+ },
+ "tool_fields": {
+  "KimlikDogrula": {
+   "customer_key": "musteri_no",
+   "field": "soru",
+   "answer": "cevap",
+   "result": "dogrulandi",
+   "left": "kalan_hak",
+   "all_done": "tum_sorular_tamam",
+   "hint": "ipucu",
+   "ok": "basarili",
+   "error": "hata_kodu"
+  },
+  "OdemeSozuKaydet": {
+   "product": "kart_id",
+   "amount": "tutar",
+   "date": "odeme_tarihi",
+   "derived_enum": {
+    "field": "soz_tipi",
+    "rule": "TAMAMI if amount == ekstre_borcu, ASGARI if amount == asgari_odeme_tutari, else KISMI"
+   }
+  },
+  "GeriAramaPlanla": {
+   "date": "tarih",
+   "time": "saat"
+  },
+  "CagriAktar": {
+   "queue": "kuyruk"
+  },
+  "NotEkle": {
+   "product": "kart_id",
+   "type": "not_tipi",
+   "text": "aciklama"
+  },
+  "GorusmeKapat": {
+   "outcome": "sonuc_kodu",
+   "reason": "gerekce_kodu (omitted when the table has none)"
+  }
+ },
+ "code_list": {
+  "outcome": {
+   "SOZ_ALINDI": "promise",
+   "ODEME_YAPILMIS": "paid",
+   "AKTARILDI": "transferred",
+   "SOZ_ALINAMADI": "no_promise",
+   "DOGRULANAMADI": "not_verified",
+   "ULASILAMADI": "not_reached"
+  },
+  "reason": {
+   "REDDETTI": "refused",
+   "ZOR_DURUM": "hardship",
+   "ITIRAZ": "dispute",
+   "SISTEM_HATASI": "service_error",
+   "HATALI_CEVAP": "failed",
+   "CEVAP_VERMEDI": "declined",
+   "GERI_ARAMA": "callback",
+   "GERI_ARAMA_YOK": "no_callback",
+   "YANLIS_NUMARA": "wrong_number",
+   "VEFAT": "deceased",
+   "BELIRSIZ": "unclear",
+   "FINANSAL_DESTEK": "support",
+   "YAPILANDIRMA": "restructuring",
+   "TEMSILCI": "human"
+  },
+  "queue": {
+   "FINANSAL_DESTEK": "support",
+   "YAPILANDIRMA": "restructuring",
+   "MUSTERI_TEMSILCISI": "general"
+  },
+  "note": {
+   "ODENDI_BEYANI": "paid",
+   "ITIRAZ": "dispute"
+  },
+  "close_pairs": [
+   [
+    "SOZ_ALINDI",
+    null
+   ],
+   [
+    "ODEME_YAPILMIS",
+    null
+   ],
+   [
+    "AKTARILDI",
+    "FINANSAL_DESTEK"
+   ],
+   [
+    "AKTARILDI",
+    "YAPILANDIRMA"
+   ],
+   [
+    "AKTARILDI",
+    "TEMSILCI"
+   ],
+   [
+    "SOZ_ALINAMADI",
+    "REDDETTI"
+   ],
+   [
+    "SOZ_ALINAMADI",
+    "ZOR_DURUM"
+   ],
+   [
+    "SOZ_ALINAMADI",
+    "ITIRAZ"
+   ],
+   [
+    "SOZ_ALINAMADI",
+    "SISTEM_HATASI"
+   ],
+   [
+    "DOGRULANAMADI",
+    "HATALI_CEVAP"
+   ],
+   [
+    "DOGRULANAMADI",
+    "CEVAP_VERMEDI"
+   ],
+   [
+    "ULASILAMADI",
+    "GERI_ARAMA"
+   ],
+   [
+    "ULASILAMADI",
+    "GERI_ARAMA_YOK"
+   ],
+   [
+    "ULASILAMADI",
+    "YANLIS_NUMARA"
+   ],
+   [
+    "ULASILAMADI",
+    "VEFAT"
+   ],
+   [
+    "ULASILAMADI",
+    "BELIRSIZ"
+   ]
+  ],
+  "retired_never_send": [
+   "SESLI_MESAJ",
+   "HUKUKI_TAKIP"
+  ],
+  "trap": "queue MUSTERI_TEMSILCISI closes with gerekce TEMSILCI (not the queue name)"
+ },
+ "situations": {
+  "promise": [
+   "SOZ_ALINDI",
+   null
+  ],
+  "paid": [
+   "ODEME_YAPILMIS",
+   null
+  ],
+  "hardship_transfer": [
+   "AKTARILDI",
+   "FINANSAL_DESTEK",
+   "queue FINANSAL_DESTEK"
+  ],
+  "restructure_transfer": [
+   "AKTARILDI",
+   "YAPILANDIRMA",
+   "queue YAPILANDIRMA"
+  ],
+  "human_transfer": [
+   "AKTARILDI",
+   "TEMSILCI",
+   "queue MUSTERI_TEMSILCISI"
+  ],
+  "refused": [
+   "SOZ_ALINAMADI",
+   "REDDETTI"
+  ],
+  "hardship_declined": [
+   "SOZ_ALINAMADI",
+   "ZOR_DURUM"
+  ],
+  "dispute": [
+   "SOZ_ALINAMADI",
+   "ITIRAZ",
+   "note ITIRAZ"
+  ],
+  "service_error": [
+   "SOZ_ALINAMADI",
+   "SISTEM_HATASI"
+  ],
+  "id_failed": [
+   "DOGRULANAMADI",
+   "HATALI_CEVAP"
+  ],
+  "id_declined": [
+   "DOGRULANAMADI",
+   "CEVAP_VERMEDI"
+  ],
+  "callback": [
+   "ULASILAMADI",
+   "GERI_ARAMA"
+  ],
+  "no_callback": [
+   "ULASILAMADI",
+   "GERI_ARAMA_YOK"
+  ],
+  "wrong_number": [
+   "ULASILAMADI",
+   "YANLIS_NUMARA"
+  ],
+  "deceased": [
+   "ULASILAMADI",
+   "VEFAT"
+  ],
+  "unclear": [
+   "ULASILAMADI",
+   "BELIRSIZ"
+  ]
+ },
+ "multi_product": {
+  "order": "most days_late first",
+  "one_at_a_time": true,
+  "one_promise_per_product": true,
+  "close_precedence": [
+   "transfer -> AKTARILDI",
+   "any promise -> SOZ_ALINDI",
+   "all paid -> ODEME_YAPILMIS",
+   "else first unpromised non-paid product"
+  ]
+ },
+ "banned_before_verification_must_include": [
+  "borç",
+  "ekstre",
+  "ödeme",
+  "kredi kartı",
+  "kart",
+  "gecikme",
+  "tahsilat",
+  "asgari",
+  "tutar",
+  "faiz"
+ ],
+ "banned_morphology": "suffixed forms count: borcunuz, ödemeniz, kartınızın, ekstrenizin, gecikmeli ...",
+ "never_offer_must_include": [
+  "faiz indirimi",
+  "borç silme",
+  "taksitlendirme",
+  "yapılandırma",
+  "erteleme"
+ ],
+ "never_ask_must_include": [
+  "Ne kadar ödeyebilirsiniz?"
+ ],
+ "verbatim_sentences": {
+  "opening": "Merhaba, ben Freya Bank'ın dijital asistanıyım. Bu görüşme kalite amacıyla kayıt altına alınmaktadır.",
+  "right_party_ask": "{ad} {soyad} ile mi görüşüyorum?",
+  "first_ask": "Bu ödemeyi bugün yapabilir misiniz?",
+  "confirm_question": "Onaylıyor musunuz?",
+  "sms": "Bu ödeme sözünü onaylayan bir SMS alacaksınız.",
+  "rest_overdue": "Kalan tutar gecikmede kalmaya devam eder.",
+  "scam": "Bu aramayı Freya Bank müşteri hizmetleri numarasını arayarak doğrulayabilirsiniz.",
+  "robot": "Freya Bank'ın dijital asistanıyım.",
+  "sorry_loss": "Başınız sağ olsun.",
+  "paid_delay": "Ödemelerin sisteme yansıması bir iş günü sürebilir."
+ },
+ "language": {
+  "amount_format": "8.450,75 TL (dot thousands, comma decimals)",
+  "date_spoken": "21 Ekim 2026 Çarşamba",
+  "weekday_names": [
+   "Pazartesi",
+   "Salı",
+   "Çarşamba",
+   "Perşembe",
+   "Cuma",
+   "Cumartesi",
+   "Pazar"
+  ],
+  "month_names": [
+   "Ocak",
+   "Şubat",
+   "Mart",
+   "Nisan",
+   "Mayıs",
+   "Haziran",
+   "Temmuz",
+   "Ağustos",
+   "Eylül",
+   "Ekim",
+   "Kasım",
+   "Aralık"
+  ],
+  "two_digit_year": "19xx",
+  "numeric_date_order": "DMY"
+ },
+ "superseded_values": [
+  {
+   "path": "/third_party/callback/windows/0/to",
+   "brief": "18:00",
+   "announcement": "DUY-2026-031",
+   "value": "20:00",
+   "effective_from": "2026-10-19",
+   "in_force_at_reference_now": "20:00",
+   "test": "TRF-13"
+  }
+ ],
+ "dated_overrides": [
+  {
+   "announcement": "DUY-2026-034",
+   "path": "/bands/1/deadline/n",
+   "before": 3,
+   "value": 2,
+   "effective_from": "2026-11-02",
+   "decided_by": "call date (now)",
+   "expect": "n=3 when now < 2026-11-02 (TRF-02, TRF-12), n=2 when now >= 2026-11-02 (TRF-06). Baking either value fails one of them; the builder must emit a now-conditioned deadline or at least raise it in meta.residual_rules / warnings."
+  }
+ ],
+ "residual_rules": [
+  {
+   "what": "arife (half-day) callback window 09:00-12:30; arife counts as a business day for promises",
+   "dates": [
+    "2026-10-28",
+    "2027-03-08",
+    "2027-05-15"
+   ],
+   "test": "TRF-03 (callback), TRF-11 (promise on arife)"
+  },
+  {
+   "what": "attempt-1 date is capped at the deadline",
+   "test": "TRF-06"
+  },
+  {
+   "what": "soz_tipi derived from the amount",
+   "test": "TRF-01, TRF-02, TRF-06, TRF-11, TRF-12"
+  }
+ ],
+ "rejected_changes": [
+  {
+   "announcement": "DUY-2026-035",
+   "what": "Saturday promises",
+   "expect": "business_weekdays stays Mon-Fri"
+  },
+  {
+   "announcement": "DUY-2026-036",
+   "what": "2026-12-31 is NOT a holiday",
+   "expect": "2026-12-31 absent from /calendar/holidays"
+  },
+  {
+   "announcement": "DUY-2026-028",
+   "what": "half-minimum pilot expired 2026-09-30",
+   "expect": "floor stays asgari_odeme_tutari"
+  }
+ ],
+ "distractors": {
+  "analiz.docx": "'5 iş günü' (draft, rejected) and 'yaklaşık iki hafta' must not become a deadline",
+  "servis-sozlesmesi.docx": "example bodies use FB-000001 / 2026-01-02; retired codes SESLI_MESAJ, HUKUKI_TAKIP"
+ },
+ "file_traps": {
+  "test-musterileri.xlsx": "dates are real Excel date cells (serial numbers with a dd.mm.yyyy format), tckn_son4 '0285' is text, amounts are numbers with #,##0.00",
+  "servis-sozlesmesi.docx": "the closing table sits inside a content control (w:sdt)",
+  "akis.drawio": "uncompressed mxGraph XML (labels in value attributes with <br>); the -md variant folder holds the compressed form diagrams.net saves by default (base64 + raw deflate + URL-encoding)",
+  "duyurular.pdf": "text PDF printed by Chrome"
+ }
+}

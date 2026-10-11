@@ -1,0 +1,534 @@
+{
+  "_about": "Expected CORE leaves for testbed/raw-a/brief.md. Keys are JSON pointers into the Spec (same paths as tests/golden/spec-a.json). Values are the rules in force for a call dated 2026-10-14 (the golden spec-a applies unchanged at that date). Leaves not listed (lines, wording, keywords, interpretation) are free.",
+  "reference_now": "2026-10-14T11:00",
+  "leaves": {
+    "/bank/name": "Freya Bank",
+    "/call_variables/customer_key": "customer_id",
+    "/call_variables/now": "now",
+    "/addressing/customer": "<v:title> <v:last_name>",
+    "/right_party/max_asks": 2,
+    "/right_party/accept_own_name": true,
+    "/right_party/on_unresolved": "S_UNCLEAR",
+    "/identity/questions/0/field_value": "date_of_birth",
+    "/identity/questions/0/kind": "date",
+    "/identity/questions/0/numeric_order": "DMY",
+    "/identity/questions/0/wire_format": "%Y-%m-%d",
+    "/identity/questions/1/field_value": "phone_last4",
+    "/identity/questions/1/kind": "digits",
+    "/identity/questions/1/length": 4,
+    "/identity/one_at_a_time": true,
+    "/identity/max_wrong_total": 3,
+    "/identity/hints/0/value": "day_month_swapped",
+    "/identity/hints/0/counts_as_wrong": false,
+    "/identity/decline/explain_times": 1,
+    "/identity/decline/max_declines": 2,
+    "/identity/decline/purpose_question_counts": true,
+    "/identity/on_failed": "S_ID_FAILED",
+    "/identity/on_declined": "S_ID_DECLINED",
+    "/third_party/relative_may_verify": false,
+    "/third_party/relative_may_pay": false,
+    "/third_party/disclose": "nothing_beyond_opening",
+    "/third_party/callback/date_rule/include_today": true,
+    "/third_party/callback/date_rule/business_days_ahead": 1,
+    "/third_party/callback/windows/0/from": "10:00",
+    "/third_party/callback/windows/0/to": "19:00",
+    "/third_party/callback/windows/0/inclusive_from": true,
+    "/third_party/callback/windows/0/inclusive_to": true,
+    "/third_party/callback/after_now": true,
+    "/third_party/callback/reask_limit": 1,
+    "/products/max": 1,
+    "/products/types/credit_card/spoken": "credit card ending <f:card_last4>",
+    "/products/types/credit_card/floor/field": "minimum_payment",
+    "/products/types/personal_loan/spoken": "personal loan",
+    "/products/types/personal_loan/floor/field": "instalment_amount",
+    "/products/types/car_loan/spoken": "car loan",
+    "/products/types/car_loan/floor/field": "instalment_amount",
+    "/calendar/business_weekdays": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "/calendar/holidays": [
+      "2026-10-26",
+      "2026-11-11",
+      "2026-11-26",
+      "2026-12-25",
+      "2027-01-01"
+    ],
+    "/calendar/count_from": "after_today",
+    "/calendar/numeric_order": "DMY",
+    "/calendar/this_next": {
+      "this": "current_week",
+      "next": "following_week"
+    },
+    "/bands": [
+      {
+        "key": "early",
+        "days_late_min": 1,
+        "days_late_max": 7,
+        "deadline": {
+          "kind": "nth_business_day_after_today",
+          "n": 12
+        },
+        "attempts": 1
+      },
+      {
+        "key": "late",
+        "days_late_min": 8,
+        "days_late_max": 45,
+        "deadline": {
+          "kind": "nth_business_day_after_today",
+          "n": 7
+        },
+        "attempts": 2
+      }
+    ],
+    "/promise_date/earliest": {
+      "kind": "today"
+    },
+    "/promise_date/latest": {
+      "kind": "deadline"
+    },
+    "/promise_date/business_day_only": true,
+    "/promise_date/non_business_within_deadline": "offer_next_business_day",
+    "/promise_date/after_deadline": "offer_deadline",
+    "/promise_date/offered_date_refused": "flat_refusal",
+    "/promise_date/vague": {
+      "ask_exact_times": 1,
+      "then": "propose_deadline"
+    },
+    "/amounts/first": {
+      "kind": "full"
+    },
+    "/amounts/never_ask_customer": true,
+    "/amounts/too_much/offer": {
+      "kind": "floor"
+    },
+    "/amounts/too_much/times": 1,
+    "/amounts/too_much/refusal": "flat_refusal",
+    "/amounts/accept_min": {
+      "kind": "floor"
+    },
+    "/amounts/accept_max": {
+      "kind": "full"
+    },
+    "/amounts/below_floor/times": 1,
+    "/amounts/below_floor/then": "flat_refusal",
+    "/negotiation/first_ask/single": "Can you make this payment today?",
+    "/negotiation/first_ask/consumes_attempt": false,
+    "/negotiation/ladder/0/attempt": 1,
+    "/negotiation/ladder/0/bands": [
+      "all"
+    ],
+    "/negotiation/ladder/0/amount": {
+      "kind": "floor_if_too_much_else_full"
+    },
+    "/negotiation/ladder/0/date": {
+      "kind": "last_business_day_of_week",
+      "if_today": "next_week"
+    },
+    "/negotiation/ladder/1/attempt": 2,
+    "/negotiation/ladder/1/bands": [
+      "late"
+    ],
+    "/negotiation/ladder/1/amount": {
+      "kind": "floor"
+    },
+    "/negotiation/ladder/1/date": {
+      "kind": "deadline"
+    },
+    "/negotiation/no_repeat_refused_offer": true,
+    "/negotiation/on_exhausted": "S_REFUSED_EXHAUSTED",
+    "/confirmation/question": "Do you confirm?",
+    "/confirmation/verbatim_question": true,
+    "/recording/tries": 2,
+    "/recording/on_all_failed": "S_SERVICE_ERROR",
+    "/required_sentences": [
+      {
+        "id": "text_message",
+        "text": "You will receive a text message confirming this promise.",
+        "verbatim": true,
+        "trigger": "after_promise_recorded",
+        "once": true
+      },
+      {
+        "id": "sorry_loss",
+        "text": "I am sorry for your loss.",
+        "verbatim": true,
+        "trigger": "on_situation:S_DECEASED",
+        "once": true
+      }
+    ],
+    "/situations": {
+      "S_PROMISE": {
+        "outcome": "promise",
+        "reason": "",
+        "queue": "",
+        "note_reason": ""
+      },
+      "S_PAID": {
+        "outcome": "paid",
+        "reason": "",
+        "queue": "",
+        "note_reason": "paid"
+      },
+      "S_RESTRUCTURE_TRANSFER": {
+        "outcome": "transferred",
+        "reason": "restructuring",
+        "queue": "restructuring",
+        "note_reason": ""
+      },
+      "S_HUMAN_TRANSFER": {
+        "outcome": "transferred",
+        "reason": "human",
+        "queue": "general",
+        "note_reason": ""
+      },
+      "S_HARDSHIP_TRANSFER": {
+        "outcome": "transferred",
+        "reason": "support",
+        "queue": "support",
+        "note_reason": ""
+      },
+      "S_REFUSED_EXHAUSTED": {
+        "outcome": "no_promise",
+        "reason": "refused",
+        "queue": "",
+        "note_reason": "refused"
+      },
+      "S_REFUSED_TO_TALK": {
+        "outcome": "no_promise",
+        "reason": "refused",
+        "queue": "",
+        "note_reason": "refused"
+      },
+      "S_HARDSHIP_DECLINED": {
+        "outcome": "no_promise",
+        "reason": "hardship",
+        "queue": "",
+        "note_reason": "hardship"
+      },
+      "S_DISPUTE": {
+        "outcome": "no_promise",
+        "reason": "dispute",
+        "queue": "",
+        "note_reason": "dispute"
+      },
+      "S_SERVICE_ERROR": {
+        "outcome": "no_promise",
+        "reason": "service_error",
+        "queue": "",
+        "note_reason": "service_error"
+      },
+      "S_ID_FAILED": {
+        "outcome": "not_verified",
+        "reason": "failed",
+        "queue": "",
+        "note_reason": ""
+      },
+      "S_ID_DECLINED": {
+        "outcome": "not_verified",
+        "reason": "declined",
+        "queue": "",
+        "note_reason": ""
+      },
+      "S_CALLBACK": {
+        "outcome": "not_reached",
+        "reason": "callback",
+        "queue": "",
+        "note_reason": ""
+      },
+      "S_NO_CALLBACK": {
+        "outcome": "not_reached",
+        "reason": "no_callback",
+        "queue": "",
+        "note_reason": ""
+      },
+      "S_WRONG_NUMBER": {
+        "outcome": "not_reached",
+        "reason": "wrong_number",
+        "queue": "",
+        "note_reason": ""
+      },
+      "S_DECEASED": {
+        "outcome": "not_reached",
+        "reason": "deceased",
+        "queue": "",
+        "note_reason": ""
+      },
+      "S_UNCLEAR": {
+        "outcome": "not_reached",
+        "reason": "unclear",
+        "queue": "",
+        "note_reason": ""
+      }
+    },
+    "/notes/enabled": false,
+    "/outcomes/reasonless_outcomes": [
+      "promise",
+      "paid"
+    ]
+  },
+  "intents": {
+    "deceased": {
+      "scope": [
+        "rp",
+        "tp"
+      ],
+      "action": {
+        "kind": "close_now",
+        "situation": "S_DECEASED",
+        "say": "I am sorry for your loss."
+      }
+    },
+    "wrong_number": {
+      "scope": [
+        "rp",
+        "tp"
+      ],
+      "action": {
+        "kind": "close_now",
+        "situation": "S_WRONG_NUMBER"
+      }
+    },
+    "hardship": {
+      "scope": [
+        "neg",
+        "conf"
+      ],
+      "action": {
+        "kind": "offer_transfer",
+        "queue": "support",
+        "accept_situation": "S_HARDSHIP_TRANSFER",
+        "decline_situation": "S_HARDSHIP_DECLINED",
+        "suspend_persuasion": true
+      }
+    },
+    "restructure": {
+      "scope": [
+        "neg",
+        "conf"
+      ],
+      "action": {
+        "kind": "transfer",
+        "queue": "restructuring",
+        "situation": "S_RESTRUCTURE_TRANSFER"
+      }
+    },
+    "dispute": {
+      "scope": [
+        "neg",
+        "conf"
+      ],
+      "action": {
+        "kind": "resolve_product",
+        "situation": "S_DISPUTE"
+      }
+    },
+    "paid": {
+      "scope": [
+        "neg",
+        "conf"
+      ],
+      "action": {
+        "kind": "resolve_product",
+        "situation": "S_PAID"
+      }
+    },
+    "human": {
+      "scope": [
+        "id",
+        "neg",
+        "conf"
+      ],
+      "action": {
+        "kind": "ask_then_transfer",
+        "queue": "general",
+        "situation": "S_HUMAN_TRANSFER"
+      }
+    },
+    "refuse_talk": {
+      "scope": [
+        "id",
+        "neg",
+        "conf"
+      ],
+      "action": {
+        "kind": "count_then_close",
+        "situation": "S_REFUSED_TO_TALK",
+        "situation_pre_verification": "S_ID_DECLINED",
+        "limit": 2
+      }
+    },
+    "too_much": {
+      "scope": [
+        "neg",
+        "conf"
+      ],
+      "action": {
+        "kind": "too_much"
+      }
+    },
+    "robot": {
+      "scope": [
+        "rp",
+        "tp",
+        "id",
+        "neg",
+        "conf"
+      ],
+      "action": {
+        "kind": "answer_continue"
+      }
+    },
+    "scam": {
+      "scope": [
+        "rp",
+        "tp",
+        "id",
+        "neg",
+        "conf"
+      ],
+      "action": {
+        "kind": "answer_continue"
+      }
+    },
+    "change_promise": {
+      "scope": [
+        "neg",
+        "conf"
+      ],
+      "action": {
+        "kind": "answer_continue"
+      }
+    },
+    "forbidden_offer": {
+      "scope": [
+        "neg",
+        "conf"
+      ],
+      "action": {
+        "kind": "answer_continue"
+      }
+    }
+  },
+  "banned_before_verification_must_include": [
+    "collections",
+    "debt",
+    "payment",
+    "credit card",
+    "personal loan",
+    "car loan"
+  ],
+  "never_offer_must_include": [
+    "discount",
+    "waiver",
+    "instalment plan"
+  ],
+  "never_ask_must_include": [
+    "how much can you pay"
+  ],
+  "verbatim_sentences": {
+    "right_party_ask": "Am I speaking with {title} {last_name}?",
+    "first_ask": "Can you make this payment today?",
+    "confirm_question": "Do you confirm?",
+    "text_message": "You will receive a text message confirming this promise.",
+    "sorry_loss": "I am sorry for your loss."
+  },
+  "code_list": {
+    "outcome": {
+      "OUT-PRM": "promise",
+      "OUT-PDA": "paid",
+      "OUT-TRF": "transferred",
+      "OUT-NPR": "no_promise",
+      "OUT-NVF": "not_verified",
+      "OUT-NRC": "not_reached"
+    },
+    "reason": {
+      "RSN-RST": "restructuring",
+      "RSN-HUM": "human",
+      "RSN-SUP": "support",
+      "RSN-REF": "refused",
+      "RSN-HRD": "hardship",
+      "RSN-DSP": "dispute",
+      "RSN-SVC": "service_error",
+      "RSN-IDF": "failed",
+      "RSN-IDD": "declined",
+      "RSN-CBK": "callback",
+      "RSN-NCB": "no_callback",
+      "RSN-WRN": "wrong_number",
+      "RSN-DEC": "deceased",
+      "RSN-UNC": "unclear"
+    },
+    "queue": {
+      "Q-RST": "restructuring",
+      "Q-GEN": "general",
+      "Q-SUP": "support"
+    },
+    "note_reason_unused": {
+      "NTE-REF": "refused",
+      "NTE-HRD": "hardship",
+      "NTE-DSP": "dispute",
+      "NTE-PDA": "paid",
+      "NTE-SVC": "service_error"
+    },
+    "must_never_be_sent_in_tool_arguments": [
+      "voicemail",
+      "legal_hold",
+      "OUT-",
+      "RSN-",
+      "Q-RST",
+      "Q-GEN",
+      "Q-SUP",
+      "NTE-"
+    ]
+  },
+  "superseded_values": [
+    {
+      "path": "/bands/1/deadline/n",
+      "policy_v3": 10,
+      "memo_item": 1,
+      "value": 7,
+      "effective_from": "2026-10-05",
+      "in_force_at_reference_now": 7
+    },
+    {
+      "path": "/third_party/callback/windows/0/to",
+      "policy_v3": "18:00",
+      "memo_item": 2,
+      "value": "19:00",
+      "effective_from": "2026-10-12",
+      "in_force_at_reference_now": "19:00"
+    }
+  ],
+  "rejected_changes": [
+    {
+      "memo_item": 3,
+      "what": "move early/late boundary from 7 to 10 days_late",
+      "expect": "/bands/0/days_late_max stays 7 and /bands/1/days_late_min stays 8"
+    },
+    {
+      "memo_item": 4,
+      "what": "2026-12-24 is NOT a holiday",
+      "expect": "2026-12-24 absent from /calendar/holidays"
+    }
+  ],
+  "dated_overrides": [
+    {
+      "memo_item": 5,
+      "path": "/bands/0/deadline/n",
+      "before": 12,
+      "value": 10,
+      "effective_from": "2026-11-16",
+      "decided_by": "call date (now), not the promise date",
+      "expect": "a correct build resolves the early-band deadline at call time: n=12 when now < 2026-11-16, n=10 when now >= 2026-11-16. A build that bakes n=10 fails RAWA-13; a build that bakes n=12 fails RAWA-11 and RAWA-12. Spec schema mvp-1 has no dated-override leaf, so the builder must either emit a now-conditioned deadline or record this in meta.residual_rules/warnings (never silently drop it)."
+    }
+  ],
+  "not_core_or_free": {
+    "/bank/currency": "the policy shows 'USD 126.00' style examples; symbol/word may be '' (spec-a) or 'USD'/'dollars'. Not scored.",
+    "/bands/*/key": "free label: the brief calls the bands E1/E2 (early/late); match on days_late ranges, deadline and attempts, not on the key",
+    "/meta/sources": "must not cite the Part 1 mail paraphrase 'about two weeks' for any deadline"
+  }
+}

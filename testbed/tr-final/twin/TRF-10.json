@@ -1,0 +1,94 @@
+{
+ "id": "TRF-10",
+ "title": "Taksitlendirme isteği, Yapılandırma Ekibine aktarım",
+ "mode": "sim",
+ "case": {
+  "id": "TRF-10",
+  "variables": {
+   "musteri_no": "FB-240233",
+   "ad": "Mehmet",
+   "soyad": "Kaya",
+   "hitap": "Bey",
+   "now": "2026-10-27T15:30"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "03.01.1985",
+   "TCKN_SON4": "6614"
+  },
+  "products": [
+   {
+    "kart_id": "KRT-240233-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "2290",
+    "ekstre_borcu": 5350.0,
+    "asgari_odeme_tutari": 2140.0,
+    "son_odeme_tarihi": "2026-10-05",
+    "gecikme_gun_sayisi": 22
+   }
+  ]
+ },
+ "expect": {
+  "outcome": "AKTARILDI",
+  "reason": "YAPILANDIRMA",
+  "promises": [],
+  "notes": [],
+  "callbacks": [],
+  "transfers": [
+   {
+    "queue": "YAPILANDIRMA"
+   }
+  ]
+ },
+ "turns": [
+  {
+   "say": "Evet, benim.",
+   "x": {
+    "u_text": "Evet, benim.",
+    "u_en": "Yes, it's me.",
+    "u_act": "yes",
+    "u_topic": "none"
+   }
+  },
+  {
+   "say": "Üç bir seksen beş.",
+   "x": {
+    "u_text": "Üç bir seksen beş.",
+    "u_en": "Three one eighty-five.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "1985-01-03",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "6614.",
+   "x": {
+    "u_text": "6614.",
+    "u_en": "6614.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "6614",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "Bunu taksitlendirebilir miyiz? Borcumu yapılandırmak istiyorum.",
+   "x": {
+    "u_text": "Bunu taksitlendirebilir miyiz? Borcumu yapılandırmak istiyorum.",
+    "u_en": "Can we split this into instalments? I want to restructure my debt.",
+    "u_act": "question",
+    "u_topic": "restructure_request",
+    "u_amt": "",
+    "u_dkind": "none",
+    "u_dval": "",
+    "u_dwhich": "bare",
+    "u_kind": "question"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 24
+ }
+}

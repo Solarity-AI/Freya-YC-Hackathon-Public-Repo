@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Freya Builder System Design</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: title, builder pipeline (left to right), agent hub diagram + code/model split, safety rails, test layers, Sunday flow. */
+:root {
+  --bg: #f3f5f9; --panel: #ffffff; --ink: #16213a; --muted: #5a6478; --line: #dde3ee;
+  --llm: #6b3fc6; --llm-soft: #efe8fb;
+  --code: #2563c9; --code-soft: #e7effc;
+  --freya: #0f8a7a; --freya-soft: #e2f4f1;
+  --bank: #d9611c; --bank-soft: #fcede3;
+  --good: #1d8a4e; --banner: #c8432f; --banner-ink: #ffffff;
+  --display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1420; --panel: #171e2d; --ink: #e8ecf5; --muted: #a2acc0; --line: #2a3346;
+    --llm: #b08cff; --llm-soft: #2a2145; --code: #6ea3ff; --code-soft: #1b2a47;
+    --freya: #3fc7b2; --freya-soft: #13302d; --bank: #ff9a5c; --bank-soft: #3a2416;
+    --good: #4cc282; --banner: #b23a28; color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.4; }
+.wrap { max-width: 1500px; margin: 0 auto; padding-inline: 22px; padding-block: 26px 34px; display: grid; gap: 20px; }
+header { text-align: center; display: grid; gap: 4px; }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(2.4rem, 5vw, 3.6rem); margin: 0; line-height: 1; }
+.sub { color: var(--muted); font-weight: 600; font-size: 1.05rem; }
+.sub b { color: var(--ink); }
+h2 { font-family: var(--display); font-weight: 700; font-size: 1.5rem; letter-spacing: 0.04em; text-transform: uppercase; margin: 0; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; display: grid; gap: 14px; min-width: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 0.85rem; color: var(--muted); }
+.tag { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 1px 7px; border-radius: 999px; border: 1px solid currentColor; }
+.tag.llm { color: var(--llm); } .tag.code { color: var(--code); } .tag.freya { color: var(--freya); }
+.flow { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 0; align-items: stretch; }
+.step { position: relative; background: var(--soft); border-top: 4px solid var(--c); border-radius: 10px; padding: 10px 10px 12px; margin-right: 18px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.step:last-child { margin-right: 0; }
+.step::after { content: ""; position: absolute; right: -16px; top: 42%; border: 7px solid transparent; border-left: 10px solid var(--muted); }
+.step:last-child::after { display: none; }
+.step.llm { --c: var(--llm); --soft: var(--llm-soft); } .step.code { --c: var(--code); --soft: var(--code-soft); } .step.freya { --c: var(--freya); --soft: var(--freya-soft); }
+.step h3 { margin: 0; font-family: var(--display); font-size: 1.15rem; font-weight: 700; line-height: 1.1; }
+.step p { margin: 0; font-size: 0.84rem; }
+.step .time { font-family: var(--display); font-weight: 700; color: var(--c); font-size: 1rem; }
+.facets { display: grid; gap: 3px; font-size: 0.8rem; }
+.facets span b { color: var(--llm); }
+.total { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 0.92rem; }
+.total b { font-family: var(--display); font-size: 1.25rem; color: var(--ink); }
+.two { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 1100px) { .two { grid-template-columns: minmax(0, 1fr); } .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 14px; } .step::after { display: none; } }
+@media (max-width: 600px) { .flow { grid-template-columns: minmax(0, 1fr); } }
+.hub { display: grid; grid-template-columns: minmax(0, 1fr) 190px minmax(0, 1fr); gap: 14px; align-items: center; }
+@media (max-width: 760px) { .hub { grid-template-columns: minmax(0, 1fr); } }
+.lane { display: grid; gap: 6px; }
+.lane h4 { margin: 0 0 2px; font-family: var(--display); font-size: 1.05rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--c); }
+.lane.listen { --c: var(--freya); --soft: var(--freya-soft); } .lane.bankl { --c: var(--bank); --soft: var(--bank-soft); }
+.node { background: var(--soft); border: 1px solid var(--c); border-radius: 8px; padding: 5px 9px; font-size: 0.84rem; display: flex; justify-content: space-between; gap: 8px; }
+.node code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.78rem; color: var(--c); font-weight: 700; white-space: nowrap; }
+.brain { background: var(--code-soft); border: 2px solid var(--code); border-radius: 50%; aspect-ratio: 1; max-width: 190px; width: 100%; display: grid; place-items: center; text-align: center; padding: 14px; justify-self: center; }
+.brain strong { font-family: var(--display); font-size: 1.6rem; color: var(--code); display: block; line-height: 1; }
+.brain small { font-size: 0.8rem; color: var(--muted); display: block; margin-top: 4px; }
+.loop { font-size: 0.85rem; color: var(--muted); text-align: center; }
+.loop b { color: var(--ink); }
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.side { border-radius: 10px; padding: 10px 12px; display: grid; gap: 6px; align-content: start; }
+.side.model { background: var(--freya-soft); } .side.codes { background: var(--code-soft); }
+.side h4 { margin: 0; font-family: var(--display); font-size: 1.1rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.side ul { margin: 0; padding-left: 16px; display: grid; gap: 3px; font-size: 0.86rem; }
+.three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 1100px) { .three { grid-template-columns: minmax(0, 1fr); } }
+.rails { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; font-size: 0.88rem; }
+.rails li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 6px; }
+.rails li::before { content: "✓"; color: var(--good); font-weight: 700; }
+.layers { display: grid; gap: 6px; }
+.layer { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 10px; align-items: baseline; font-size: 0.88rem; }
+.layer b { font-family: var(--display); font-size: 1.2rem; text-align: right; color: var(--code); font-variant-numeric: tabular-nums; }
+.timeline { display: grid; gap: 7px; font-size: 0.88rem; }
+.timeline div { display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 10px; }
+.timeline b { font-family: var(--display); font-size: 1.1rem; color: var(--bank); font-variant-numeric: tabular-nums; }
+.banner { background: var(--banner); color: var(--banner-ink); border-radius: 12px; padding: 13px 18px; text-align: center; font-weight: 600; }
+.banner strong { font-family: var(--display); font-size: 1.45rem; margin-right: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>How the Builder Works</h1>
+    <div class="sub">One command: <b>python3 builder/build.py &lt;case_folder&gt; &lt;mock_url&gt;</b> · the bank's documents go in, a Turkish-speaking Freya phone agent comes out</div>
+  </header>
+
+  <section class="panel" aria-label="Builder pipeline">
+    <h2>1 · Builder pipeline</h2>
+    <div class="legend"><span><span class="tag llm">Claude</span> language work</span><span><span class="tag code">code</span> deterministic</span><span><span class="tag freya">Freya</span> platform calls</span></div>
+    <div class="flow">
+      <div class="step code"><h3>Read the case folder</h3><p>Markdown, Word, PDF, Excel, draw.io, zip. Each document sorted: brief, contract, customers, examples. Preflight checks keys.</p><span class="time">&lt; 1 s</span></div>
+      <div class="step code"><h3>Contract → tools</h3><p>OpenAPI, or a Word/PDF contract converted by Claude. Renamed or Turkish operations mapped to roles; every tool calls our mock.</p><span class="time">&lt; 1 s</span></div>
+      <div class="step code"><h3>Split the brief</h3><p>Sections and tables of every document, each tagged with its role (rules, test data, example).</p><span class="time">&lt; 1 s</span></div>
+      <div class="step llm"><h3>Extract 7 facets in parallel</h3>
+        <div class="facets">
+          <span><b>F1</b> opening, third party, banned words</span>
+          <span><b>F2</b> identity questions</span>
+          <span><b>F3</b> products, calendar, bands</span>
+          <span><b>F4</b> dates, amounts, offer ladder</span>
+          <span><b>F5</b> intents (hardship, dispute…)</span>
+          <span><b>F6</b> read-back, recording, closing</span>
+          <span><b>F7</b> outcomes, notes, multi-product</span>
+        </div><span class="time">60–100 s</span></div>
+      <div class="step code"><h3>Validate the Spec</h3><p>Values quoted from the documents; enums bound to the contract; call language; Turkish holidays; dated memo rules; honest wording.</p><span class="time">&lt; 1 s</span></div>
+      <div class="step code"><h3>Compile</h3><p>Spec → workflow JSON. The brain is packed to about 84 KB, with a turn budget so long calls close before the 131 KB limit.</p><span class="time">&lt; 1 s</span></div>
+      <div class="step code"><h3>Lint + local twin</h3><p>Graph checks, size check, then sample calls against a mock bank built from the tool API.</p><span class="time">1 s</span></div>
+      <div class="step freya"><h3>Deploy + trace</h3><p>Dry run, save, publish, read back, one smoke chat turn, export, full trace.</p><span class="time">5–30 s</span></div>
+    </div>
+    <div class="total"><span><b>70–140 s</b> per build (limit 30 min)</span><span><b>~8</b> Claude calls per build</span><span><b>0</b> live tests needed to ship</span><span><b>1</b> new workflow per run, never overwritten</span></div>
+  </section>
+
+  <div class="two">
+    <section class="panel" aria-label="Generated phone agent">
+      <h2>2 · The phone agent it generates</h2>
+      <div class="hub">
+        <div class="lane listen">
+          <h4>Listen and speak (8)</h4>
+          <div class="node">Opening + "Am I speaking with…?" <code>s_open</code></div>
+          <div class="node">Right person check <code>s_rp</code></div>
+          <div class="node">Relative / third party <code>s_tp</code></div>
+          <div class="node">Identity questions <code>s_id</code></div>
+          <div class="node">Negotiation <code>s_neg</code></div>
+          <div class="node">Read-back + confirm <code>s_conf</code></div>
+          <div class="node">Goodbye <code>s_bye</code></div>
+          <div class="node">Safe re-ask <code>s_safe</code></div>
+        </div>
+        <div style="display:grid; gap:10px; justify-items:center;">
+          <div class="brain"><div><strong>ctl</strong>code brain<small>one code node, runs every turn in 0.3–2 s</small></div></div>
+          <div class="loop">every customer turn:<br><b>listen → ctl → next line or bank call</b></div>
+        </div>
+        <div class="lane bankl">
+          <h4>Bank calls → our Cloudflare mock (25)</h4>
+          <div class="node">Identity checks <code>a_verify ×8</code></div>
+          <div class="node">Read the account <code>a_acct ×2</code></div>
+          <div class="node">Promise per product, 1 retry <code>a_promise ×6</code></div>
+          <div class="node">Notes per product <code>a_note ×3</code></div>
+          <div class="node">Callback <code>a_cb ×2</code></div>
+          <div class="node">Transfer <code>a_xfer ×2</code></div>
+          <div class="node">Close with / without reason <code>a_close ×2</code></div>
+        </div>
+      </div>
+      <div class="loop">Brief A+B build: <b>35 nodes</b> (8 conversation, 1 code, 25 bank-call, 1 end) · every route is a plain variable check, no AI routing</div>
+    </section>
+
+    <section class="panel" aria-label="Who decides what">
+      <h2>3 · The model listens, code decides</h2>
+      <div class="split">
+        <div class="side model">
+          <h4>Freya model</h4>
+          <ul>
+            <li>Copies the customer's words, and an English rendering</li><li>Reads Turkish answers as typed values: date, digits, amount</li>
+            <li>Picks the kind of reply: yes, no, answer, question</li>
+            <li>Picks the topic: hardship, dispute, paid, human</li>
+            <li>Speaks only lines the code chose</li>
+          </ul>
+        </div>
+        <div class="side codes">
+          <h4>Code brain</h4>
+          <ul>
+            <li>Checks every model-read value; resolves "yarın", "cuma" from the call date</li><li>Business days, Turkish holidays, deadlines</li>
+            <li>Amounts in cents, minimum payment, the offer ladder</li>
+            <li>Identity answers, wrong-answer counts, hints</li>
+            <li>Which product is next, when to read back</li>
+            <li>Every bank call and its exact values</li>
+            <li>Outcome, reason and notes for the close</li><li>Speaks "23 Ekim Cuma", "1.250,00 TL"</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="three">
+    <section class="panel" aria-label="Safety rails">
+      <h2>4 · Safety rails</h2>
+      <ul class="rails">
+        <li>Nothing about the debt is said before identity is verified; lines before that are fixed text</li>
+        <li>No bank write runs twice: each write node is guarded and entered once</li>
+        <li>A failed promise is retried once; "recorded" is said only after success</li>
+        <li>close_call is always the last call; no reason on promise or paid</li>
+        <li>Memo changes apply by the call's own date; Turkish national holidays built in</li><li>Forbidden words caught with Turkish endings (borç → borcunuz)</li><li>Long calls wrap up before the platform's 131 KB limit</li>
+        <li>Nothing from Brief A/B is in the builder; a leak check runs on every fix</li>
+      </ul>
+    </section>
+    <section class="panel" aria-label="Test layers">
+      <h2>5 · How it is tested</h2>
+      <div class="layers">
+        <div class="layer"><b>3,509</b><span>local tests, incl. Turkish, ingest, contract and mock suites</span></div>
+        <div class="layer"><b>14</b><span>practice customers replayed in the local twin</span></div>
+        <div class="layer"><b>74</b><span>live chat calls with Claude playing the customer</span></div>
+        <div class="layer"><b>194</b><span>official simulated calls, 84% passed; every practice case 3/3 except platform faults</span></div>
+        <div class="layer"><b>52/52</b><span>customers of 4 invented banks (raw memo, renamed tool API)</span></div>
+      </div>
+    </section>
+    <section class="panel" aria-label="Sunday flow">
+      <h2>6 · Final day (EDT)</h2>
+      <div class="timeline">
+        <div><b>12:30</b><span>Pull, venv, key check, Cloudflare login, tests</span></div>
+        <div><b>13:00</b><span>Unzip the case; generate the mock from contract + test customers; deploy to Cloudflare</span></div>
+        <div><b>13:15</b><span>build.py &lt;case_folder&gt; &lt;mock_url&gt; | tee traces/final.log; go/no-go checks; replay the 6 example calls</span></div>
+        <div><b>15:00</b><span>Last generic fix (leak check), rebuild</span></div>
+        <div><b>15:40</b><span>Export, commit, push, submission.json with mock_url (deadline 16:00)</span></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="banner"><strong>Final: one Turkish case, hidden customers</strong>outcome · policy · honesty — our mock must stay up until results are out</div>
+</div>
+</body>
+</html>

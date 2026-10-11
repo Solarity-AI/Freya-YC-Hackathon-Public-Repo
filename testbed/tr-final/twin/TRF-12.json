@@ -1,0 +1,124 @@
+{
+ "id": "TRF-12",
+ "title": "Son tarihten sonraki gün istenir; son tarih önerilir",
+ "mode": "sim",
+ "case": {
+  "id": "TRF-12",
+  "variables": {
+   "musteri_no": "FB-241250",
+   "ad": "Emre",
+   "soyad": "Polat",
+   "hitap": "Bey",
+   "now": "2026-10-21T13:00"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "12.09.1968",
+   "TCKN_SON4": "4925"
+  },
+  "products": [
+   {
+    "kart_id": "KRT-241250-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "5124",
+    "ekstre_borcu": 9875.0,
+    "asgari_odeme_tutari": 3950.0,
+    "son_odeme_tarihi": "2026-09-07",
+    "gecikme_gun_sayisi": 44
+   }
+  ]
+ },
+ "expect": {
+  "outcome": "SOZ_ALINDI",
+  "reason": null,
+  "promises": [
+   {
+    "product_id": "KRT-241250-01",
+    "amount": 9875.0,
+    "date": "2026-10-26"
+   }
+  ],
+  "notes": [],
+  "callbacks": [],
+  "transfers": []
+ },
+ "turns": [
+  {
+   "say": "Benim.",
+   "x": {
+    "u_text": "Benim.",
+    "u_en": "It's me.",
+    "u_act": "yes",
+    "u_topic": "none"
+   }
+  },
+  {
+   "say": "On iki Eylül altmış sekiz.",
+   "x": {
+    "u_text": "On iki Eylül altmış sekiz.",
+    "u_en": "Twelfth of September, sixty-eight.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "1968-09-12",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "Dört dokuz iki beş.",
+   "x": {
+    "u_text": "Dört dokuz iki beş.",
+    "u_en": "Four nine two five.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "4925",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "Bugün olmaz. Ay sonunda, 30 Ekim'de tamamını öderim.",
+   "x": {
+    "u_text": "Bugün olmaz. Ay sonunda, 30 Ekim'de tamamını öderim.",
+    "u_en": "Not today. At the end of the month, on 30 October, I'll pay all of it.",
+    "u_act": "proposal",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "absolute",
+    "u_dval": "10-30",
+    "u_dwhich": "bare",
+    "u_kind": "answer"
+   }
+  },
+  {
+   "say": "Peki, 26'sında öderim.",
+   "x": {
+    "u_text": "Peki, 26'sında öderim.",
+    "u_en": "Alright, I'll pay on the 26th.",
+    "u_act": "yes",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "day_of_month",
+    "u_dval": "26",
+    "u_dwhich": "bare",
+    "u_kind": "yes"
+   }
+  },
+  {
+   "say": "Evet.",
+   "x": {
+    "u_text": "Evet.",
+    "u_en": "Yes.",
+    "u_act": "yes",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "none",
+    "u_dval": "",
+    "u_dwhich": "bare",
+    "u_kind": "yes"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 24
+ }
+}

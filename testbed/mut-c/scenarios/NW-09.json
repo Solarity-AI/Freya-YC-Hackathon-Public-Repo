@@ -1,0 +1,185 @@
+{
+ "id": "MUTC-NW-09",
+ "spec": "mut-c",
+ "mode": "sim",
+ "case": {
+  "id": "NW-09",
+  "brief": "mut-c",
+  "family": "Multi-product",
+  "level": "hard",
+  "title": "Month end: two promises, the auto loan refused twice",
+  "variables": {
+   "first_name": "Marcus",
+   "last_name": "Bell",
+   "title": "Mr",
+   "now": "2026-11-30T10:00"
+  },
+  "identity": {
+   "date_of_birth": "1986-10-19",
+   "postcode": "BS8 1TH"
+  },
+  "products": [
+   {
+    "type": "overdraft",
+    "past_due": 312.8,
+    "days_late": 22
+   },
+   {
+    "type": "credit_card",
+    "card_last4": "2288",
+    "past_due": 158.2,
+    "days_late": 5,
+    "minimum_payment": 7.91
+   },
+   {
+    "type": "auto_loan",
+    "past_due": 1050.0,
+    "days_late": 40,
+    "instalment_amount": 350.0
+   }
+  ],
+  "script": "Gives the date of birth as numbers only, '19/10/1986'. Postcode: 'B S eight, one T H'. Cannot pay all today. Overdraft: this Friday. Card: the 14th of December. Auto loan: flatly refuses whatever is offered. Confirms the read-back once.",
+  "expected": {
+   "outcome": "promise_to_pay",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 312.8,
+     "date": "2026-12-04",
+     "amount_cents": 31280,
+     "promise_date": "2026-12-04"
+    },
+    {
+     "product_id": "p2",
+     "amount": 158.2,
+     "date": "2026-12-14",
+     "amount_cents": 15820,
+     "promise_date": "2026-12-14"
+    }
+   ],
+   "notes": [
+    {
+     "product_id": "p3",
+     "reason": "refused"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "'19/10/1986' sent as 1986-10-19 (day, month, year)",
+   "all three products stated before any ask",
+   "'this Friday' = 4 December, inside the overdraft deadline 7 December",
+   "14 December accepted: it is exactly the early-band deadline (10th business day)",
+   "auto loan attempt 1 = 1050 on Thu 3 December (deadline is earlier than Friday 4 December)",
+   "auto loan attempt 2 = floor 350 on 3 December",
+   "one read-back with 'Is that correct?', then two create_promise calls",
+   "add_note p3 'refused' after the promises",
+   "outcome promise_to_pay"
+  ]
+ },
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "19/10/1986.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "19/10/1986"
+   }
+  },
+  {
+   "say": "B S eight, one T H.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "B S eight, one T H"
+   }
+  },
+  {
+   "say": "No, not all of them today.",
+   "x": {
+    "u_act": "no"
+   }
+  },
+  {
+   "say": "The overdraft this Friday.",
+   "x": {
+    "u_act": "proposal",
+    "u_date": "this Friday"
+   }
+  },
+  {
+   "say": "The card on the 14th of December.",
+   "x": {
+    "u_act": "proposal",
+    "u_date": "the 14th of December"
+   }
+  },
+  {
+   "say": "No, I'm not paying the auto loan.",
+   "x": {
+    "u_act": "no"
+   }
+  },
+  {
+   "say": "No.",
+   "x": {
+    "u_act": "no"
+   }
+  },
+  {
+   "say": "Yes, that's correct.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "Bye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 24,
+  "must": [
+   [
+    -1,
+    "1,050 pounds on Thursday, 3 December"
+   ],
+   [
+    -1,
+    "350 pounds on Thursday, 3 December"
+   ],
+   [
+    -1,
+    "158.20 pounds"
+   ],
+   [
+    -1,
+    "Is that correct?"
+   ],
+   [
+    -1,
+    "You will receive an email confirming this promise."
+   ],
+   [
+    -1,
+    "Thank you for your time, and thank you for choosing Northwind Credit Union. Goodbye."
+   ]
+  ],
+  "must_not": [
+   [
+    -1,
+    "39.55"
+   ]
+  ]
+ }
+}

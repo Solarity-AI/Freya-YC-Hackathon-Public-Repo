@@ -1,0 +1,694 @@
+{
+ "_about": "Core leaves a correct extraction of testbed/raw-ab/brief.md must produce. Key paths follow tests/golden/spec-ab.json; values were copied from it, because the effective rules of raw-ab equal Brief A+B (the memo date is inside the A+B holiday list, the corrected callback window equals A+B). 'must_not' lists the traps: values that appear in the raw material but must not reach the Spec. 'code_map' is the code list resolved to OpenAPI enum values.",
+ "golden_equivalent": "tests/golden/spec-ab.json",
+ "bank": {
+  "name": "Freya Bank",
+  "assistant_self": "Freya Bank's digital assistant"
+ },
+ "call_variables": {
+  "customer_key": "customer_id",
+  "now": "now",
+  "declared": [
+   {
+    "name": "customer_id"
+   },
+   {
+    "name": "first_name"
+   },
+   {
+    "name": "last_name"
+   },
+   {
+    "name": "title"
+   },
+   {
+    "name": "now"
+   }
+  ]
+ },
+ "right_party": {
+  "ask": "Am I speaking with <customer>?",
+  "confirm_examples": [
+   "yes",
+   "that's me",
+   "speaking",
+   "<own name>"
+  ],
+  "non_confirm_examples": [
+   "hello",
+   "go ahead",
+   "who is this"
+  ],
+  "accept_own_name": true,
+  "max_asks": 2,
+  "on_unresolved": "S_UNCLEAR"
+ },
+ "third_party": {
+  "relative_may_verify": false,
+  "relative_may_pay": false,
+  "callback": {
+   "date_rule": {
+    "include_today": true,
+    "today_must_be_business_day": true,
+    "business_days_ahead": 1,
+    "calendar_days_ahead": 0
+   },
+   "windows": [
+    {
+     "from": "10:00",
+     "to": "19:00",
+     "inclusive_from": true,
+     "inclusive_to": true,
+     "days": "any"
+    }
+   ],
+   "after_now": true,
+   "min_lead_minutes": 0,
+   "reask_limit": 1,
+   "vague_asks": 1
+  }
+ },
+ "identity": {
+  "questions": [
+   {
+    "key": "dob",
+    "field_value": "date_of_birth",
+    "kind": "date",
+    "numeric_order": "DMY",
+    "wire_format": "%Y-%m-%d",
+    "length": 0
+   },
+   {
+    "key": "phone",
+    "field_value": "phone_last4",
+    "kind": "digits",
+    "numeric_order": "DMY",
+    "wire_format": "digits",
+    "length": 4
+   }
+  ],
+  "one_at_a_time": true,
+  "max_wrong_total": 3,
+  "hints": [
+   {
+    "value": "day_month_swapped",
+    "counts_as_wrong": false
+   }
+  ],
+  "decline": {
+   "explain": "These questions protect your account.",
+   "explain_times": 1,
+   "max_declines": 2,
+   "purpose_question_counts": true
+  },
+  "on_failed": "S_ID_FAILED",
+  "on_declined": "S_ID_DECLINED"
+ },
+ "products": {
+  "max": 3,
+  "fields": {
+   "list": "products",
+   "id": "product_id",
+   "type": "type",
+   "past_due": "past_due",
+   "days_late": "days_late"
+  },
+  "types": {
+   "credit_card": {
+    "spoken": "credit card ending <f:card_last4>",
+    "floor": {
+     "kind": "field",
+     "field": "minimum_payment"
+    }
+   },
+   "personal_loan": {
+    "spoken": "personal loan",
+    "floor": {
+     "kind": "field",
+     "field": "instalment_amount"
+    }
+   },
+   "car_loan": {
+    "spoken": "car loan",
+    "floor": {
+     "kind": "field",
+     "field": "instalment_amount"
+    }
+   }
+  }
+ },
+ "calendar": {
+  "business_weekdays": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "holidays": [
+   "2026-10-26",
+   "2026-11-11",
+   "2026-11-26",
+   "2026-12-25",
+   "2027-01-01"
+  ],
+  "count_from": "after_today",
+  "numeric_order": "DMY",
+  "this_next": {
+   "this": "current_week",
+   "next": "following_week"
+  }
+ },
+ "bands": [
+  {
+   "key": "early",
+   "days_late_min": 1,
+   "days_late_max": 7,
+   "deadline": {
+    "kind": "nth_business_day_after_today",
+    "n": 12
+   },
+   "attempts": 1
+  },
+  {
+   "key": "late",
+   "days_late_min": 8,
+   "days_late_max": 45,
+   "deadline": {
+    "kind": "nth_business_day_after_today",
+    "n": 7
+   },
+   "attempts": 2
+  }
+ ],
+ "promise_date": {
+  "earliest": {
+   "kind": "today"
+  },
+  "latest": {
+   "kind": "deadline"
+  },
+  "business_day_only": true,
+  "non_business_within_deadline": "offer_next_business_day",
+  "after_deadline": "offer_deadline",
+  "offered_date_refused": "flat_refusal",
+  "vague": {
+   "ask_exact_times": 1,
+   "then": "propose_deadline"
+  },
+  "past_date": "say_passed_and_ask"
+ },
+ "amounts": {
+  "first": {
+   "kind": "full"
+  },
+  "never_ask_customer": true,
+  "accept_min": {
+   "kind": "floor"
+  },
+  "accept_max": {
+   "kind": "full"
+  },
+  "too_much": {
+   "offer": {
+    "kind": "floor"
+   },
+   "times": 1,
+   "date": "attempt_1",
+   "refusal": "flat_refusal"
+  },
+  "below_floor": {
+   "offer": {
+    "kind": "floor"
+   },
+   "times": 1,
+   "then": "flat_refusal"
+  }
+ },
+ "negotiation": {
+  "first_ask": {
+   "single": "Can you make this payment today?",
+   "consumes_attempt": false
+  },
+  "ladder": [
+   {
+    "attempt": 1,
+    "bands": [
+     "all"
+    ],
+    "amount": {
+     "kind": "floor_if_too_much_else_full"
+    },
+    "date": {
+     "kind": "last_business_day_of_week",
+     "if_today": "next_week"
+    }
+   },
+   {
+    "attempt": 2,
+    "bands": [
+     "late"
+    ],
+    "amount": {
+     "kind": "floor"
+    },
+    "date": {
+     "kind": "deadline"
+    }
+   }
+  ],
+  "no_repeat_refused_offer": true,
+  "on_exhausted": "S_REFUSED_EXHAUSTED",
+  "forbidden_offers": [
+   "discount",
+   "waiver",
+   "instalment plan"
+  ]
+ },
+ "intents": [
+  {
+   "id": "deceased",
+   "scope": [
+    "rp",
+    "tp"
+   ],
+   "product_scoped": false,
+   "action": {
+    "kind": "close_now",
+    "situation": "S_DECEASED"
+   }
+  },
+  {
+   "id": "wrong_number",
+   "scope": [
+    "rp",
+    "tp"
+   ],
+   "product_scoped": false,
+   "action": {
+    "kind": "close_now",
+    "situation": "S_WRONG_NUMBER"
+   }
+  },
+  {
+   "id": "hardship",
+   "scope": [
+    "neg",
+    "conf"
+   ],
+   "product_scoped": false,
+   "action": {
+    "kind": "offer_transfer",
+    "queue": "support",
+    "accept_situation": "S_HARDSHIP_TRANSFER",
+    "decline_situation": "S_HARDSHIP_DECLINED",
+    "suspend_persuasion": true
+   }
+  },
+  {
+   "id": "restructure",
+   "scope": [
+    "neg",
+    "conf"
+   ],
+   "product_scoped": false,
+   "action": {
+    "kind": "transfer",
+    "situation": "S_RESTRUCTURE_TRANSFER",
+    "queue": "restructuring",
+    "keep_recorded": true,
+    "drop_unrecorded": true,
+    "suppress_notes": true
+   }
+  },
+  {
+   "id": "dispute",
+   "scope": [
+    "neg",
+    "conf"
+   ],
+   "product_scoped": true,
+   "action": {
+    "kind": "resolve_product",
+    "situation": "S_DISPUTE"
+   }
+  },
+  {
+   "id": "paid",
+   "scope": [
+    "neg",
+    "conf"
+   ],
+   "product_scoped": true,
+   "action": {
+    "kind": "resolve_product",
+    "situation": "S_PAID"
+   }
+  },
+  {
+   "id": "human",
+   "scope": [
+    "id",
+    "neg",
+    "conf"
+   ],
+   "product_scoped": false,
+   "action": {
+    "kind": "ask_then_transfer",
+    "situation": "S_HUMAN_TRANSFER",
+    "queue": "general"
+   }
+  },
+  {
+   "id": "refuse_talk",
+   "scope": [
+    "id",
+    "neg",
+    "conf"
+   ],
+   "product_scoped": false,
+   "action": {
+    "kind": "count_then_close",
+    "limit": 2,
+    "situation": "S_REFUSED_TO_TALK",
+    "situation_pre_verification": "S_ID_DECLINED"
+   }
+  },
+  {
+   "id": "too_much",
+   "scope": [
+    "neg",
+    "conf"
+   ],
+   "product_scoped": true,
+   "action": {
+    "kind": "too_much"
+   }
+  },
+  {
+   "id": "robot",
+   "scope": [
+    "rp",
+    "tp",
+    "id",
+    "neg",
+    "conf"
+   ],
+   "product_scoped": false,
+   "action": {
+    "kind": "answer_continue"
+   }
+  },
+  {
+   "id": "scam",
+   "scope": [
+    "rp",
+    "tp",
+    "id",
+    "neg",
+    "conf"
+   ],
+   "product_scoped": false,
+   "action": {
+    "kind": "answer_continue"
+   }
+  },
+  {
+   "id": "change_promise",
+   "scope": [
+    "neg",
+    "conf"
+   ],
+   "product_scoped": false,
+   "action": {
+    "kind": "answer_continue"
+   }
+  },
+  {
+   "id": "forbidden_offer",
+   "scope": [
+    "neg",
+    "conf"
+   ],
+   "product_scoped": false,
+   "action": {
+    "kind": "answer_continue"
+   }
+  }
+ ],
+ "situations": {
+  "S_PROMISE": {
+   "outcome": "promise",
+   "reason": "",
+   "queue": "",
+   "note_reason": ""
+  },
+  "S_PAID": {
+   "outcome": "paid",
+   "reason": "",
+   "queue": "",
+   "note_reason": "paid"
+  },
+  "S_RESTRUCTURE_TRANSFER": {
+   "outcome": "transferred",
+   "reason": "restructuring",
+   "queue": "restructuring",
+   "note_reason": ""
+  },
+  "S_HUMAN_TRANSFER": {
+   "outcome": "transferred",
+   "reason": "human",
+   "queue": "general",
+   "note_reason": ""
+  },
+  "S_HARDSHIP_TRANSFER": {
+   "outcome": "transferred",
+   "reason": "support",
+   "queue": "support",
+   "note_reason": ""
+  },
+  "S_REFUSED_EXHAUSTED": {
+   "outcome": "no_promise",
+   "reason": "refused",
+   "queue": "",
+   "note_reason": "refused"
+  },
+  "S_REFUSED_TO_TALK": {
+   "outcome": "no_promise",
+   "reason": "refused",
+   "queue": "",
+   "note_reason": "refused"
+  },
+  "S_HARDSHIP_DECLINED": {
+   "outcome": "no_promise",
+   "reason": "hardship",
+   "queue": "",
+   "note_reason": "hardship"
+  },
+  "S_DISPUTE": {
+   "outcome": "no_promise",
+   "reason": "dispute",
+   "queue": "",
+   "note_reason": "dispute"
+  },
+  "S_SERVICE_ERROR": {
+   "outcome": "no_promise",
+   "reason": "service_error",
+   "queue": "",
+   "note_reason": "service_error"
+  },
+  "S_ID_FAILED": {
+   "outcome": "not_verified",
+   "reason": "failed",
+   "queue": "",
+   "note_reason": ""
+  },
+  "S_ID_DECLINED": {
+   "outcome": "not_verified",
+   "reason": "declined",
+   "queue": "",
+   "note_reason": ""
+  },
+  "S_CALLBACK": {
+   "outcome": "not_reached",
+   "reason": "callback",
+   "queue": "",
+   "note_reason": ""
+  },
+  "S_NO_CALLBACK": {
+   "outcome": "not_reached",
+   "reason": "no_callback",
+   "queue": "",
+   "note_reason": ""
+  },
+  "S_WRONG_NUMBER": {
+   "outcome": "not_reached",
+   "reason": "wrong_number",
+   "queue": "",
+   "note_reason": ""
+  },
+  "S_DECEASED": {
+   "outcome": "not_reached",
+   "reason": "deceased",
+   "queue": "",
+   "note_reason": ""
+  },
+  "S_UNCLEAR": {
+   "outcome": "not_reached",
+   "reason": "unclear",
+   "queue": "",
+   "note_reason": ""
+  }
+ },
+ "outcomes": {
+  "precedence": [
+   {
+    "when": "transfer_done",
+    "use": "transfer_situation"
+   },
+   {
+    "when": "any_promise_recorded",
+    "use": "situation:S_PROMISE"
+   },
+   {
+    "when": "call_situation",
+    "use": "call_situation"
+   },
+   {
+    "when": "all_products:S_PAID",
+    "use": "situation:S_PAID"
+   },
+   {
+    "when": "else",
+    "use": "first_product_excluding:S_PAID"
+   }
+  ],
+  "reasonless_outcomes": [
+   "promise",
+   "paid"
+  ],
+  "unresolved_product_situation": "S_REFUSED_EXHAUSTED"
+ },
+ "notes": {
+  "enabled": true,
+  "scope": "product",
+  "when": "no_promise_recorded",
+  "reason_from": "product_situation",
+  "skip_if_transfer": true,
+  "text": ""
+ },
+ "multi_product": {
+  "state_all_first": true,
+  "ask_all_today_first": true,
+  "order": "api",
+  "attempts_per_product": true,
+  "one_date_for_all": "clamp_to_own_deadline_and_say",
+  "readback_together": true,
+  "hardship_applies_to": "all_remaining",
+  "dispute_or_paid_continues": true
+ },
+ "confirmation": {
+  "question": "Do you confirm?",
+  "verbatim_question": true
+ },
+ "recording": {
+  "tries": 2,
+  "on_all_failed": "S_SERVICE_ERROR"
+ },
+ "required_sentences": [
+  {
+   "id": "text_message",
+   "text": "You will receive a text message confirming this promise.",
+   "verbatim": true,
+   "trigger": "after_promise_recorded"
+  },
+  {
+   "id": "sorry_loss",
+   "text": "I am sorry for your loss.",
+   "verbatim": true,
+   "trigger": "on_situation:S_DECEASED"
+  }
+ ],
+ "code_map": {
+  "outcome": {
+   "PRM": "promise",
+   "PDA": "paid",
+   "TRF": "transferred",
+   "NOP": "no_promise",
+   "NVF": "not_verified",
+   "NRC": "not_reached"
+  },
+  "reason": {
+   "RST": "restructuring",
+   "HUM": "human",
+   "SUP": "support",
+   "REF": "refused",
+   "HRD": "hardship",
+   "DSP": "dispute",
+   "SVE": "service_error",
+   "FLD": "failed",
+   "DCL": "declined",
+   "CBK": "callback",
+   "NCB": "no_callback",
+   "WRN": "wrong_number",
+   "DEC": "deceased",
+   "UNC": "unclear"
+  },
+  "queue": {
+   "Q10": "restructuring",
+   "Q20": "general",
+   "Q30": "support"
+  },
+  "note_reason": {
+   "REF": "refused",
+   "HRD": "hardship",
+   "DSP": "dispute",
+   "PDA": "paid",
+   "SVE": "service_error"
+  },
+  "identity_field": {
+   "ID1": "date_of_birth",
+   "ID2": "phone_last4"
+  },
+  "hint": {
+   "H-DMS": "day_month_swapped"
+  }
+ },
+ "must_not": [
+  {
+   "path": "/calendar/holidays",
+   "contains": "2026-11-02",
+   "why": "withdrawn draft date in memo OPS-26-118; 2 November is a business day"
+  },
+  {
+   "path": "/third_party/callback/windows/0/to",
+   "equals": "18:00",
+   "why": "mail 1 figure, corrected to 19:00 by mail 2"
+  },
+  {
+   "path": "/calendar/holidays",
+   "missing": "2026-10-26",
+   "why": "memo OPS-26-118 adds it; the policy extract 6.1 does not list it"
+  },
+  {
+   "path": "/situations/*/outcome",
+   "contains": "voicemail",
+   "why": "code VMB has no system value and is never used by the assistant"
+  },
+  {
+   "path": "/situations/*/*",
+   "matches": "^(PRM|PDA|TRF|NOP|NVF|NRC|VMB|RST|HUM|SUP|REF|HRD|DSP|SVE|FLD|DCL|CBK|NCB|WRN|DEC|UNC|Q10|Q20|Q30)$",
+   "why": "internal codes must never be sent; only the code list's system values"
+  },
+  {
+   "path": "/notes/enabled",
+   "equals": false,
+   "why": "extract 10.2 is replaced by addendum A2.8, which applies to single-product customers too"
+  },
+  {
+   "path": "/identity/questions/*/field_value",
+   "matches": "^(ID1|ID2)$",
+   "why": "internal codes; send date_of_birth / phone_last4"
+  }
+ ]
+}

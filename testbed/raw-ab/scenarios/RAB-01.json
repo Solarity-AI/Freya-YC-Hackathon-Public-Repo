@@ -1,0 +1,122 @@
+{
+ "id": "RAB-01",
+ "spec": "raw-ab",
+ "mode": "sim",
+ "about": "Verified. Cannot pay today. Agrees to pay all three this Friday. Confirms once.",
+ "case": {
+  "id": "RAB-01",
+  "brief": "raw-ab",
+  "family": "Multi-product",
+  "level": "medium",
+  "title": "Three products, one date for all",
+  "variables": {
+   "first_name": "Sofia",
+   "last_name": "Almeida",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1987-06-03",
+   "phone_last4": "2288"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "2288",
+    "past_due": 220.0,
+    "days_late": 9,
+    "minimum_payment": 66.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 640.0,
+    "days_late": 9,
+    "instalment_amount": 213.0
+   },
+   {
+    "type": "car_loan",
+    "past_due": 75.0,
+    "days_late": 3,
+    "instalment_amount": 25.0
+   }
+  ],
+  "script": "Verified. Cannot pay today. Agrees to pay all three this Friday. Confirms once.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 220.0,
+     "date": "2026-10-16"
+    },
+    {
+     "product_id": "p2",
+     "amount": 640.0,
+     "date": "2026-10-16"
+    },
+    {
+     "product_id": "p3",
+     "amount": 75.0,
+     "date": "2026-10-16"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "mirrors": "PUB-11"
+ },
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "The third of June, 1987.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "The third of June, 1987"
+   }
+  },
+  {
+   "say": "2288.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "2288"
+   }
+  },
+  {
+   "say": "No, I can't pay today. I can pay all three this Friday.",
+   "x": {
+    "u_act": "proposal",
+    "u_date": "this Friday"
+   }
+  },
+  {
+   "say": "Yes, I confirm.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "Thank you, goodbye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 20,
+  "must": [
+   [
+    -1,
+    "16 October"
+   ]
+  ]
+ }
+}

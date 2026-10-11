@@ -1,0 +1,75 @@
+{
+ "id": "A-PUB-06",
+ "spec": "a",
+ "pub": "PUB-06",
+ "mode": "sim",
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "17 May 1986.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "17 May 1986"
+   }
+  },
+  {
+   "say": "1502.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "1502"
+   }
+  },
+  {
+   "say": "That's too much for me right now.",
+   "x": {
+    "u_act": "refuse",
+    "u_topic": "too_much"
+   }
+  },
+  {
+   "say": "Yes, I can pay the minimum on Friday.",
+   "x": {
+    "u_act": "yes",
+    "u_date": "Friday"
+   }
+  },
+  {
+   "say": "Yes, I confirm.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "Thank you, goodbye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 12,
+  "must": [
+   [
+    -1,
+    "stays overdue"
+   ],
+   [
+    -1,
+    "637.50"
+   ]
+  ],
+  "must_not": [
+   [
+    -1,
+    "how much can you pay"
+   ]
+  ]
+ }
+}

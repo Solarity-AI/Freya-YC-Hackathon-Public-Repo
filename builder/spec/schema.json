@@ -1,0 +1,682 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "spec/mvp-1",
+  "title": "Collections agent Spec (MVP)",
+  "description": "Brief-agnostic description of one collections phone agent. Produced by builder/pipeline (extract -> validate/defaults -> critic), consumed by builder/compiler and, embedded, by runtime/brain.py. Every bank-facing string (outcome, reason, queue, note reason, product type, identity field value, hint value) must be a value of the bound OpenAPI enum when that field has an enum. Lines are templates using the closed placeholder vocabulary of docs/CONTRACTS.md section B.2. See docs/CONTRACTS.md section B for semantics.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["spec_version", "meta", "bank", "call_variables", "addressing", "opening", "banned", "right_party", "third_party", "identity", "products", "statement", "calendar", "bands", "promise_date", "amounts", "negotiation", "intents", "situations", "outcomes", "notes", "multi_product", "confirmation", "recording", "required_sentences", "closing", "lines"],
+  "properties": {
+    "spec_version": {"const": "mvp-1"},
+
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inputs"],
+      "properties": {
+        "inputs": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["path"], "properties": {"path": {"type": "string"}, "sha256": {"type": "string"}}}},
+        "openapi_sha256": {"type": "string"},
+        "defaults_applied": {"type": "array", "items": {"type": "string"}},
+        "decisions": {"type": "array", "items": {"type": "string"}},
+        "warnings": {"type": "array", "items": {"type": "string"}},
+        "residual_rules": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["text", "class"], "properties": {"text": {"type": "string"}, "class": {"enum": ["speech", "flow"]}, "bound_to": {"type": "string"}}}},
+        "sources": {"type": "object", "description": "JSON pointer of a Spec leaf -> verbatim quote from the brief that justifies it.", "additionalProperties": {"type": "string"}}
+      }
+    },
+
+    "bank": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "assistant_self", "currency", "language"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "assistant_self": {"type": "string", "minLength": 1, "description": "How the agent names itself, e.g. '<bank>'s digital assistant'. Rendered by <self>."},
+        "currency": {
+          "type": "object", "additionalProperties": false,
+          "required": ["symbol", "word", "position"],
+          "properties": {
+            "symbol": {"type": "string"},
+            "word": {"type": "string", "description": "Spoken currency word after the number, '' if the brief names none."},
+            "position": {"enum": ["before", "after", "none"]}
+          }
+        },
+        "language": {"type": "string", "pattern": "^[a-z]{2}$", "description": "The call language of the brief as a 2-letter ISO 639-1 code (en, tr, de, ...). Every spoken line of the Spec is written in this language."}
+      }
+    },
+
+    "call_variables": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["customer_key", "now", "declared"],
+      "properties": {
+        "customer_key": {"type": "string", "description": "Call variable passed as the customer field of every tool call."},
+        "now": {"type": "string", "description": "Call variable holding the current date-time, ISO 'YYYY-MM-DDTHH:MM'."},
+        "declared": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["name", "meaning"], "properties": {"name": {"type": "string", "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$"}, "meaning": {"type": "string"}}}}
+      }
+    },
+
+    "addressing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["customer", "name_vars"],
+      "properties": {
+        "customer": {"$ref": "#/$defs/Line", "description": "How to address/name the customer; rendered by <customer>. Uses only <v:...> placeholders."},
+        "name_vars": {"type": "array", "minItems": 1, "items": {"type": "string"}, "description": "Call variables holding the customer's own name tokens (for the right-party own-name match)."}
+      }
+    },
+
+    "opening": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["line", "must_convey", "verbatim"],
+      "properties": {
+        "line": {"$ref": "#/$defs/Line", "description": "First sentence. The compiler speaks opening.line + ' ' + right_party.ask as the initial tts. Must not contain any banned.before_verification word."},
+        "must_convey": {"type": "array", "items": {"enum": ["assistant", "bank", "recorded", "purpose_free"]}},
+        "verbatim": {"type": "boolean"}
+      }
+    },
+
+    "banned": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before_verification", "always", "never_offer", "never_ask"],
+      "properties": {
+        "before_verification": {"type": "array", "items": {"type": "string"}},
+        "always": {"type": "array", "items": {"type": "string"}},
+        "never_offer": {"type": "array", "items": {"type": "string"}},
+        "never_ask": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+
+    "right_party": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ask", "reask", "confirm_examples", "non_confirm_examples", "accept_own_name", "max_asks", "on_unresolved", "answers", "bare_no"],
+      "properties": {
+        "ask": {"$ref": "#/$defs/Line"},
+        "reask": {"$ref": "#/$defs/Line"},
+        "confirm_examples": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "non_confirm_examples": {"type": "array", "items": {"type": "string"}},
+        "accept_own_name": {"type": "boolean"},
+        "max_asks": {"type": "integer", "minimum": 1, "maximum": 5},
+        "on_unresolved": {"$ref": "#/$defs/SituationId"},
+        "answers": {
+          "type": "object", "additionalProperties": false,
+          "required": ["who", "why", "other"],
+          "properties": {"who": {"$ref": "#/$defs/Line"}, "why": {"$ref": "#/$defs/Line"}, "other": {"$ref": "#/$defs/Line"}, "why_confirmed": {"$ref": "#/$defs/Line", "description": "Optional. Answer to 'what is this about?' from someone who has just confirmed, before identity is verified; never states the purpose."}}
+        },
+        "bare_no": {"enum": ["third_party", "unclear"], "description": "What a bare 'No.' to the right-party ask means."}
+      }
+    },
+
+    "third_party": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["disclose", "reach_ask", "reach_reask", "outside_line", "vague_line", "booked_line", "offer_to_pay_line", "relative_may_verify", "relative_may_pay", "callback", "situations", "turn_budget"],
+      "properties": {
+        "disclose": {"const": "nothing_beyond_opening"},
+        "mode": {"enum": ["callback", "close"], "description": "callback (default): ask when the customer is reachable and book a callback. close: never ask, never book; say close_line and close with situations.no_callback at once."},
+        "close_line": {"$ref": "#/$defs/Line", "description": "mode close: the one sentence said to a third party before the call ends (no goodbye is added after it)."},
+        "reach_ask": {"$ref": "#/$defs/Line"},
+        "reach_reask": {"$ref": "#/$defs/Line"},
+        "outside_line": {"$ref": "#/$defs/Line", "description": "Said when an offered time is outside the callback rules; followed by reach_reask."},
+        "vague_line": {"$ref": "#/$defs/Line", "description": "Asks for an exact day and time after a vague answer."},
+        "time_ask": {"$ref": "#/$defs/Line", "description": "Optional. Asks for the time when a day or a part of the day was given."},
+        "time_reask": {"$ref": "#/$defs/Line", "description": "Optional. Second time ask."},
+        "booked_line": {"$ref": "#/$defs/Line", "description": "Said after schedule_callback succeeded. Placeholders <date> <time>."},
+        "offer_to_pay_line": {"$ref": "#/$defs/Line"},
+        "relative_may_verify": {"type": "boolean"},
+        "relative_may_pay": {"type": "boolean"},
+        "callback": {
+          "type": "object", "additionalProperties": false,
+          "required": ["date_rule", "windows", "after_now", "min_lead_minutes", "reask_limit", "vague_asks"],
+          "properties": {
+            "date_rule": {
+              "type": "object", "additionalProperties": false,
+              "required": ["include_today", "today_must_be_business_day", "business_days_ahead", "calendar_days_ahead"],
+              "description": "Allowed dates = {today if include_today (and a business day if today_must_be_business_day)} U {the next business_days_ahead business days after today} U {the next calendar_days_ahead calendar days after today}.",
+              "properties": {
+                "include_today": {"type": "boolean"},
+                "today_must_be_business_day": {"type": "boolean"},
+                "business_days_ahead": {"type": "integer", "minimum": 0},
+                "calendar_days_ahead": {"type": "integer", "minimum": 0}
+              }
+            },
+            "windows": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/TimeWindow"}},
+            "after_now": {"type": "boolean", "description": "Slot must be strictly later than now."},
+            "min_lead_minutes": {"type": "integer", "minimum": 0},
+            "reask_limit": {"type": "integer", "minimum": 0, "description": "How many times an outside offer is answered with another ask before closing as no_callback."},
+            "vague_asks": {"type": "integer", "minimum": 0, "description": "Free clarification asks after a vague time."}
+          }
+        },
+        "situations": {
+          "type": "object", "additionalProperties": false,
+          "required": ["callback", "no_callback"],
+          "properties": {"callback": {"$ref": "#/$defs/SituationId"}, "no_callback": {"$ref": "#/$defs/SituationId"}}
+        },
+        "turn_budget": {"type": "integer", "minimum": 2, "maximum": 20}
+      }
+    },
+
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["questions", "one_at_a_time", "max_wrong_total", "hints", "decline", "fail_line", "on_failed", "on_declined", "turn_budget", "verified_prefix"],
+      "properties": {
+        "questions": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"$ref": "#/$defs/IdQuestion"}, "description": "In the order they are asked."},
+        "one_at_a_time": {"type": "boolean"},
+        "max_wrong_total": {"type": "integer", "minimum": 1, "maximum": 10},
+        "hints": {"type": "array", "items": {"$ref": "#/$defs/Hint"}},
+        "decline": {
+          "type": "object", "additionalProperties": false,
+          "required": ["explain", "explain_times", "max_declines", "purpose_question_counts"],
+          "properties": {
+            "explain": {"$ref": "#/$defs/Line"},
+            "explain_times": {"type": "integer", "minimum": 0},
+            "max_declines": {"type": "integer", "minimum": 1},
+            "purpose_question_counts": {"type": "boolean", "description": "A 'what is this about?' instead of an answer counts as a decline."}
+          }
+        },
+        "fail_line": {"$ref": "#/$defs/Line"},
+        "on_failed": {"$ref": "#/$defs/SituationId"},
+        "on_declined": {"$ref": "#/$defs/SituationId"},
+        "turn_budget": {"type": "integer", "minimum": 3, "maximum": 30},
+        "verified_prefix": {"$ref": "#/$defs/Line", "description": "Short acknowledgement before the debt statement."}
+      }
+    },
+
+    "products": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max", "fields", "types", "floor_missing", "unknown_type_spoken"],
+      "properties": {
+        "max": {"type": "integer", "minimum": 1, "maximum": 5},
+        "fields": {
+          "type": "object", "additionalProperties": false,
+          "required": ["list", "id", "type", "past_due", "days_late"],
+          "description": "Response leaf names of the account tool (bound from the OpenAPI by code, not by the LLM).",
+          "properties": {"list": {"type": "string"}, "id": {"type": "string"}, "type": {"type": "string"}, "past_due": {"type": "string"}, "days_late": {"type": "string"}}
+        },
+        "types": {
+          "type": "object", "minProperties": 1,
+          "description": "Key = product type enum value from the OpenAPI.",
+          "additionalProperties": {
+            "type": "object", "additionalProperties": false,
+            "required": ["spoken", "floor"],
+            "properties": {"spoken": {"$ref": "#/$defs/Line", "description": "May use <f:FIELD> for any product response leaf."}, "floor": {"$ref": "#/$defs/AmountRule"}}
+          }
+        },
+        "floor_missing": {"enum": ["full"]},
+        "unknown_type_spoken": {"$ref": "#/$defs/Line"}
+      }
+    },
+
+    "statement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intro", "item"],
+      "properties": {
+        "intro": {"$ref": "#/$defs/Line", "description": "Said once, right after verification (may name the purpose)."},
+        "item": {"$ref": "#/$defs/Line", "description": "One sentence per late product: <product> <past_due> <days_late>."}
+      }
+    },
+
+    "calendar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["business_weekdays", "holidays", "holiday_rules", "week_start", "count_from", "numeric_order", "this_next"],
+      "properties": {
+        "business_weekdays": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "minimum": 0, "maximum": 6}, "description": "Python weekday numbers, Monday = 0."},
+        "holidays": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/IsoDate"}},
+        "holiday_rules": {"type": "array", "items": {"$ref": "#/$defs/HolidayRule"}},
+        "week_start": {"type": "integer", "minimum": 0, "maximum": 6},
+        "count_from": {"enum": ["after_today", "including_today"]},
+        "numeric_order": {"enum": ["DMY", "MDY", "YMD"]},
+        "half_days": {"type": "array", "description": "Half days (e.g. the eve of a holiday): callbacks at or after `from` (HH:MM) are not allowed that day.",
+          "items": {"type": "object", "additionalProperties": false, "required": ["date", "from"],
+                    "properties": {"date": {"$ref": "#/$defs/IsoDate"}, "from": {"type": "string", "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"}}}},
+        "half_day_is_business_day": {"type": "boolean", "description": "A half day still counts as a business day for promise dates (default true)."},
+        "this_next": {
+          "type": "object", "additionalProperties": false,
+          "required": ["this", "next"],
+          "properties": {"this": {"enum": ["current_week", "next_occurrence"]}, "next": {"enum": ["following_week", "first_after_today", "skip_one"]}}
+        }
+      }
+    },
+
+    "bands": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["key", "days_late_min", "days_late_max", "deadline", "attempts"],
+        "properties": {
+          "key": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+          "days_late_min": {"type": "integer"},
+          "days_late_max": {"type": "integer"},
+          "deadline": {"$ref": "#/$defs/DateRule"},
+          "attempts": {"type": "integer", "minimum": 0, "maximum": 5}
+        }
+      }
+    },
+
+    "promise_date": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["earliest", "latest", "business_day_only", "non_business_within_deadline", "after_deadline", "offered_date_refused", "vague", "past_date"],
+      "properties": {
+        "earliest": {"$ref": "#/$defs/DateRule"},
+        "latest": {"$ref": "#/$defs/DateRule"},
+        "business_day_only": {"type": "boolean"},
+        "non_business_within_deadline": {"enum": ["offer_next_business_day", "refuse"]},
+        "after_deadline": {"enum": ["offer_deadline"]},
+        "offered_date_refused": {"enum": ["flat_refusal"]},
+        "vague": {
+          "type": "object", "additionalProperties": false,
+          "required": ["ask_exact_times", "then"],
+          "properties": {"ask_exact_times": {"type": "integer", "minimum": 0}, "then": {"enum": ["propose_deadline"]}}
+        },
+        "past_date": {"enum": ["say_passed_and_ask"]}
+      }
+    },
+
+    "amounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["first", "never_ask_customer", "too_much", "accept_min", "accept_max", "below_floor", "above_full", "decimals"],
+      "properties": {
+        "first": {"$ref": "#/$defs/AmountRule"},
+        "never_ask_customer": {"type": "boolean"},
+        "too_much": {
+          "type": "object", "additionalProperties": false,
+          "required": ["offer", "times", "date", "say_rest", "refusal"],
+          "properties": {
+            "offer": {"$ref": "#/$defs/AmountRule"},
+            "times": {"type": "integer", "minimum": 0},
+            "date": {"enum": ["attempt_1", "pending", "customer_else_pending"]},
+            "say_rest": {"$ref": "#/$defs/Line"},
+            "refusal": {"enum": ["flat_refusal"]}
+          }
+        },
+        "accept_min": {"$ref": "#/$defs/AmountRule"},
+        "accept_max": {"$ref": "#/$defs/AmountRule"},
+        "below_floor": {
+          "type": "object", "additionalProperties": false,
+          "required": ["say", "offer", "times", "then"],
+          "properties": {"say": {"$ref": "#/$defs/Line"}, "offer": {"$ref": "#/$defs/AmountRule"}, "times": {"type": "integer", "minimum": 0}, "then": {"enum": ["flat_refusal"]}}
+        },
+        "above_full": {"enum": ["offer_full"]},
+        "decimals": {"type": "integer", "minimum": 0, "maximum": 2}
+      }
+    },
+
+    "negotiation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["first_ask", "ladder", "no_repeat_refused_offer", "non_answer_counts_as_refusal", "on_exhausted", "forbidden_offers"],
+      "properties": {
+        "first_ask": {
+          "type": "object", "additionalProperties": false,
+          "required": ["single", "multi", "amount", "date", "consumes_attempt"],
+          "properties": {
+            "single": {"$ref": "#/$defs/Line"},
+            "multi": {"$ref": "#/$defs/Line"},
+            "amount": {"$ref": "#/$defs/AmountRule"},
+            "date": {"$ref": "#/$defs/DateRule"},
+            "consumes_attempt": {"type": "boolean"}
+          }
+        },
+        "ladder": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["key", "attempt", "bands", "amount", "date", "line"],
+            "properties": {
+              "key": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+              "attempt": {"type": "integer", "minimum": 1},
+              "bands": {"type": "array", "minItems": 1, "items": {"type": "string"}, "description": "Band keys, or ['all']."},
+              "amount": {"$ref": "#/$defs/AmountRule"},
+              "date": {"$ref": "#/$defs/DateRule"},
+              "line": {"$ref": "#/$defs/Line"}
+            }
+          }
+        },
+        "no_repeat_refused_offer": {"type": "boolean"},
+        "non_answer_counts_as_refusal": {"type": "boolean"},
+        "on_exhausted": {"$ref": "#/$defs/SituationId"},
+        "forbidden_offers": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+
+    "intents": {"type": "array", "items": {"$ref": "#/$defs/Intent"}},
+
+    "situations": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {"$ref": "#/$defs/SituationId"},
+      "additionalProperties": {
+        "type": "object", "additionalProperties": false,
+        "required": ["outcome", "reason", "queue", "note_reason"],
+        "properties": {
+          "outcome": {"type": "string", "minLength": 1, "description": "close_call outcome enum value."},
+          "reason": {"type": "string", "description": "close_call reason; '' = send no reason leaf at all."},
+          "queue": {"type": "string", "description": "transfer queue enum value for transfer situations, else ''."},
+          "note_reason": {"type": "string", "description": "add_note reason enum value used when a product ends in this situation, else ''."}
+        }
+      }
+    },
+
+    "outcomes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["precedence", "reasonless_outcomes", "unresolved_product_situation"],
+      "properties": {
+        "precedence": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["when", "use"],
+            "properties": {
+              "when": {"type": "string", "pattern": "^(transfer_done|call_situation|any_promise_recorded|else|all_products:S_[A-Z0-9_]+|any_product:S_[A-Z0-9_]+)$"},
+              "use": {"type": "string", "pattern": "^(transfer_situation|call_situation|situation:S_[A-Z0-9_]+|first_product_excluding:S_[A-Z0-9_]+(,S_[A-Z0-9_]+)*)$"}
+            }
+          }
+        },
+        "reasonless_outcomes": {"type": "array", "items": {"type": "string"}},
+        "unresolved_product_situation": {"$ref": "#/$defs/SituationId"}
+      }
+    },
+
+    "notes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "scope", "when", "reason_from", "skip_if_transfer", "text"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "scope": {"enum": ["product", "call"]},
+        "when": {"enum": ["no_promise_recorded"]},
+        "reason_from": {"enum": ["product_situation"]},
+        "skip_if_transfer": {"type": "boolean"},
+        "text": {"type": "string", "description": "Optional free text template for the note's text field ('' = omit)."}
+      }
+    },
+
+    "multi_product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state_all_first", "ask_all_today_first", "order", "attempts_per_product", "one_date_for_all", "readback_together", "hardship_applies_to", "dispute_or_paid_continues", "clamp_line"],
+      "properties": {
+        "state_all_first": {"type": "boolean"},
+        "ask_all_today_first": {"type": "boolean"},
+        "order": {"enum": ["api"]},
+        "attempts_per_product": {"type": "boolean"},
+        "one_date_for_all": {"enum": ["clamp_to_own_deadline_and_say", "offer_deadline"]},
+        "readback_together": {"type": "boolean"},
+        "hardship_applies_to": {"enum": ["current_product", "all_remaining"]},
+        "dispute_or_paid_continues": {"type": "boolean"},
+        "clamp_line": {"$ref": "#/$defs/Line"}
+      }
+    },
+
+    "confirmation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["readback", "readback_item", "question", "verbatim_question", "on_change", "what_to_change", "recorded_cannot_change"],
+      "properties": {
+        "readback": {"$ref": "#/$defs/Line", "description": "Uses <items> (the joined readback_item renderings)."},
+        "readback_item": {"$ref": "#/$defs/Line"},
+        "question": {"$ref": "#/$defs/Line"},
+        "verbatim_question": {"type": "boolean"},
+        "on_change": {"enum": ["revalidate_then_readback"]},
+        "what_to_change": {"$ref": "#/$defs/Line"},
+        "recorded_cannot_change": {"$ref": "#/$defs/Line"}
+      }
+    },
+
+    "recording": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tries", "recorded", "recorded_multi", "failed", "on_all_failed"],
+      "properties": {
+        "tries": {"type": "integer", "minimum": 1, "maximum": 3},
+        "recorded": {"$ref": "#/$defs/Line"},
+        "recorded_multi": {"$ref": "#/$defs/Line"},
+        "failed_item": {"$ref": "#/$defs/Line", "description": "Optional. Said per product whose promise failed while others were recorded; uses <product>."},
+        "failed": {"$ref": "#/$defs/Line"},
+        "on_all_failed": {"$ref": "#/$defs/SituationId"}
+      }
+    },
+
+    "required_sentences": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "text", "verbatim", "trigger", "once"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+          "text": {"type": "string", "minLength": 1},
+          "verbatim": {"type": "boolean"},
+          "trigger": {"type": "string", "pattern": "^(after_promise_recorded|after_verified|after_statement|before_close|on_situation:S_[A-Z0-9_]+|on_intent:[a-z][a-z0-9_]*|on_outcome:[a-z][a-z0-9_]*)$"},
+          "once": {"type": "boolean"}
+        }
+      }
+    },
+
+    "closing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["goodbye", "per_situation"],
+      "properties": {
+        "goodbye": {"$ref": "#/$defs/Line", "description": "Thanks + goodbye; always the last sentence before close_call."},
+        "per_situation": {"type": "object", "propertyNames": {"$ref": "#/$defs/SituationId"}, "additionalProperties": {"$ref": "#/$defs/Line"}},
+        "no_goodbye": {"type": "array", "items": {"$ref": "#/$defs/SituationId"}, "description": "Situations whose close adds no closing.goodbye (the brief says its own line and 'nothing else'); per_situation lines are still said."}
+      }
+    },
+
+    "lines": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clarify", "no_info", "ack", "neutral_reask", "continue_prompt", "date_ask_exact", "next_bd_offer", "deadline_offer", "past_date", "floor_offer", "above_full_offer", "pay_on_date_question", "cannot_offer", "account_error", "hold"],
+      "description": "Canned runtime lines (closed slot set). Defaults in builder/spec/defaults.py.",
+      "properties": {
+        "clarify": {"$ref": "#/$defs/Line"},
+        "no_info": {"$ref": "#/$defs/Line"},
+        "presence": {"$ref": "#/$defs/Line", "description": "Optional. Answer to 'are you there?'."},
+        "ack": {"$ref": "#/$defs/Line"},
+        "neutral_reask": {"$ref": "#/$defs/Line"},
+        "continue_prompt": {"$ref": "#/$defs/Line"},
+        "date_ask_exact": {"$ref": "#/$defs/Line"},
+        "next_bd_offer": {"$ref": "#/$defs/Line"},
+        "deadline_offer": {"$ref": "#/$defs/Line"},
+        "past_date": {"$ref": "#/$defs/Line"},
+        "floor_offer": {"$ref": "#/$defs/Line"},
+        "above_full_offer": {"$ref": "#/$defs/Line"},
+        "pay_on_date_question": {"$ref": "#/$defs/Line"},
+        "cannot_offer": {"$ref": "#/$defs/Line"},
+        "account_error": {"$ref": "#/$defs/Line"},
+        "hold": {"$ref": "#/$defs/Line"},
+        "amount_change_ask": {"$ref": "#/$defs/Line", "description": "Optional. Asks for the new amount after the customer said at the read-back that the amount should change."},
+        "anything_else": {"$ref": "#/$defs/Line", "description": "Optional. Asked after the promises are recorded when interpretation.after_record is ask_anything_else."}
+      }
+    },
+
+    "dated": {
+      "type": "array",
+      "description": "Rules that change on an effective date (e.g. a memo item 'from <date>'). On a call whose date is on or after `from` (and before `until`, when given) the runtime sets the JSON pointer `path` of the Spec to `value`; the base values hold the rule before the change. Only runtime-evaluated sections may be dated (builder/pipeline/validate.py DATED_PREFIXES).",
+      "items": {"type": "object", "additionalProperties": false, "required": ["from", "path", "value"], "properties": {"from": {"$ref": "#/$defs/IsoDate"}, "until": {"$ref": "#/$defs/IsoDate"}, "path": {"type": "string", "pattern": "^/[a-z_]+/"}, "value": {}, "source": {"type": "string"}}}
+    },
+
+    "interpretation": {"$ref": "#/$defs/Interpretation"}
+  },
+
+  "$defs": {
+    "Line": {"type": "string", "minLength": 1, "description": "Spoken template. Placeholders: <bank> <self> <customer> <v:CALLVAR> <f:FIELD> <product> <amount> <date> <deadline> <floor> <past_due> <days_late> <time> <items> <rest>. Never Freya {{ }}."},
+    "SituationId": {"type": "string", "pattern": "^S_[A-Z][A-Z0-9_]*$"},
+    "IsoDate": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+    "HHMM": {"type": "string", "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"},
+
+    "TimeWindow": {
+      "type": "object", "additionalProperties": false,
+      "required": ["from", "to", "inclusive_from", "inclusive_to", "days"],
+      "properties": {
+        "from": {"$ref": "#/$defs/HHMM"},
+        "to": {"$ref": "#/$defs/HHMM"},
+        "inclusive_from": {"type": "boolean"},
+        "inclusive_to": {"type": "boolean"},
+        "days": {"enum": ["any", "business", "non_business"]}
+      }
+    },
+
+    "HolidayRule": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {"enum": ["fixed_md", "nth_weekday", "last_weekday", "range"]},
+        "month": {"type": "integer", "minimum": 1, "maximum": 12},
+        "day": {"type": "integer", "minimum": 1, "maximum": 31},
+        "weekday": {"type": "integer", "minimum": 0, "maximum": 6},
+        "n": {"type": "integer", "minimum": 1, "maximum": 5},
+        "from": {"$ref": "#/$defs/IsoDate"},
+        "to": {"$ref": "#/$defs/IsoDate"},
+        "observed": {"enum": ["none", "next_monday", "nearest_weekday", "next_business_day"]}
+      }
+    },
+
+    "DateRule": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {"enum": ["today", "next_business_day", "nth_business_day_after_today", "nth_calendar_day_after_today", "last_business_day_of_week", "end_of_month", "last_business_day_of_month", "deadline", "fixed", "min", "max"]},
+        "n": {"type": "integer", "minimum": 0},
+        "roll": {"enum": ["none", "next_bd", "prev_bd"]},
+        "if_today": {"enum": ["keep", "next_week"], "description": "last_business_day_of_week: what to do when today is that day."},
+        "date": {"$ref": "#/$defs/IsoDate"},
+        "args": {"type": "array", "items": {"$ref": "#/$defs/DateRule"}}
+      }
+    },
+
+    "AmountRule": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {"enum": ["full", "floor", "field", "percent_of_full", "fixed", "min", "max", "floor_if_too_much_else_full"]},
+        "field": {"type": "string", "description": "Product response leaf name (kind=field)."},
+        "pct": {"type": "number", "minimum": 0, "maximum": 100},
+        "value": {"type": "number", "minimum": 0},
+        "rounding": {"enum": ["half_up", "ceil", "floor"]},
+        "args": {"type": "array", "items": {"$ref": "#/$defs/AmountRule"}}
+      }
+    },
+
+    "IdQuestion": {
+      "type": "object", "additionalProperties": false,
+      "required": ["key", "field_value", "kind", "numeric_order", "wire_format", "length", "pattern", "ask", "reask_wrong", "ask_full", "max_wrong"],
+      "properties": {
+        "key": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "field_value": {"type": "string", "minLength": 1, "description": "Value of the verify tool's selector enum (or the per-question body field name) for this question."},
+        "kind": {"enum": ["date", "digits", "year", "alnum", "text"]},
+        "numeric_order": {"enum": ["DMY", "MDY", "YMD"]},
+        "wire_format": {"type": "string", "description": "date: strftime-style ('%Y-%m-%d'); digits: 'digits'; year: '%Y'; alnum: 'upper' | 'upper_nospace' | 'as_is'; text: 'as_is'."},
+        "length": {"type": "integer", "minimum": 0, "description": "Exact length of digits/alnum answers; 0 = unknown."},
+        "pattern": {"type": "string", "description": "Regex the wire value must match ('' = none)."},
+        "ask": {"$ref": "#/$defs/Line"},
+        "reask_wrong": {"$ref": "#/$defs/Line"},
+        "ask_full": {"$ref": "#/$defs/Line", "description": "Asked when the answer was incomplete/unreadable (uncounted)."},
+        "reask": {"$ref": "#/$defs/Line", "description": "Optional. Re-ask after a non-answer, without a thank-you lead-in."},
+        "max_wrong": {"type": "integer", "minimum": 0, "description": "Per-question wrong limit; 0 = only the total limit applies."},
+        "two_digit_year": {"enum": ["ask_full", "pivot"], "description": "kind year: a two-digit year is never sent and the full year is asked (ask_full, the default), or completed with a century pivot (pivot)."}
+      }
+    },
+
+    "Hint": {
+      "type": "object", "additionalProperties": false,
+      "required": ["value", "counts_as_wrong", "say", "max"],
+      "properties": {
+        "value": {"type": "string", "description": "Hint enum value from the verify tool response."},
+        "counts_as_wrong": {"type": "boolean"},
+        "say": {"$ref": "#/$defs/Line"},
+        "max": {"type": "integer", "minimum": 0}
+      }
+    },
+
+    "Intent": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "label", "description", "examples", "negatives", "keywords", "scope", "precedence", "product_scoped", "action"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "label": {"type": "string"},
+        "description": {"type": "string", "description": "One sentence for the extraction model."},
+        "examples": {"type": "array", "minItems": 2, "items": {"type": "string"}},
+        "negatives": {"type": "array", "items": {"type": "string"}},
+        "keywords": {"type": "array", "items": {"type": "string"}, "description": "Python regexes (case-insensitive) run on u_text every turn as a backstop."},
+        "scope": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["rp", "tp", "id", "neg", "conf"]}},
+        "precedence": {"type": "integer", "minimum": 0, "maximum": 1000, "description": "Higher wins when several intents fire in one turn."},
+        "product_scoped": {"type": "boolean"},
+        "action": {"$ref": "#/$defs/Action"}
+      }
+    },
+
+    "Action": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {"enum": ["answer_continue", "resolve_product", "transfer", "ask_then_transfer", "offer_transfer", "count_then_close", "close_now", "too_much"]},
+        "say": {"$ref": "#/$defs/Line"},
+        "situation": {"$ref": "#/$defs/SituationId"},
+        "situation_pre_verification": {"$ref": "#/$defs/SituationId"},
+        "accept_situation": {"$ref": "#/$defs/SituationId"},
+        "accept_say": {"$ref": "#/$defs/Line", "description": "offer_transfer, optional: said when the customer accepts, before the transfer."},
+        "decline_situation": {"$ref": "#/$defs/SituationId"},
+        "queue": {"type": "string"},
+        "question": {"$ref": "#/$defs/Line"},
+        "limit": {"type": "integer", "minimum": 1},
+        "keep_recorded": {"type": "boolean"},
+        "drop_unrecorded": {"type": "boolean"},
+        "suppress_notes": {"type": "boolean"},
+        "suspend_persuasion": {"type": "boolean"}
+      },
+      "allOf": [
+        {"if": {"properties": {"kind": {"const": "answer_continue"}}}, "then": {"required": ["say"]}},
+        {"if": {"properties": {"kind": {"const": "resolve_product"}}}, "then": {"required": ["say", "situation"]}},
+        {"if": {"properties": {"kind": {"const": "transfer"}}}, "then": {"required": ["say", "situation", "queue", "keep_recorded", "drop_unrecorded", "suppress_notes"]}},
+        {"if": {"properties": {"kind": {"const": "ask_then_transfer"}}}, "then": {"required": ["question", "say", "situation", "queue"]}},
+        {"if": {"properties": {"kind": {"const": "offer_transfer"}}}, "then": {"required": ["say", "queue", "accept_situation", "decline_situation", "suspend_persuasion"]}},
+        {"if": {"properties": {"kind": {"const": "count_then_close"}}}, "then": {"required": ["say", "limit", "situation", "situation_pre_verification"]}},
+        {"if": {"properties": {"kind": {"const": "close_now"}}}, "then": {"required": ["say", "situation"]}}
+      ]
+    },
+
+    "Interpretation": {
+      "type": "object", "additionalProperties": false,
+      "description": "Section 5.3 interpretation defaults, overridable by the brief. builder/spec/defaults.py holds the default values; validate.py fills missing keys and logs each one in meta.defaults_applied.",
+      "properties": {
+        "floor_offer_date": {"enum": ["attempt_1", "customer_else_pending_else_attempt_1"]},
+        "decline_counting": {"enum": ["per_question_consecutive", "total"]},
+        "rp_greeting_first_turn": {"enum": ["reask_counts", "reask_free"]},
+        "rp_question_after_last_ask": {"enum": ["counts_as_unclear", "answer_and_allow_one_more"]},
+        "transfer_beats_promise": {"type": "boolean"},
+        "after_record": {"enum": ["close", "ask_anything_else"], "description": "After the promises are recorded: close at once, or ask lines.anything_else and handle one more request (a transfer after a recorded promise, a question). Derived by validate.py when absent."},
+        "attempt_definition": {"enum": ["rungs_only"]},
+        "refused_corrective_offer": {"enum": ["flat_refusal"]},
+        "proposal_beats_too_much": {"type": "boolean"},
+        "floor_ge_full": {"enum": ["skip_floor"]},
+        "refuse_to_talk_requires_talk_words": {"type": "boolean"},
+        "paid_requires_completed_tense": {"type": "boolean"},
+        "past_closure_is_dispute": {"type": "boolean"},
+        "hardship_requires_cause": {"type": "boolean"},
+        "hedge_is_non_answer": {"type": "boolean"},
+        "readback_no": {"enum": ["ask_what_to_change"]},
+        "agreed_before_terminal": {"enum": ["drop", "readback_and_record"]},
+        "text_message_sentence": {"enum": ["once_after_all_creates"]},
+        "partial_today": {"enum": ["record_today_rest_from_attempt_1"]},
+        "notes_timing": {"enum": ["before_close"]},
+        "notes_scope": {"enum": ["every_product_without_promise"]},
+        "reasonless": {"enum": ["omit_reason_leaf"]},
+        "malformed_identity": {"enum": ["never_send_ask_rest"]},
+        "callback_today_nonbd": {"enum": ["allow", "refuse"]},
+        "hedged_time": {"enum": ["exact"]},
+        "weekend_now_attempt1": {"enum": ["last_bd_of_next_week"]},
+        "intent_tie": {"type": "array", "items": {"type": "string"}, "description": "Intent ids, highest first; used only when two intents share a precedence."}
+      }
+    }
+  }
+}

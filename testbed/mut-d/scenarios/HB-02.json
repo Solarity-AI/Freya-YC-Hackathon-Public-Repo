@@ -1,0 +1,111 @@
+{
+ "id": "HB-02",
+ "mode": "sim",
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 12,
+  "must": [
+   [
+    -1,
+    "Thank you, we will try again another time. Goodbye."
+   ]
+  ],
+  "must_not": [
+   [
+    -1,
+    "612"
+   ],
+   [
+    -1,
+    "reach"
+   ],
+   [
+    -1,
+    "what time"
+   ],
+   [
+    -1,
+    "callback"
+   ],
+   [
+    -1,
+    "loan"
+   ]
+  ]
+ },
+ "turns": [
+  {
+   "say": "No, this is her husband. What is this about?",
+   "x": {
+    "u_act": "question",
+    "u_topic": "third_party"
+   }
+  },
+  {
+   "say": "I can pay it for her if you tell me how much it is.",
+   "x": {
+    "u_act": "proposal",
+    "u_topic": "third_party"
+   }
+  },
+  {
+   "say": "Just call her back tomorrow at eleven.",
+   "x": {
+    "u_act": "proposal",
+    "u_topic": "third_party",
+    "u_date": "tomorrow",
+    "u_time": "eleven"
+   }
+  },
+  {
+   "say": "Okay, bye.",
+   "x": {
+    "u_act": "chatter_only",
+    "u_topic": "none"
+   }
+  }
+ ],
+ "case": {
+  "id": "HB-02",
+  "brief": "HARBOR",
+  "family": "Third party",
+  "level": "medium",
+  "title": "Husband answers and asks for a callback",
+  "variables": {
+   "first_name": "Nora",
+   "last_name": "Lindqvist",
+   "title": "Ms",
+   "now": "2026-10-22T16:40"
+  },
+  "identity": {
+   "account_last4": "7731",
+   "birth_year": "1975"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 612.0,
+    "days_late": 19,
+    "monthly_payment": 204.0
+   }
+  ],
+  "script": "The person who answers is her husband. Asks what the call is about, offers to pay it himself, then says 'call her back tomorrow at eleven'.",
+  "expected": {
+   "outcome": "no_contact",
+   "reason": "third_party",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "schedule_callback is never called, although the husband asks for one",
+   "the agent does not ask when Nora can be reached",
+   "nothing beyond the opening sentence is disclosed: no reason, product, amount or debt",
+   "verify_identity and get_account never called",
+   "close_call (no_contact, third_party); the retired NCT-CBK / callback value is not used"
+  ]
+ },
+ "spec": "mut-d"
+}

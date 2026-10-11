@@ -1,0 +1,113 @@
+{
+ "id": "MUTC-NW-03",
+ "spec": "mut-c",
+ "mode": "sim",
+ "case": {
+  "id": "NW-03",
+  "brief": "mut-c",
+  "family": "Identity",
+  "level": "hard",
+  "title": "Swapped date does not count, two wrong postcodes end the check",
+  "variables": {
+   "first_name": "Ruth",
+   "last_name": "Adeyemi",
+   "title": "Ms",
+   "now": "2026-10-29T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1990-03-07",
+   "postcode": "M14 5BH"
+  },
+  "products": [
+   {
+    "type": "overdraft",
+    "past_due": 188.0,
+    "days_late": 9
+   }
+  ],
+  "script": "Confirms her name. Gives date of birth 'the third of July 1990'; when asked to say the month as a word, says 'March, the seventh, 1990'. Postcode: 'M fourteen, five B G'. When asked again: 'M four one, five B H'. Then asks how much she owes.",
+  "expected": {
+   "outcome": "id_failed",
+   "reason": "wrong_answers",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "the swap retry is not counted as wrong",
+   "the postcode is asked again exactly once",
+   "the check ends after the second wrong answer; no third postcode question",
+   "no product or amount disclosed",
+   "member told to call the number on the back of the card or visit a branch",
+   "get_account and add_note never called"
+  ]
+ },
+ "turns": [
+  {
+   "say": "Yes, that's me.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "The third of July 1990.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "The third of July 1990"
+   }
+  },
+  {
+   "say": "March, the seventh, 1990.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "March, the seventh, 1990"
+   }
+  },
+  {
+   "say": "M fourteen, five B G.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "M fourteen, five B G"
+   }
+  },
+  {
+   "say": "M four one, five B H.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "M four one, five B H"
+   }
+  },
+  {
+   "say": "How much do I owe?",
+   "x": {
+    "u_act": "question"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 24,
+  "must": [
+   [
+    -1,
+    "the number on the back of your Northwind card"
+   ],
+   [
+    -1,
+    "Thank you for your time, and thank you for choosing Northwind Credit Union. Goodbye."
+   ]
+  ],
+  "must_not": [
+   [
+    -1,
+    "pounds"
+   ],
+   [
+    -1,
+    "overdraft"
+   ]
+  ]
+ }
+}

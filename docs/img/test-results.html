@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Freya Builder Test Results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: poster header, four status columns (one per test layer), a full-width final-rule banner. */
+:root {
+  --bg: #f3f5f9;
+  --panel: #ffffff;
+  --ink: #16213a;
+  --muted: #5a6478;
+  --line: #dde3ee;
+  --local: #2563c9;   --local-soft: #e7effc;
+  --chat: #0f8a7a;    --chat-soft: #e2f4f1;
+  --sim: #d9611c;     --sim-soft: #fcede3;
+  --rehearsal: #6b3fc6; --rehearsal-soft: #efe8fb;
+  --good: #1d8a4e; --warn: #b7791f; --bad: #c2362f;
+  --banner: #c8432f; --banner-ink: #ffffff;
+  --display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1420; --panel: #171e2d; --ink: #e8ecf5; --muted: #a2acc0; --line: #2a3346;
+    --local: #6ea3ff; --local-soft: #1b2a47;
+    --chat: #3fc7b2; --chat-soft: #13302d;
+    --sim: #ff9a5c; --sim-soft: #3a2416;
+    --rehearsal: #b08cff; --rehearsal-soft: #2a2145;
+    --good: #4cc282; --warn: #e3b154; --bad: #ff7b6f;
+    --banner: #b23a28; --banner-ink: #ffffff;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1420; --panel: #171e2d; --ink: #e8ecf5; --muted: #a2acc0; --line: #2a3346;
+  --local: #6ea3ff; --local-soft: #1b2a47;
+  --chat: #3fc7b2; --chat-soft: #13302d;
+  --sim: #ff9a5c; --sim-soft: #3a2416;
+  --rehearsal: #b08cff; --rehearsal-soft: #2a2145;
+  --good: #4cc282; --warn: #e3b154; --bad: #ff7b6f;
+  --banner: #b23a28; --banner-ink: #ffffff;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.4; margin: 0; }
+.wrap { max-width: 1280px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 36px; display: grid; gap: 22px; }
+header { text-align: center; display: grid; gap: 4px; }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(2.4rem, 5vw, 3.6rem); letter-spacing: 0.01em; margin: 0; line-height: 1; text-wrap: balance; }
+.sub { color: var(--muted); font-size: 1.05rem; font-weight: 600; }
+.sub b { color: var(--ink); }
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 1100px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+.col { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; gap: 14px; align-content: start; min-width: 0; border-top: 5px solid var(--c); }
+.col.local { --c: var(--local); --soft: var(--local-soft); }
+.col.chat { --c: var(--chat); --soft: var(--chat-soft); }
+.col.sim { --c: var(--sim); --soft: var(--sim-soft); }
+.col.rehearsal { --c: var(--rehearsal); --soft: var(--rehearsal-soft); }
+.head { display: flex; align-items: center; gap: 12px; }
+.icon { width: 46px; height: 46px; flex: none; border-radius: 12px; background: var(--soft); color: var(--c); display: grid; place-items: center; }
+.icon svg { width: 26px; height: 26px; }
+h2 { font-family: var(--display); font-weight: 700; font-size: 1.45rem; letter-spacing: 0.04em; text-transform: uppercase; margin: 0; line-height: 1; }
+.kind { color: var(--muted); font-size: 0.85rem; margin-top: 3px; }
+.big { background: var(--soft); border-radius: 12px; padding: 14px 12px 12px; text-align: center; }
+.big .n { font-family: var(--display); font-weight: 800; font-size: clamp(3rem, 6vw, 4.2rem); color: var(--c); line-height: 0.95; font-variant-numeric: tabular-nums; }
+.big .l { font-weight: 700; font-size: 1rem; margin-top: 6px; }
+ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+li { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 10px; align-items: start; }
+.k { font-family: var(--display); font-weight: 700; font-size: 1.25rem; color: var(--c); text-align: right; font-variant-numeric: tabular-nums; line-height: 1.15; white-space: nowrap; }
+.k.good { color: var(--good); } .k.warn { color: var(--warn); } .k.bad { color: var(--bad); }
+.t { font-size: 0.92rem; min-width: 0; }
+.t b { font-weight: 700; }
+.t small { display: block; color: var(--muted); font-size: 0.82rem; margin-top: 2px; }
+.runs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.chip { font-size: 0.78rem; font-weight: 700; padding: 1px 7px; border-radius: 999px; border: 1px solid currentColor; font-variant-numeric: tabular-nums; }
+.chip.good { color: var(--good); } .chip.warn { color: var(--warn); } .chip.bad { color: var(--bad); }
+.note { border-top: 1px dashed var(--line); padding-top: 10px; color: var(--muted); font-size: 0.82rem; }
+.banner { background: var(--banner); color: var(--banner-ink); border-radius: 12px; padding: 14px 18px; display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; justify-content: center; text-align: center; }
+.banner strong { font-family: var(--display); font-size: 1.5rem; letter-spacing: 0.02em; }
+.banner span { font-weight: 600; opacity: 0.95; }
+.next { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px 20px; font-size: 0.9rem; }
+.next div { min-width: 0; }
+.next b { display: block; font-family: var(--display); font-size: 1.05rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Testing &amp; Results</h1>
+    <div class="sub">Phone-agent builder · status Sunday 15:35 UTC (11:35 EDT) · final case opens 17:00 UTC (13:00 EDT)</div>
+  </header>
+
+  <section class="grid" aria-label="Test layers">
+    <article class="col local">
+      <div class="head">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2" fill="none"/><path d="M8 20h8M12 16v4"/></svg></div>
+        <div><h2>Local tests</h2><div class="kind">offline, every commit</div></div>
+      </div>
+      <div class="big"><div class="n">3,509</div><div class="l">tests passed · 0 failed · 125 s</div></div>
+      <ul>
+        <li><span class="k good">99.9%</span><span class="t"><b>Code coverage</b>, line and branch<small>Quality gate requires at least 95%</small></span></li>
+        <li><span class="k good">0</span><span class="t"><b>SonarQube findings that block</b><small>0 bugs, 0 vulnerabilities, 0% duplicated code, 0 dead-code issues; gate OK</small></span></li>
+        <li><span class="k">14/14</span><span class="t"><b>Practice customers replayed</b> in the local engine copy with a mock bank<small>Scored with the kit's own bank-record checker</small></span></li>
+        <li><span class="k">534</span><span class="t"><b>Parser tests</b>: amounts and dates in words, numbers said in pieces, corrections, times</span></li>
+        <li><span class="k">455</span><span class="t"><b>Call-logic tests</b>: 232 state machine, 120 identity, 103 calendar and business days</span></li>
+        <li><span class="k">✓</span><span class="t"><b>Every bug found live becomes a test</b><small>The suite grew from 1,543 to 3,509 tests today</small></span></li>
+      </ul>
+    </article>
+
+    <article class="col chat">
+      <div class="head">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z" fill="none"/><path d="M19 9h1a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-1v2l-3-2h-4"/></svg></div>
+        <div><h2>Live chat tests</h2><div class="kind">Claude plays the customer</div></div>
+      </div>
+      <div class="big"><div class="n">74</div><div class="l">chat calls · 13 customers · 467 turns</div></div>
+      <ul>
+        <li><span class="k good">49</span><span class="t"><b>Passed</b>: bank record and transcript checks<small>Real Freya agent, real practice bank</small></span></li>
+        <li><span class="k warn">15</span><span class="t"><b>Stopped by the platform</b><small>HTTP 502/503/504 or no reply within 45 s</small></span></li>
+        <li><span class="k bad">10</span><span class="t"><b>Agent bugs found, all fixed</b><small>Code step over the 131 KB limit, hardship sent to restructuring, read-back loops</small></span></li>
+        <li><span class="k good">6/6</span><span class="t"><b>Latest re-check after the fixes</b><small>PUB-01, 04, 06, 10, 11, 12 at 13:58–14:09 UTC</small></span></li>
+        <li><span class="k">2–19 s</span><span class="t"><b>Agent turn time</b><small>Our code step takes 0.3–2 s; the rest is platform overhead</small></span></li>
+        <li><span class="k">–</span><span class="t"><b>Not an official score</b><small>Used when the simulation queue was blocked</small></span></li>
+      </ul>
+    </article>
+
+    <article class="col sim">
+      <div class="head">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2" fill="none"/><rect x="2" y="14" width="5" height="6" rx="1.5" fill="none"/><rect x="17" y="14" width="5" height="6" rx="1.5" fill="none"/></svg></div>
+        <div><h2>Official simulations</h2><div class="kind">kit simulator + AI judge + bank records</div></div>
+      </div>
+      <div class="big"><div class="n">194</div><div class="l">simulated calls · 84% passed</div></div>
+      <ul>
+        <li><span class="k">25</span><span class="t"><b>Simulation runs today</b>, all on agents made by build.py</span></li>
+        <li><span class="k good">23/23</span><span class="t"><b>First single run</b><small>Brief A 10/10 · A+B 3/3 · raw-material A 10/10</small></span></li>
+        <li><span class="k">A</span><span class="t"><b>Brief A, three runs</b>
+          <span class="runs"><span class="chip good">9/10*</span><span class="chip good">10/10</span><span class="chip good">9/10*</span></span>
+          <small>Latest agent: every case 3/3 except PUB-07, whose two misses were platform faults*</small></span></li>
+        <li><span class="k">RAW</span><span class="t"><b>Raw-material Brief A, three runs</b>
+          <span class="runs"><span class="chip warn">3/10*</span><span class="chip good">10/10</span><span class="chip good">10/10</span></span></span></li>
+        <li><span class="k">A+B</span><span class="t"><b>Three products, three runs</b>
+          <span class="runs"><span class="chip good">3/3</span><span class="chip good">3/3</span><span class="chip good">3/3</span></span>
+          <small>All 3 customers passed all 3 runs after the fixes (was 0/3)</small></span></li>
+        <li><span class="k">Styles</span><span class="t"><b>Speaking styles</b>
+          <span class="runs"><span class="chip good">pieces 9/10</span><span class="chip good">corrects 10/10</span><span class="chip good">asks_back 10/10</span><span class="chip good">in_words 10/10</span><span class="chip warn">talkative 6/10</span></span>
+          <small>On the earlier agent; the talkative fixes are in but not re-run</small></span></li>
+      </ul>
+      <div class="note">* Platform faults, not agent errors: the judge's analysis never arrived, and in one call the platform never processed the customer's turn (no events at all). Practice cases no longer count toward the score: the final is one Turkish case.</div>
+    </article>
+
+    <article class="col rehearsal">
+      <div class="head">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" fill="none"/><circle cx="12" cy="12" r="5" fill="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></div>
+        <div><h2>Hidden-brief rehearsal</h2><div class="kind">4 invented banks, never seen by the builder</div></div>
+      </div>
+      <div class="big"><div class="n">52/52</div><div class="l">customers handled correctly</div></div>
+      <ul>
+        <li><span class="k good">13/13</span><span class="t"><b>Raw Brief A</b>: mail, policy, memo, code list<small>Memo changes applied by call date</small></span></li>
+        <li><span class="k good">12/12</span><span class="t"><b>Raw Brief A+B</b>: mail thread, addendum, holiday memo</span></li>
+        <li><span class="k good">12/12</span><span class="t"><b>Northwind</b>: postcode identity, three bands, renamed tool fields</span></li>
+        <li><span class="k good">15/15</span><span class="t"><b>Harbor Bank</b>: account-number identity, calendar-day deadlines, dated memo</span></li>
+        <li><span class="k good">GO</span><span class="t"><b>Fresh-clone rehearsal</b> with the official command<small>Builds in 107 s and 142 s; submission files and trace checked</small></span></li>
+        <li><span class="k">2×</span><span class="t"><b>Rebuild check</b> on Brief A and Northwind<small>Core rules stable across rebuilds; one flag that flipped is being pinned in code</small></span></li>
+      </ul>
+    </article>
+  </section>
+
+  <div class="banner" role="note">
+    <strong>Final: one Turkish case · hidden customers</strong>
+    <span>Outcome, policy and honesty are judged; our own mock must stay up until results are out.</span>
+  </div>
+
+  <section class="next" aria-label="Plan">
+    <div><b>Now</b>Final format: Turkish rehearsal build, our bank mock on Cloudflare, live Turkish test</div>
+    <div><b>13:00 EDT</b>Final case opens: unzip, generate + deploy the mock, run the builder</div>
+    <div><b>15:00 EDT</b>Last generic fix, rebuild</div>
+    <div><b>16:00 EDT</b>submission.json in (20:00 UTC)</div>
+  </section>
+</div>
+
+</html>

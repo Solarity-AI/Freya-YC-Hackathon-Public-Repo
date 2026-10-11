@@ -1,0 +1,128 @@
+{
+ "id": "HB-12",
+ "mode": "sim",
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 12,
+  "must": [
+   [
+    -1,
+    "restructuring"
+   ]
+  ],
+  "must_not": [
+   [
+    -1,
+    "promise is recorded"
+   ]
+  ]
+ },
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes",
+    "u_topic": "none"
+   }
+  },
+  {
+   "say": "3157.",
+   "x": {
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_ans": "3157"
+   }
+  },
+  {
+   "say": "1986.",
+   "x": {
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_ans": "1986"
+   }
+  },
+  {
+   "say": "Not both today, no.",
+   "x": {
+    "u_act": "no",
+    "u_topic": "none"
+   }
+  },
+  {
+   "say": "I can pay the card in full today.",
+   "x": {
+    "u_act": "proposal",
+    "u_topic": "none",
+    "u_date": "today",
+    "u_amt": "in full"
+   }
+  },
+  {
+   "say": "For the auto loan, can the monthly payments be made smaller?",
+   "x": {
+    "u_act": "question",
+    "u_topic": "restructuring"
+   }
+  },
+  {
+   "say": "Thanks.",
+   "x": {
+    "u_act": "chatter_only",
+    "u_topic": "none"
+   }
+  }
+ ],
+ "case": {
+  "id": "HB-12",
+  "brief": "HARBOR",
+  "family": "Restructuring",
+  "level": "hard",
+  "title": "Month end: card agreed but not yet recorded, then a restructuring request on the loan",
+  "variables": {
+   "first_name": "Marta",
+   "last_name": "Silva",
+   "title": "Ms",
+   "now": "2026-11-30T10:00"
+  },
+  "identity": {
+   "account_last4": "3157",
+   "birth_year": "1986"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "2266",
+    "past_due": 300.0,
+    "days_late": 31,
+    "minimum_due": 75.0
+   },
+   {
+    "type": "auto_loan",
+    "past_due": 1950.0,
+    "days_late": 41,
+    "monthly_payment": 650.0
+   }
+  ],
+  "script": "Verified. Cannot pay both today. Agrees to pay the card in full today. For the auto loan asks whether the monthly payments can be made smaller.",
+  "expected": {
+   "outcome": "transferred",
+   "reason": "restructuring",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "restructuring"
+    }
+   ]
+  },
+  "checks": [
+   "the card promise was agreed but not read back or recorded before the request, so it is NOT recorded",
+   "transfer_to_agent queue 'restructuring'; the agent does not describe a plan",
+   "no add_note at all on this call",
+   "close_call (transferred, restructuring)"
+  ]
+ },
+ "spec": "mut-d"
+}

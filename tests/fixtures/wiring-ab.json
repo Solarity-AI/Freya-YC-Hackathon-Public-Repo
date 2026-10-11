@@ -1,0 +1,732 @@
+{
+ "v": 1,
+ "listen": {
+  "open": "s_open",
+  "rp": "s_rp",
+  "tp": "s_tp",
+  "id": "s_id",
+  "neg": "s_neg",
+  "conf": "s_conf",
+  "safe": "s_safe"
+ },
+ "bye": "s_bye",
+ "bye_mode": "pass",
+ "end": "e_end",
+ "api": {
+  "verify": [
+   "a_verify_1",
+   "a_verify_2",
+   "a_verify_3",
+   "a_verify_4",
+   "a_verify_5",
+   "a_verify_6",
+   "a_verify_7",
+   "a_verify_8"
+  ],
+  "acct": [
+   "a_acct_1",
+   "a_acct_2"
+  ],
+  "promise": [
+   [
+    "a_promise_1_1",
+    "a_promise_1_2"
+   ],
+   [
+    "a_promise_2_1",
+    "a_promise_2_2"
+   ],
+   [
+    "a_promise_3_1",
+    "a_promise_3_2"
+   ]
+  ],
+  "note": [
+   [
+    "a_note_1"
+   ],
+   [
+    "a_note_2"
+   ],
+   [
+    "a_note_3"
+   ]
+  ],
+  "note_call": [],
+  "cb": [
+   "a_cb_1",
+   "a_cb_2"
+  ],
+  "xfer": [
+   "a_xfer_1",
+   "a_xfer_2"
+  ],
+  "close_r": "a_close_r",
+  "close_n": "a_close_n"
+ },
+ "nodes": {
+  "a_verify_1": {
+   "tool": "verify_identity",
+   "body": {
+    "field": "b_a_verify_1_field",
+    "answer": "b_a_verify_1_answer"
+   },
+   "res": {
+    "s": "r_a_verify_1_s",
+    "err": "r_a_verify_1_err",
+    "verified": "r_a_verify_1_verified",
+    "left": "r_a_verify_1_left",
+    "all": "r_a_verify_1_all",
+    "hint": "r_a_verify_1_hint"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error",
+    "verified": "verified",
+    "left": "wrong_answers_left",
+    "all": "all_verified",
+    "hint": "hint"
+   }
+  },
+  "a_verify_2": {
+   "tool": "verify_identity",
+   "body": {
+    "field": "b_a_verify_2_field",
+    "answer": "b_a_verify_2_answer"
+   },
+   "res": {
+    "s": "r_a_verify_2_s",
+    "err": "r_a_verify_2_err",
+    "verified": "r_a_verify_2_verified",
+    "left": "r_a_verify_2_left",
+    "all": "r_a_verify_2_all",
+    "hint": "r_a_verify_2_hint"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error",
+    "verified": "verified",
+    "left": "wrong_answers_left",
+    "all": "all_verified",
+    "hint": "hint"
+   }
+  },
+  "a_verify_3": {
+   "tool": "verify_identity",
+   "body": {
+    "field": "b_a_verify_3_field",
+    "answer": "b_a_verify_3_answer"
+   },
+   "res": {
+    "s": "r_a_verify_3_s",
+    "err": "r_a_verify_3_err",
+    "verified": "r_a_verify_3_verified",
+    "left": "r_a_verify_3_left",
+    "all": "r_a_verify_3_all",
+    "hint": "r_a_verify_3_hint"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error",
+    "verified": "verified",
+    "left": "wrong_answers_left",
+    "all": "all_verified",
+    "hint": "hint"
+   }
+  },
+  "a_verify_4": {
+   "tool": "verify_identity",
+   "body": {
+    "field": "b_a_verify_4_field",
+    "answer": "b_a_verify_4_answer"
+   },
+   "res": {
+    "s": "r_a_verify_4_s",
+    "err": "r_a_verify_4_err",
+    "verified": "r_a_verify_4_verified",
+    "left": "r_a_verify_4_left",
+    "all": "r_a_verify_4_all",
+    "hint": "r_a_verify_4_hint"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error",
+    "verified": "verified",
+    "left": "wrong_answers_left",
+    "all": "all_verified",
+    "hint": "hint"
+   }
+  },
+  "a_verify_5": {
+   "tool": "verify_identity",
+   "body": {
+    "field": "b_a_verify_5_field",
+    "answer": "b_a_verify_5_answer"
+   },
+   "res": {
+    "s": "r_a_verify_5_s",
+    "err": "r_a_verify_5_err",
+    "verified": "r_a_verify_5_verified",
+    "left": "r_a_verify_5_left",
+    "all": "r_a_verify_5_all",
+    "hint": "r_a_verify_5_hint"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error",
+    "verified": "verified",
+    "left": "wrong_answers_left",
+    "all": "all_verified",
+    "hint": "hint"
+   }
+  },
+  "a_verify_6": {
+   "tool": "verify_identity",
+   "body": {
+    "field": "b_a_verify_6_field",
+    "answer": "b_a_verify_6_answer"
+   },
+   "res": {
+    "s": "r_a_verify_6_s",
+    "err": "r_a_verify_6_err",
+    "verified": "r_a_verify_6_verified",
+    "left": "r_a_verify_6_left",
+    "all": "r_a_verify_6_all",
+    "hint": "r_a_verify_6_hint"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error",
+    "verified": "verified",
+    "left": "wrong_answers_left",
+    "all": "all_verified",
+    "hint": "hint"
+   }
+  },
+  "a_verify_7": {
+   "tool": "verify_identity",
+   "body": {
+    "field": "b_a_verify_7_field",
+    "answer": "b_a_verify_7_answer"
+   },
+   "res": {
+    "s": "r_a_verify_7_s",
+    "err": "r_a_verify_7_err",
+    "verified": "r_a_verify_7_verified",
+    "left": "r_a_verify_7_left",
+    "all": "r_a_verify_7_all",
+    "hint": "r_a_verify_7_hint"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error",
+    "verified": "verified",
+    "left": "wrong_answers_left",
+    "all": "all_verified",
+    "hint": "hint"
+   }
+  },
+  "a_verify_8": {
+   "tool": "verify_identity",
+   "body": {
+    "field": "b_a_verify_8_field",
+    "answer": "b_a_verify_8_answer"
+   },
+   "res": {
+    "s": "r_a_verify_8_s",
+    "err": "r_a_verify_8_err",
+    "verified": "r_a_verify_8_verified",
+    "left": "r_a_verify_8_left",
+    "all": "r_a_verify_8_all",
+    "hint": "r_a_verify_8_hint"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error",
+    "verified": "verified",
+    "left": "wrong_answers_left",
+    "all": "all_verified",
+    "hint": "hint"
+   }
+  },
+  "a_acct_1": {
+   "tool": "get_account",
+   "body": {},
+   "res": {
+    "s": "r_a_acct_1_s",
+    "err": "r_a_acct_1_err",
+    "products": "r_a_acct_1_products"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error",
+    "products": "products"
+   }
+  },
+  "a_acct_2": {
+   "tool": "get_account",
+   "body": {},
+   "res": {
+    "s": "r_a_acct_2_s",
+    "err": "r_a_acct_2_err",
+    "products": "r_a_acct_2_products"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error",
+    "products": "products"
+   }
+  },
+  "a_promise_1_1": {
+   "tool": "create_promise",
+   "body": {
+    "product_id": "b_a_promise_1_1_product_id",
+    "amount": "b_a_promise_1_1_amount",
+    "date": "b_a_promise_1_1_date"
+   },
+   "res": {
+    "s": "r_a_promise_1_1_s",
+    "err": "r_a_promise_1_1_err",
+    "pid": "r_a_promise_1_1_pid"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error",
+    "pid": "promise_id"
+   }
+  },
+  "a_promise_1_2": {
+   "tool": "create_promise",
+   "body": {
+    "product_id": "b_a_promise_1_2_product_id",
+    "amount": "b_a_promise_1_2_amount",
+    "date": "b_a_promise_1_2_date"
+   },
+   "res": {
+    "s": "r_a_promise_1_2_s",
+    "err": "r_a_promise_1_2_err",
+    "pid": "r_a_promise_1_2_pid"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error",
+    "pid": "promise_id"
+   }
+  },
+  "a_promise_2_1": {
+   "tool": "create_promise",
+   "body": {
+    "product_id": "b_a_promise_2_1_product_id",
+    "amount": "b_a_promise_2_1_amount",
+    "date": "b_a_promise_2_1_date"
+   },
+   "res": {
+    "s": "r_a_promise_2_1_s",
+    "err": "r_a_promise_2_1_err",
+    "pid": "r_a_promise_2_1_pid"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error",
+    "pid": "promise_id"
+   }
+  },
+  "a_promise_2_2": {
+   "tool": "create_promise",
+   "body": {
+    "product_id": "b_a_promise_2_2_product_id",
+    "amount": "b_a_promise_2_2_amount",
+    "date": "b_a_promise_2_2_date"
+   },
+   "res": {
+    "s": "r_a_promise_2_2_s",
+    "err": "r_a_promise_2_2_err",
+    "pid": "r_a_promise_2_2_pid"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error",
+    "pid": "promise_id"
+   }
+  },
+  "a_promise_3_1": {
+   "tool": "create_promise",
+   "body": {
+    "product_id": "b_a_promise_3_1_product_id",
+    "amount": "b_a_promise_3_1_amount",
+    "date": "b_a_promise_3_1_date"
+   },
+   "res": {
+    "s": "r_a_promise_3_1_s",
+    "err": "r_a_promise_3_1_err",
+    "pid": "r_a_promise_3_1_pid"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error",
+    "pid": "promise_id"
+   }
+  },
+  "a_promise_3_2": {
+   "tool": "create_promise",
+   "body": {
+    "product_id": "b_a_promise_3_2_product_id",
+    "amount": "b_a_promise_3_2_amount",
+    "date": "b_a_promise_3_2_date"
+   },
+   "res": {
+    "s": "r_a_promise_3_2_s",
+    "err": "r_a_promise_3_2_err",
+    "pid": "r_a_promise_3_2_pid"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error",
+    "pid": "promise_id"
+   }
+  },
+  "a_note_1": {
+   "tool": "add_note",
+   "body": {
+    "product_id": "b_a_note_1_product_id",
+    "reason": "b_a_note_1_reason"
+   },
+   "res": {
+    "s": "r_a_note_1_s",
+    "err": "r_a_note_1_err"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error"
+   }
+  },
+  "a_note_2": {
+   "tool": "add_note",
+   "body": {
+    "product_id": "b_a_note_2_product_id",
+    "reason": "b_a_note_2_reason"
+   },
+   "res": {
+    "s": "r_a_note_2_s",
+    "err": "r_a_note_2_err"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error"
+   }
+  },
+  "a_note_3": {
+   "tool": "add_note",
+   "body": {
+    "product_id": "b_a_note_3_product_id",
+    "reason": "b_a_note_3_reason"
+   },
+   "res": {
+    "s": "r_a_note_3_s",
+    "err": "r_a_note_3_err"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error"
+   }
+  },
+  "a_cb_1": {
+   "tool": "schedule_callback",
+   "body": {
+    "date": "b_a_cb_1_date",
+    "time": "b_a_cb_1_time"
+   },
+   "res": {
+    "s": "r_a_cb_1_s",
+    "err": "r_a_cb_1_err"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error"
+   }
+  },
+  "a_cb_2": {
+   "tool": "schedule_callback",
+   "body": {
+    "date": "b_a_cb_2_date",
+    "time": "b_a_cb_2_time"
+   },
+   "res": {
+    "s": "r_a_cb_2_s",
+    "err": "r_a_cb_2_err"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error"
+   }
+  },
+  "a_xfer_1": {
+   "tool": "transfer_to_agent",
+   "body": {
+    "queue": "b_a_xfer_1_queue"
+   },
+   "res": {
+    "s": "r_a_xfer_1_s",
+    "err": "r_a_xfer_1_err"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error"
+   }
+  },
+  "a_xfer_2": {
+   "tool": "transfer_to_agent",
+   "body": {
+    "queue": "b_a_xfer_2_queue"
+   },
+   "res": {
+    "s": "r_a_xfer_2_s",
+    "err": "r_a_xfer_2_err"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error"
+   }
+  },
+  "a_close_r": {
+   "tool": "close_call",
+   "body": {
+    "outcome": "co",
+    "reason": "cr"
+   },
+   "res": {
+    "s": "r_a_close_r_s",
+    "err": "r_a_close_r_err"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error"
+   }
+  },
+  "a_close_n": {
+   "tool": "close_call",
+   "body": {
+    "outcome": "co"
+   },
+   "res": {
+    "s": "r_a_close_n_s",
+    "err": "r_a_close_n_err"
+   },
+   "res_leaf": {
+    "s": "ok",
+    "err": "error"
+   }
+  }
+ },
+ "roles": {
+  "verify_identity": {
+   "req": {
+    "customer": "customer_id",
+    "selector": "field",
+    "answer": "answer"
+   },
+   "res": {
+    "s": "ok",
+    "err": "error",
+    "verified": "verified",
+    "left": "wrong_answers_left",
+    "all": "all_verified",
+    "hint": "hint"
+   },
+   "item": {}
+  },
+  "get_account": {
+   "req": {
+    "customer": "customer_id"
+   },
+   "res": {
+    "s": "ok",
+    "err": "error",
+    "products": "products"
+   },
+   "item": {
+    "id": "product_id",
+    "type": "type",
+    "past_due": "past_due",
+    "days_late": "days_late"
+   }
+  },
+  "create_promise": {
+   "req": {
+    "customer": "customer_id",
+    "product": "product_id",
+    "amount": "amount",
+    "date": "date"
+   },
+   "res": {
+    "s": "ok",
+    "err": "error",
+    "pid": "promise_id"
+   },
+   "item": {}
+  },
+  "add_note": {
+   "req": {
+    "customer": "customer_id",
+    "product": "product_id",
+    "reason": "reason",
+    "text": "text"
+   },
+   "res": {
+    "s": "ok",
+    "err": "error"
+   },
+   "item": {}
+  },
+  "schedule_callback": {
+   "req": {
+    "customer": "customer_id",
+    "date": "date",
+    "time": "time"
+   },
+   "res": {
+    "s": "ok",
+    "err": "error"
+   },
+   "item": {}
+  },
+  "transfer_to_agent": {
+   "req": {
+    "customer": "customer_id",
+    "queue": "queue"
+   },
+   "res": {
+    "s": "ok",
+    "err": "error"
+   },
+   "item": {}
+  },
+  "close_call": {
+   "req": {
+    "customer": "customer_id",
+    "outcome": "outcome",
+    "reason": "reason"
+   },
+   "res": {
+    "s": "ok",
+    "err": "error"
+   },
+   "item": {}
+  }
+ },
+ "success": {
+  "verify_identity": {
+   "role": "s",
+   "kind": "bool_true",
+   "values": [
+    "true",
+    "True"
+   ]
+  },
+  "get_account": {
+   "role": "s",
+   "kind": "bool_true",
+   "values": [
+    "true",
+    "True"
+   ]
+  },
+  "create_promise": {
+   "role": "s",
+   "kind": "bool_true",
+   "values": [
+    "true",
+    "True"
+   ]
+  },
+  "add_note": {
+   "role": "s",
+   "kind": "bool_true",
+   "values": [
+    "true",
+    "True"
+   ]
+  },
+  "schedule_callback": {
+   "role": "s",
+   "kind": "bool_true",
+   "values": [
+    "true",
+    "True"
+   ]
+  },
+  "transfer_to_agent": {
+   "role": "s",
+   "kind": "bool_true",
+   "values": [
+    "true",
+    "True"
+   ]
+  },
+  "close_call": {
+   "role": "s",
+   "kind": "bool_true",
+   "values": [
+    "true",
+    "True"
+   ]
+  }
+ },
+ "wire": {
+  "create_promise.amount": {
+   "type": "number",
+   "format": "",
+   "scale": 1
+  },
+  "create_promise.date": {
+   "type": "string",
+   "format": "%Y-%m-%d",
+   "scale": 1
+  },
+  "schedule_callback.date": {
+   "type": "string",
+   "format": "%Y-%m-%d",
+   "scale": 1
+  },
+  "schedule_callback.time": {
+   "type": "string",
+   "format": "%H:%M",
+   "scale": 1
+  }
+ },
+ "identity_mode": "selector",
+ "chain": true,
+ "chainable": [
+  "a_cb_1",
+  "a_cb_2",
+  "a_note_1",
+  "a_note_2",
+  "a_note_3",
+  "a_promise_1_1",
+  "a_promise_1_2",
+  "a_promise_2_1",
+  "a_promise_2_2",
+  "a_promise_3_1",
+  "a_promise_3_2",
+  "a_xfer_1",
+  "a_xfer_2"
+ ],
+ "vchain": {
+  "t": [
+   "true",
+   "True"
+  ],
+  "f": [
+   "false",
+   "False"
+  ]
+ },
+ "flags": {
+  "bye": "pass",
+  "write_chain": "on",
+  "qnodes": "off",
+  "uvars": "reset",
+  "amount_tpl": "plain",
+  "vchain": "on"
+ }
+}

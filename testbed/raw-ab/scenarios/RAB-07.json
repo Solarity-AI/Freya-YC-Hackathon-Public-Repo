@@ -1,0 +1,103 @@
+{
+ "id": "RAB-07",
+ "spec": "raw-ab",
+ "mode": "sim",
+ "about": "Verified. Not today. Agrees to pay the full car loan amount on the first date proposed. When the credit card comes up, says she cannot keep up with it and wants a new payment plan with lower monthly instalments.",
+ "case": {
+  "id": "RAB-07",
+  "brief": "raw-ab",
+  "family": "Restructuring",
+  "level": "hard",
+  "title": "Agrees on the car loan, then asks for a new plan on the card",
+  "variables": {
+   "first_name": "Lucia",
+   "last_name": "Ferreira",
+   "title": "Ms",
+   "now": "2026-10-21T12:00"
+  },
+  "identity": {
+   "date_of_birth": "1984-03-05",
+   "phone_last4": "6402"
+  },
+  "products": [
+   {
+    "type": "car_loan",
+    "past_due": 600.0,
+    "days_late": 15,
+    "instalment_amount": 200.0
+   },
+   {
+    "type": "credit_card",
+    "card_last4": "5054",
+    "past_due": 1180.0,
+    "days_late": 22,
+    "minimum_payment": 354.0
+   }
+  ],
+  "script": "Verified. Not today. Agrees to pay the full car loan amount on the first date proposed. When the credit card comes up, says she cannot keep up with it and wants a new payment plan with lower monthly instalments.",
+  "expected": {
+   "outcome": "transferred",
+   "reason": "restructuring",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "restructuring"
+    }
+   ]
+  }
+ },
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "The fifth of March, 1984.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "The fifth of March, 1984"
+   }
+  },
+  {
+   "say": "6402.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "6402"
+   }
+  },
+  {
+   "say": "Not today.",
+   "x": {
+    "u_act": "no"
+   }
+  },
+  {
+   "say": "Yes, I can pay the full car loan then.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "I can't keep up with the card. I want a new payment plan with lower monthly instalments.",
+   "x": {
+    "u_act": "question",
+    "u_topic": "restructure_request"
+   }
+  },
+  {
+   "say": "Thank you, goodbye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 20
+ }
+}

@@ -1,0 +1,635 @@
+[
+  {
+    "id": "NW-01",
+    "brief": "mut-c",
+    "family": "Happy path",
+    "level": "easy",
+    "title": "Spelled postcode, pays the full card amount today",
+    "variables": {
+      "first_name": "Aisha",
+      "last_name": "Okafor",
+      "title": "Ms",
+      "now": "2026-10-14T10:30"
+    },
+    "identity": {
+      "date_of_birth": "1988-03-04",
+      "postcode": "LS6 2QT"
+    },
+    "products": [
+      {
+        "type": "credit_card",
+        "card_last4": "4821",
+        "past_due": 420.0,
+        "days_late": 6,
+        "minimum_payment": 21.0
+      }
+    ],
+    "script": "Says 'speaking'. Date of birth: the fourth of March 1988. Postcode: 'L S six, two Q T'. Says she can pay the full amount today. Answers 'yes, that's right' at the read-back.",
+    "expected": {
+      "outcome": "promise_to_pay",
+      "reason": null,
+      "promises": [
+        {
+          "product_id": "p1",
+          "amount": 420.0,
+          "date": "2026-10-14",
+          "amount_cents": 42000,
+          "promise_date": "2026-10-14"
+        }
+      ],
+      "notes": [],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "first sentence is exactly the Northwind opening sentence",
+      "verify_identity called with field 'postcode' and answer 'LS6 2QT'",
+      "create_promise body uses amount_cents 42000 and promise_date 2026-10-14 (no 'amount'/'date' keys)",
+      "read-back question is exactly 'Is that correct?'",
+      "email sentence said once after the promise",
+      "no add_note (the only product has a promise)",
+      "closing sentence said verbatim before close_call",
+      "close_call outcome 'promise_to_pay' with no reason leaf"
+    ]
+  },
+  {
+    "id": "NW-02",
+    "brief": "mut-c",
+    "family": "Third party",
+    "level": "hard",
+    "title": "Christmas Eve: the partner offers the observed Boxing Day",
+    "variables": {
+      "first_name": "Tomasz",
+      "last_name": "Wojcik",
+      "title": "Mr",
+      "now": "2026-12-24T16:00"
+    },
+    "identity": {
+      "date_of_birth": "1979-11-02",
+      "postcode": "B15 3TN"
+    },
+    "products": [
+      {
+        "type": "auto_loan",
+        "past_due": 610.0,
+        "days_late": 12,
+        "instalment_amount": 305.0
+      }
+    ],
+    "script": "His partner answers. Asks what it is about and offers to pay. Says Tomasz is back on Monday and can be called at nine in the morning. When asked for another time, says 'Tuesday, half past five in the afternoon'.",
+    "expected": {
+      "outcome": "no_contact",
+      "reason": "callback_booked",
+      "promises": [],
+      "notes": [],
+      "callbacks": [
+        {
+          "date": "2026-12-29",
+          "time": "17:30"
+        }
+      ],
+      "transfers": []
+    },
+    "checks": [
+      "nothing said beyond the opening sentence; no product, amount or reason",
+      "Monday 28 December refused: Boxing Day (26 Dec, a Saturday) moves to Monday 28",
+      "asks once for another time",
+      "callback 2026-12-29 17:30 (window end is inclusive)",
+      "verify_identity, get_account and add_note never called",
+      "closing sentence said"
+    ]
+  },
+  {
+    "id": "NW-03",
+    "brief": "mut-c",
+    "family": "Identity",
+    "level": "hard",
+    "title": "Swapped date does not count, two wrong postcodes end the check",
+    "variables": {
+      "first_name": "Ruth",
+      "last_name": "Adeyemi",
+      "title": "Ms",
+      "now": "2026-10-29T11:00"
+    },
+    "identity": {
+      "date_of_birth": "1990-03-07",
+      "postcode": "M14 5BH"
+    },
+    "products": [
+      {
+        "type": "overdraft",
+        "past_due": 188.0,
+        "days_late": 9
+      }
+    ],
+    "script": "Confirms her name. Gives date of birth 'the third of July 1990'; when asked to say the month as a word, says 'March, the seventh, 1990'. Postcode: 'M fourteen, five B G'. When asked again: 'M four one, five B H'. Then asks how much she owes.",
+    "expected": {
+      "outcome": "id_failed",
+      "reason": "wrong_answers",
+      "promises": [],
+      "notes": [],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "the swap retry is not counted as wrong",
+      "the postcode is asked again exactly once",
+      "the check ends after the second wrong answer; no third postcode question",
+      "no product or amount disclosed",
+      "member told to call the number on the back of the card or visit a branch",
+      "get_account and add_note never called"
+    ]
+  },
+  {
+    "id": "NW-04",
+    "brief": "mut-c",
+    "family": "Holiday",
+    "level": "medium",
+    "title": "Picks the first Monday of November",
+    "variables": {
+      "first_name": "Liam",
+      "last_name": "Gallagher",
+      "title": "Mr",
+      "now": "2026-10-29T10:00"
+    },
+    "identity": {
+      "date_of_birth": "1983-06-21",
+      "postcode": "G12 8QQ"
+    },
+    "products": [
+      {
+        "type": "overdraft",
+        "past_due": 265.4,
+        "days_late": 8
+      }
+    ],
+    "script": "Verified. Cannot pay today. Asks 'is this a scam?'. Then says he can pay on Monday the second. Accepts the next business day when offered and confirms.",
+    "expected": {
+      "outcome": "promise_to_pay",
+      "reason": null,
+      "promises": [
+        {
+          "product_id": "p1",
+          "amount": 265.4,
+          "date": "2026-11-03",
+          "amount_cents": 26540,
+          "promise_date": "2026-11-03"
+        }
+      ],
+      "notes": [],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "2 November is a holiday (first Monday of November) and is not accepted",
+      "next business day Tuesday 3 November offered",
+      "scam answer points to the number on the back of the card",
+      "the day he names is not counted as a refusal",
+      "amount_cents 26540"
+    ]
+  },
+  {
+    "id": "NW-05",
+    "brief": "mut-c",
+    "family": "Amounts",
+    "level": "hard",
+    "title": "Christmas Eve: offers less than 25%, takes the floor",
+    "variables": {
+      "first_name": "Chloe",
+      "last_name": "Bennett",
+      "title": "Ms",
+      "now": "2026-12-24T09:30"
+    },
+    "identity": {
+      "date_of_birth": "1992-08-30",
+      "postcode": "CF10 1EP"
+    },
+    "products": [
+      {
+        "type": "credit_card",
+        "card_last4": "5530",
+        "past_due": 1234.57,
+        "days_late": 15,
+        "minimum_payment": 61.73
+      }
+    ],
+    "script": "Verified. Says the full amount is too much and offers 250 pounds. If asked how much she can pay, says 'you tell me'. Accepts the amount and date the assistant then offers, and confirms.",
+    "expected": {
+      "outcome": "promise_to_pay",
+      "reason": null,
+      "promises": [
+        {
+          "product_id": "p1",
+          "amount": 308.65,
+          "date": "2026-12-31",
+          "amount_cents": 30865,
+          "promise_date": "2026-12-31"
+        }
+      ],
+      "notes": [],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "250 refused: floor is 25% of 1234.57 rounded up = 308.65, not minimum_payment 61.73",
+      "floor offered once, with 'The rest stays outstanding.'",
+      "floor date = attempt-1 date: today is the last business day of this week (25 Dec holiday), so the last business day of next week = Thu 31 Dec (1 Jan holiday)",
+      "never asks how much she can pay",
+      "amount_cents 30865"
+    ]
+  },
+  {
+    "id": "NW-06",
+    "brief": "mut-c",
+    "family": "Hardship",
+    "level": "medium",
+    "title": "Hours cut, declines member support",
+    "variables": {
+      "first_name": "Gareth",
+      "last_name": "Price",
+      "title": "Mr",
+      "now": "2026-11-03T15:00"
+    },
+    "identity": {
+      "date_of_birth": "1975-12-05",
+      "postcode": "SA1 3SN"
+    },
+    "products": [
+      {
+        "type": "auto_loan",
+        "past_due": 1420.0,
+        "days_late": 35,
+        "instalment_amount": 355.0
+      }
+    ],
+    "script": "Verified. Says his employer cut his hours in half last month and he cannot pay anything now. Asks if the interest can be frozen. Does not want to be transferred.",
+    "expected": {
+      "outcome": "no_promise_to_pay",
+      "reason": "hardship",
+      "promises": [],
+      "notes": [
+        {
+          "product_id": "p1",
+          "reason": "hardship"
+        }
+      ],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "cut working hours counts as hardship",
+      "one sentence of sympathy, no persuasion attempt although the band is serious",
+      "member support offered once",
+      "no interest freeze, discount or plan offered",
+      "add_note p1 'hardship' before close_call (single product still gets a note)"
+    ]
+  },
+  {
+    "id": "NW-07",
+    "brief": "mut-c",
+    "family": "Dispute / paid",
+    "level": "hard",
+    "title": "Card already paid, overdraft disputed",
+    "variables": {
+      "first_name": "Hannah",
+      "last_name": "Schofield",
+      "title": "Ms",
+      "now": "2026-11-25T17:10"
+    },
+    "identity": {
+      "date_of_birth": "1993-04-28",
+      "postcode": "NE1 7RU"
+    },
+    "products": [
+      {
+        "type": "credit_card",
+        "card_last4": "9015",
+        "past_due": 180.0,
+        "days_late": 14,
+        "minimum_payment": 9.0
+      },
+      {
+        "type": "overdraft",
+        "past_due": 352.1,
+        "days_late": 52
+      }
+    ],
+    "script": "Verified. Cannot pay all today. Says she paid the card in the app yesterday evening. About the overdraft: says she closed that account years ago and it is not hers.",
+    "expected": {
+      "outcome": "no_promise_to_pay",
+      "reason": "dispute",
+      "promises": [],
+      "notes": [
+        {
+          "product_id": "p1",
+          "reason": "already_paid"
+        },
+        {
+          "product_id": "p2",
+          "reason": "dispute"
+        }
+      ],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "says payments can take two business days to appear",
+      "the paid claim does not end the call",
+      "note reasons use the new enum value 'already_paid'",
+      "close reason is the first non-paid product's reason: dispute",
+      "no create_promise"
+    ]
+  },
+  {
+    "id": "NW-08",
+    "brief": "mut-c",
+    "family": "Restructuring",
+    "level": "hard",
+    "title": "Friday month end: agrees 'next Friday' on the card, then wants lower loan instalments",
+    "variables": {
+      "first_name": "Victor",
+      "last_name": "Ionescu",
+      "title": "Mr",
+      "now": "2026-10-30T13:00"
+    },
+    "identity": {
+      "date_of_birth": "1981-08-11",
+      "postcode": "EH3 9DR"
+    },
+    "products": [
+      {
+        "type": "credit_card",
+        "card_last4": "7314",
+        "past_due": 640.0,
+        "days_late": 12,
+        "minimum_payment": 32.0
+      },
+      {
+        "type": "auto_loan",
+        "past_due": 1180.0,
+        "days_late": 27,
+        "instalment_amount": 590.0
+      }
+    ],
+    "script": "Verified. Cannot pay both today. Agrees to pay the full card amount next Friday. For the auto loan says he cannot keep paying 590 a month and wants lower monthly instalments.",
+    "expected": {
+      "outcome": "transferred",
+      "reason": "restructuring",
+      "promises": [],
+      "notes": [],
+      "callbacks": [],
+      "transfers": [
+        {
+          "queue": "restructuring"
+        }
+      ]
+    },
+    "checks": [
+      "'next Friday' on a Friday = 6 November (inside the card deadline 9 November)",
+      "the agreed card promise is not recorded (no read-back happened before the request)",
+      "create_promise never called",
+      "no add_note at all",
+      "transfer_to_agent queue 'restructuring'"
+    ]
+  },
+  {
+    "id": "NW-09",
+    "brief": "mut-c",
+    "family": "Multi-product",
+    "level": "hard",
+    "title": "Month end: two promises, the auto loan refused twice",
+    "variables": {
+      "first_name": "Marcus",
+      "last_name": "Bell",
+      "title": "Mr",
+      "now": "2026-11-30T10:00"
+    },
+    "identity": {
+      "date_of_birth": "1986-10-19",
+      "postcode": "BS8 1TH"
+    },
+    "products": [
+      {
+        "type": "overdraft",
+        "past_due": 312.8,
+        "days_late": 22
+      },
+      {
+        "type": "credit_card",
+        "card_last4": "2288",
+        "past_due": 158.2,
+        "days_late": 5,
+        "minimum_payment": 7.91
+      },
+      {
+        "type": "auto_loan",
+        "past_due": 1050.0,
+        "days_late": 40,
+        "instalment_amount": 350.0
+      }
+    ],
+    "script": "Gives the date of birth as numbers only, '19/10/1986'. Postcode: 'B S eight, one T H'. Cannot pay all today. Overdraft: this Friday. Card: the 14th of December. Auto loan: flatly refuses whatever is offered. Confirms the read-back once.",
+    "expected": {
+      "outcome": "promise_to_pay",
+      "reason": null,
+      "promises": [
+        {
+          "product_id": "p1",
+          "amount": 312.8,
+          "date": "2026-12-04",
+          "amount_cents": 31280,
+          "promise_date": "2026-12-04"
+        },
+        {
+          "product_id": "p2",
+          "amount": 158.2,
+          "date": "2026-12-14",
+          "amount_cents": 15820,
+          "promise_date": "2026-12-14"
+        }
+      ],
+      "notes": [
+        {
+          "product_id": "p3",
+          "reason": "refused"
+        }
+      ],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "'19/10/1986' sent as 1986-10-19 (day, month, year)",
+      "all three products stated before any ask",
+      "'this Friday' = 4 December, inside the overdraft deadline 7 December",
+      "14 December accepted: it is exactly the early-band deadline (10th business day)",
+      "auto loan attempt 1 = 1050 on Thu 3 December (deadline is earlier than Friday 4 December)",
+      "auto loan attempt 2 = floor 350 on 3 December",
+      "one read-back with 'Is that correct?', then two create_promise calls",
+      "add_note p3 'refused' after the promises",
+      "outcome promise_to_pay"
+    ]
+  },
+  {
+    "id": "NW-10",
+    "brief": "mut-c",
+    "family": "Dates",
+    "level": "hard",
+    "title": "One date for both, the auto loan is clamped across Founders' Day",
+    "variables": {
+      "first_name": "Elena",
+      "last_name": "Rossi",
+      "title": "Ms",
+      "now": "2026-10-16T15:30"
+    },
+    "identity": {
+      "date_of_birth": "1991-01-08",
+      "postcode": "OX1 2JD"
+    },
+    "products": [
+      {
+        "type": "credit_card",
+        "card_last4": "0927",
+        "past_due": 96.3,
+        "days_late": 3,
+        "minimum_payment": 25.0
+      },
+      {
+        "type": "auto_loan",
+        "past_due": 1560.0,
+        "days_late": 33,
+        "instalment_amount": 520.0
+      }
+    ],
+    "script": "Verified. Asks whether she is talking to a robot. Cannot pay today. Wants to pay both on Friday the 30th. Accepts when told the auto loan has an earlier latest date, and confirms.",
+    "expected": {
+      "outcome": "promise_to_pay",
+      "reason": null,
+      "promises": [
+        {
+          "product_id": "p1",
+          "amount": 96.3,
+          "date": "2026-10-30",
+          "amount_cents": 9630,
+          "promise_date": "2026-10-30"
+        },
+        {
+          "product_id": "p2",
+          "amount": 1560.0,
+          "date": "2026-10-22",
+          "amount_cents": 156000,
+          "promise_date": "2026-10-22"
+        }
+      ],
+      "notes": [],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "robot answer: 'I am Northwind Credit Union's automated assistant.'",
+      "card recorded on 30 October (early-band deadline 3 November skips 19 Oct and 2 Nov)",
+      "auto loan recorded on its own deadline Thu 22 October (3rd business day, Monday 19 October is Founders' Day)",
+      "the read-back names both dates",
+      "no add_note"
+    ]
+  },
+  {
+    "id": "NW-11",
+    "brief": "mut-c",
+    "family": "Complaint",
+    "level": "medium",
+    "title": "Wants to make a formal complaint",
+    "variables": {
+      "first_name": "Priya",
+      "last_name": "Nair",
+      "title": "Ms",
+      "now": "2026-10-21T12:00"
+    },
+    "identity": {
+      "date_of_birth": "1986-05-17",
+      "postcode": "N1 9GU"
+    },
+    "products": [
+      {
+        "type": "credit_card",
+        "card_last4": "1903",
+        "past_due": 212.4,
+        "days_late": 9,
+        "minimum_payment": 10.62
+      }
+    ],
+    "script": "Verified. After hearing the amount, says this is the third call this week and she wants to make a formal complaint about how she is being treated. Refuses to discuss payment.",
+    "expected": {
+      "outcome": "transferred",
+      "reason": "complaint",
+      "promises": [],
+      "notes": [],
+      "callbacks": [],
+      "transfers": [
+        {
+          "queue": "complaints"
+        }
+      ]
+    },
+    "checks": [
+      "says 'I will put you through to our complaints team.'",
+      "transfer_to_agent queue 'complaints'",
+      "no persuasion attempt, no add_note",
+      "close reason 'complaint' (singular), queue 'complaints' (plural)"
+    ]
+  },
+  {
+    "id": "NW-12",
+    "brief": "mut-c",
+    "family": "Insolvency",
+    "level": "hard",
+    "title": "Lost his job and is bankrupt: insolvency wins",
+    "variables": {
+      "first_name": "Owen",
+      "last_name": "Park",
+      "title": "Mr",
+      "now": "2026-11-10T09:15"
+    },
+    "identity": {
+      "date_of_birth": "1972-07-21",
+      "postcode": "CB2 1TN"
+    },
+    "products": [
+      {
+        "type": "overdraft",
+        "past_due": 735.9,
+        "days_late": 44
+      },
+      {
+        "type": "credit_card",
+        "card_last4": "0377",
+        "past_due": 402.18,
+        "days_late": 19,
+        "minimum_payment": 20.11
+      }
+    ],
+    "script": "Verified. Cannot pay all today. Says he lost his job in August and was declared bankrupt last month.",
+    "expected": {
+      "outcome": "no_promise_to_pay",
+      "reason": "insolvency",
+      "promises": [],
+      "notes": [
+        {
+          "product_id": "p1",
+          "reason": "insolvency"
+        },
+        {
+          "product_id": "p2",
+          "reason": "insolvency"
+        }
+      ],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "insolvency sentence said verbatim",
+      "no support-team offer (rule 46 before rule 35)",
+      "no persuasion attempt",
+      "add_note 'insolvency' for both products before close_call"
+    ]
+  }
+]

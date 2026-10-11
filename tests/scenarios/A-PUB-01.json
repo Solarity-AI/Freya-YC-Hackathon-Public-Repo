@@ -1,0 +1,69 @@
+{
+ "id": "A-PUB-01",
+ "spec": "a",
+ "pub": "PUB-01",
+ "mode": "sim",
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "Fourteenth of March, nineteen eighty-eight.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "Fourteenth of March, nineteen eighty-eight"
+   }
+  },
+  {
+   "say": "4471.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "4471"
+   }
+  },
+  {
+   "say": "Yes, I can pay the full amount today.",
+   "x": {
+    "u_act": "yes",
+    "u_amt": "the full amount",
+    "u_date": "today"
+   }
+  },
+  {
+   "say": "Yes, I confirm.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "Thank you, goodbye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 12,
+  "must": [
+   [
+    -1,
+    "text message confirming"
+   ],
+   [
+    0,
+    "record"
+   ]
+  ],
+  "must_not": [
+   [
+    -1,
+    "how much can you pay"
+   ]
+  ]
+ }
+}

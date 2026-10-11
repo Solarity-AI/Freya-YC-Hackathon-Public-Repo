@@ -1,0 +1,304 @@
+{
+ "version": 1,
+ "name": "bank-mock-sample",
+ "lang": "en",
+ "customer_field": "customer_id",
+ "max_wrong": 3,
+ "lenient_dates": true,
+ "base_paths": [
+  "/v1"
+ ],
+ "statuses": {
+  "ok": 200,
+  "invalid": 200,
+  "refused": 200,
+  "not_verified": 200,
+  "conflict": 200,
+  "locked": 200,
+  "closed": 200,
+  "unknown_product": 200,
+  "unknown_customer": 404,
+  "unknown_operation": 404,
+  "fault": 500
+ },
+ "documents_404": false,
+ "session": {
+  "idle_reset_s": 240,
+  "closed_grace_s": 15,
+  "new_call_on_verify_after_close": true,
+  "key_fields": [],
+  "key_headers": [],
+  "history": 20
+ },
+ "products": {
+  "list": "products",
+  "id": "product_id",
+  "type": "type",
+  "id_prefix": "p",
+  "fields": {
+   "product_id": "string",
+   "type": "string",
+   "card_last4": "string",
+   "past_due": "number",
+   "days_late": "integer",
+   "minimum_payment": "number",
+   "instalment_amount": "number"
+  }
+ },
+ "ops": [
+  {
+   "name": "verify_identity",
+   "role": "verify",
+   "method": "POST",
+   "path": "/verify_identity",
+   "fields": {
+    "customer": "customer_id",
+    "selector": "field",
+    "answer": "answer"
+   },
+   "request": {
+    "customer_id": {
+     "type": "string",
+     "required": true
+    },
+    "field": {
+     "type": "string",
+     "required": true,
+     "enum": [
+      "date_of_birth",
+      "phone_last4"
+     ]
+    },
+    "answer": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "response": {
+    "s": "ok",
+    "err": "error",
+    "verified": "verified",
+    "left": "wrong_answers_left",
+    "all": "all_verified",
+    "hint": "hint"
+   },
+   "customer": "customer_id",
+   "hint_value": "day_month_swapped",
+   "needs_verified": false
+  },
+  {
+   "name": "get_account",
+   "role": "account",
+   "method": "POST",
+   "path": "/get_account",
+   "fields": {
+    "customer": "customer_id"
+   },
+   "request": {
+    "customer_id": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "response": {
+    "s": "ok",
+    "err": "error",
+    "products": "products"
+   },
+   "customer": "customer_id",
+   "account_fields": {},
+   "needs_verified": true
+  },
+  {
+   "name": "create_promise",
+   "role": "promise",
+   "method": "POST",
+   "path": "/create_promise",
+   "fields": {
+    "customer": "customer_id",
+    "product": "product_id",
+    "amount": "amount",
+    "date": "date"
+   },
+   "request": {
+    "customer_id": {
+     "type": "string",
+     "required": true
+    },
+    "product_id": {
+     "type": "string",
+     "required": true
+    },
+    "amount": {
+     "type": "number",
+     "required": true
+    },
+    "date": {
+     "type": "string",
+     "required": true,
+     "wire_format": "%Y-%m-%d"
+    }
+   },
+   "response": {
+    "s": "ok",
+    "err": "error",
+    "pid": "promise_id"
+   },
+   "customer": "customer_id",
+   "id_prefix": "pr",
+   "one_per": "product",
+   "needs_verified": true
+  },
+  {
+   "name": "add_note",
+   "role": "note",
+   "method": "POST",
+   "path": "/add_note",
+   "fields": {
+    "customer": "customer_id",
+    "product": "product_id",
+    "reason": "reason",
+    "text": "text"
+   },
+   "request": {
+    "customer_id": {
+     "type": "string",
+     "required": true
+    },
+    "product_id": {
+     "type": "string",
+     "required": true
+    },
+    "reason": {
+     "type": "string",
+     "required": true,
+     "enum": [
+      "refused",
+      "hardship",
+      "dispute",
+      "paid",
+      "service_error"
+     ]
+    },
+    "text": {
+     "type": "string",
+     "required": false
+    }
+   },
+   "response": {
+    "s": "ok",
+    "err": "error"
+   },
+   "customer": "customer_id",
+   "needs_verified": false
+  },
+  {
+   "name": "schedule_callback",
+   "role": "callback",
+   "method": "POST",
+   "path": "/schedule_callback",
+   "fields": {
+    "customer": "customer_id",
+    "date": "date",
+    "time": "time"
+   },
+   "request": {
+    "customer_id": {
+     "type": "string",
+     "required": true
+    },
+    "date": {
+     "type": "string",
+     "required": true,
+     "wire_format": "%Y-%m-%d"
+    },
+    "time": {
+     "type": "string",
+     "required": true,
+     "wire_format": "%H:%M"
+    }
+   },
+   "response": {
+    "s": "ok",
+    "err": "error"
+   },
+   "customer": "customer_id",
+   "needs_verified": false
+  },
+  {
+   "name": "transfer_to_agent",
+   "role": "transfer",
+   "method": "POST",
+   "path": "/transfer_to_agent",
+   "fields": {
+    "customer": "customer_id",
+    "queue": "queue"
+   },
+   "request": {
+    "customer_id": {
+     "type": "string",
+     "required": true
+    },
+    "queue": {
+     "type": "string",
+     "required": true,
+     "enum": [
+      "restructuring",
+      "general",
+      "support"
+     ]
+    }
+   },
+   "response": {
+    "s": "ok",
+    "err": "error"
+   },
+   "customer": "customer_id",
+   "needs_verified": false
+  },
+  {
+   "name": "close_call",
+   "role": "close",
+   "method": "POST",
+   "path": "/close_call",
+   "fields": {
+    "customer": "customer_id",
+    "reason": "reason",
+    "outcome": "outcome"
+   },
+   "request": {
+    "customer_id": {
+     "type": "string",
+     "required": true
+    },
+    "outcome": {
+     "type": "string",
+     "required": true,
+     "enum": [
+      "promise",
+      "paid",
+      "transferred",
+      "no_promise",
+      "not_verified",
+      "not_reached"
+     ]
+    },
+    "reason": {
+     "type": "string",
+     "required": false
+    }
+   },
+   "response": {
+    "s": "ok",
+    "err": "error"
+   },
+   "customer": "customer_id",
+   "needs_verified": false,
+   "reasonless": [
+    "promise",
+    "paid"
+   ],
+   "reason_required": true
+  }
+ ]
+}

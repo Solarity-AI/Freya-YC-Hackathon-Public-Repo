@@ -1,0 +1,127 @@
+{
+ "id": "RAB-04",
+ "spec": "raw-ab",
+ "mode": "sim",
+ "about": "Verified. Cannot pay everything today. Says he can pay the full card amount next Friday. For the personal loan says a flat no to the first proposal, then accepts the second proposal. Confirms once at the read-back.",
+ "case": {
+  "id": "RAB-04",
+  "brief": "raw-ab",
+  "family": "Multi-product",
+  "level": "hard",
+  "title": "Friday call: card next Friday, loan on attempt 2 with the memo holiday inside its deadline",
+  "variables": {
+   "first_name": "Jonas",
+   "last_name": "Berg",
+   "title": "Mr",
+   "now": "2026-10-16T15:30"
+  },
+  "identity": {
+   "date_of_birth": "1982-02-11",
+   "phone_last4": "7735"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "3390",
+    "past_due": 260.0,
+    "days_late": 5,
+    "minimum_payment": 78.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 1500.0,
+    "days_late": 19,
+    "instalment_amount": 500.0
+   }
+  ],
+  "script": "Verified. Cannot pay everything today. Says he can pay the full card amount next Friday. For the personal loan says a flat no to the first proposal, then accepts the second proposal. Confirms once at the read-back.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 260.0,
+     "date": "2026-10-23"
+    },
+    {
+     "product_id": "p2",
+     "amount": 500.0,
+     "date": "2026-10-28"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  }
+ },
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "The eleventh of February, 1982.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "The eleventh of February, 1982"
+   }
+  },
+  {
+   "say": "7735.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "7735"
+   }
+  },
+  {
+   "say": "Not everything today. I can pay the full card amount next Friday.",
+   "x": {
+    "u_act": "proposal",
+    "u_date": "next Friday",
+    "u_amt": "the full card amount"
+   }
+  },
+  {
+   "say": "No.",
+   "x": {
+    "u_act": "no"
+   }
+  },
+  {
+   "say": "Yes, that works.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "Yes, I confirm.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "Thank you, goodbye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 20,
+  "must": [
+   [
+    -1,
+    "23 October"
+   ],
+   [
+    -1,
+    "28 October"
+   ]
+  ]
+ }
+}

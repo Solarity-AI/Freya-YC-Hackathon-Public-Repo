@@ -1,0 +1,548 @@
+{
+ "openapi": "3.0.3",
+ "info": {
+  "title": "Freya Bank Ekstre Borcu Hattı servisleri (prova)",
+  "version": "2.3",
+  "description": "Reference reading of servis-sozlesmesi.docx (rehearsal). Not part of the case folder."
+ },
+ "servers": [
+  {
+   "url": "https://example-mock.invalid"
+  }
+ ],
+ "paths": {
+  "/kimlik/dogrula": {
+   "post": {
+    "operationId": "KimlikDogrula",
+    "summary": "Bir güvenlik cevabını kontrol eder. Toplam üç yanlış cevap kontrolü bitirir.",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "musteri_no": {
+          "type": "string",
+          "description": "Çağrı değişkeni musteri_no."
+         },
+         "soru": {
+          "type": "string",
+          "description": "DOGUM_TARIHI veya TCKN_SON4.",
+          "enum": [
+           "DOGUM_TARIHI",
+           "TCKN_SON4"
+          ]
+         },
+         "cevap": {
+          "type": "string",
+          "description": "DOGUM_TARIHI için GG.AA.YYYY (ör. 14.02.1986). TCKN_SON4 için dört rakam (baştaki sıfırlar korunur, ör. 0285). Okunamayan değer E004 ile reddedilir ve yanlış sayılmaz."
+         }
+        },
+        "required": [
+         "musteri_no",
+         "soru",
+         "cevap"
+        ]
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "basarili false ise işlem yapılmadı.",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "basarili": {
+           "type": "boolean",
+           "description": "İşlem yapıldıysa true."
+          },
+          "hata_kodu": {
+           "type": "string",
+           "description": "basarili false ise hata kodu (bölüm 11)."
+          },
+          "dogrulandi": {
+           "type": "boolean",
+           "description": "Bu cevap doğru mu."
+          },
+          "kalan_hak": {
+           "type": "integer",
+           "description": "Kalan yanlış cevap hakkı (başlangıçta 3)."
+          },
+          "tum_sorular_tamam": {
+           "type": "boolean",
+           "description": "İki soru da doğrulandıysa true."
+          },
+          "ipucu": {
+           "type": "string",
+           "description": "GUN_AY_YER_DEGISTI: doğum tarihinde gün ile ay yer değiştirmiş. Yanlış sayılmaz.",
+           "enum": [
+            "GUN_AY_YER_DEGISTI"
+           ]
+          }
+         }
+        }
+       }
+      }
+     },
+     "500": {
+      "description": "E500: sistem hatası, hiçbir şey kaydedilmedi; tekrar denenebilir."
+     }
+    }
+   }
+  },
+  "/ekstre/borc-sorgula": {
+   "post": {
+    "operationId": "EkstreBorcSorgula",
+    "summary": "Müşterinin gecikmiş kredi kartı ekstre borçları. İki güvenlik sorusu geçilmeden E002 döner.",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "musteri_no": {
+          "type": "string",
+          "description": "Çağrı değişkeni musteri_no."
+         }
+        },
+        "required": [
+         "musteri_no"
+        ]
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "basarili false ise işlem yapılmadı.",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "basarili": {
+           "type": "boolean",
+           "description": "İşlem yapıldıysa true."
+          },
+          "hata_kodu": {
+           "type": "string",
+           "description": "Bölüm 11."
+          },
+          "kartlar": {
+           "type": "array",
+           "description": "Gecikmiş kartlar. Her eleman aşağıdaki alanları taşır.",
+           "items": {
+            "type": "object",
+            "properties": {
+             "kart_id": {
+              "type": "string",
+              "description": "Kartın servis kimliği (OdemeSozuKaydet ve NotEkle için)."
+             },
+             "urun": {
+              "type": "string",
+              "description": "KREDI_KARTI.",
+              "enum": [
+               "KREDI_KARTI"
+              ]
+             },
+             "kart_son4": {
+              "type": "string",
+              "description": "Kart numarasının son dört hanesi (müşteriye söylenir)."
+             },
+             "ekstre_borcu": {
+              "type": "number",
+              "description": "Ödenmemiş ekstre borcu, TL, iki ondalık."
+             },
+             "asgari_odeme_tutari": {
+              "type": "number",
+              "description": "Asgari ödeme tutarı, TL."
+             },
+             "son_odeme_tarihi": {
+              "type": "string",
+              "description": "Ekstrenin son ödeme tarihi, YYYY-AA-GG."
+             },
+             "gecikme_gun_sayisi": {
+              "type": "integer",
+              "description": "Son ödeme tarihinden bu yana geçen gün sayısı."
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     },
+     "500": {
+      "description": "E500: sistem hatası, hiçbir şey kaydedilmedi; tekrar denenebilir."
+     }
+    }
+   }
+  },
+  "/odeme-sozu/kaydet": {
+   "post": {
+    "operationId": "OdemeSozuKaydet",
+    "summary": "Bir kart için ödeme sözünü kaydeder. Kart başına görüşmede bir söz; ikincisi E006 ile reddedilir. Servis tatil veya son tarih kontrolü yapmaz.",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "musteri_no": {
+          "type": "string",
+          "description": "Çağrı değişkeni musteri_no."
+         },
+         "kart_id": {
+          "type": "string",
+          "description": "EkstreBorcSorgula'dan gelen kart_id."
+         },
+         "tutar": {
+          "type": "number",
+          "description": "TL, en fazla iki ondalık, sıfırdan büyük."
+         },
+         "odeme_tarihi": {
+          "type": "string",
+          "description": "YYYY-AA-GG.",
+          "format": "date"
+         },
+         "soz_tipi": {
+          "type": "string",
+          "description": "TAMAMI, ASGARI veya KISMI (BRIEF K30).",
+          "enum": [
+           "TAMAMI",
+           "ASGARI",
+           "KISMI"
+          ]
+         }
+        },
+        "required": [
+         "musteri_no",
+         "kart_id",
+         "tutar",
+         "odeme_tarihi",
+         "soz_tipi"
+        ]
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "basarili false ise işlem yapılmadı.",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "basarili": {
+           "type": "boolean",
+           "description": "Söz kaydedildiyse true."
+          },
+          "hata_kodu": {
+           "type": "string",
+           "description": "Bölüm 11."
+          },
+          "soz_no": {
+           "type": "string",
+           "description": "Kaydedilen sözün numarası."
+          }
+         }
+        }
+       }
+      }
+     },
+     "500": {
+      "description": "E500: sistem hatası, hiçbir şey kaydedilmedi; tekrar denenebilir."
+     }
+    }
+   }
+  },
+  "/geri-arama/planla": {
+   "post": {
+    "operationId": "GeriAramaPlanla",
+    "summary": "Müşteriye ulaşılamadığında geri arama randevusu.",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "musteri_no": {
+          "type": "string",
+          "description": "Çağrı değişkeni musteri_no."
+         },
+         "tarih": {
+          "type": "string",
+          "description": "YYYY-AA-GG.",
+          "format": "date"
+         },
+         "saat": {
+          "type": "string",
+          "description": "SS:DD, 24 saat (ör. 18:30)."
+         }
+        },
+        "required": [
+         "musteri_no",
+         "tarih",
+         "saat"
+        ]
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "basarili false ise işlem yapılmadı.",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "basarili": {
+           "type": "boolean",
+           "description": "Randevu oluşturulduysa true."
+          },
+          "hata_kodu": {
+           "type": "string",
+           "description": "Bölüm 11."
+          },
+          "randevu_no": {
+           "type": "string",
+           "description": "Randevu numarası."
+          }
+         }
+        }
+       }
+      }
+     },
+     "500": {
+      "description": "E500: sistem hatası, hiçbir şey kaydedilmedi; tekrar denenebilir."
+     }
+    }
+   }
+  },
+  "/cagri/aktar": {
+   "post": {
+    "operationId": "CagriAktar",
+    "summary": "Görüşmeyi bir ekibe aktarır.",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "musteri_no": {
+          "type": "string",
+          "description": "Çağrı değişkeni musteri_no."
+         },
+         "kuyruk": {
+          "type": "string",
+          "description": "FINANSAL_DESTEK, YAPILANDIRMA veya MUSTERI_TEMSILCISI.",
+          "enum": [
+           "FINANSAL_DESTEK",
+           "YAPILANDIRMA",
+           "MUSTERI_TEMSILCISI"
+          ]
+         }
+        },
+        "required": [
+         "musteri_no",
+         "kuyruk"
+        ]
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "basarili false ise işlem yapılmadı.",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "basarili": {
+           "type": "boolean",
+           "description": "Aktarım yapıldıysa true."
+          },
+          "hata_kodu": {
+           "type": "string",
+           "description": "Bölüm 11."
+          }
+         }
+        }
+       }
+      }
+     },
+     "500": {
+      "description": "E500: sistem hatası, hiçbir şey kaydedilmedi; tekrar denenebilir."
+     }
+    }
+   }
+  },
+  "/not/ekle": {
+   "post": {
+    "operationId": "NotEkle",
+    "summary": "Müşteri kaydına not ekler.",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "musteri_no": {
+          "type": "string",
+          "description": "Çağrı değişkeni musteri_no."
+         },
+         "kart_id": {
+          "type": "string",
+          "description": "Notun ilgili olduğu kart."
+         },
+         "not_tipi": {
+          "type": "string",
+          "description": "ODENDI_BEYANI veya ITIRAZ.",
+          "enum": [
+           "ODENDI_BEYANI",
+           "ITIRAZ"
+          ]
+         },
+         "aciklama": {
+          "type": "string",
+          "description": "Kısa açıklama, en fazla 500 karakter."
+         }
+        },
+        "required": [
+         "musteri_no",
+         "not_tipi",
+         "aciklama"
+        ]
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "basarili false ise işlem yapılmadı.",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "basarili": {
+           "type": "boolean",
+           "description": "Not eklendiyse true."
+          },
+          "hata_kodu": {
+           "type": "string",
+           "description": "Bölüm 11."
+          },
+          "not_no": {
+           "type": "string",
+           "description": "Not numarası."
+          }
+         }
+        }
+       }
+      }
+     },
+     "500": {
+      "description": "E500: sistem hatası, hiçbir şey kaydedilmedi; tekrar denenebilir."
+     }
+    }
+   }
+  },
+  "/gorusme/kapat": {
+   "post": {
+    "operationId": "GorusmeKapat",
+    "summary": "Görüşmeyi sonuç koduyla kapatır. Her görüşmede bir kez ve en son çağrılır.",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "musteri_no": {
+          "type": "string",
+          "description": "Çağrı değişkeni musteri_no."
+         },
+         "sonuc_kodu": {
+          "type": "string",
+          "description": "Bölüm 10.",
+          "enum": [
+           "SOZ_ALINDI",
+           "ODEME_YAPILMIS",
+           "AKTARILDI",
+           "SOZ_ALINAMADI",
+           "DOGRULANAMADI",
+           "ULASILAMADI"
+          ]
+         },
+         "gerekce_kodu": {
+          "type": "string",
+          "description": "Bölüm 10; tabloda gerekçe yoksa gönderilmez.",
+          "enum": [
+           "REDDETTI",
+           "ZOR_DURUM",
+           "ITIRAZ",
+           "SISTEM_HATASI",
+           "HATALI_CEVAP",
+           "CEVAP_VERMEDI",
+           "GERI_ARAMA",
+           "GERI_ARAMA_YOK",
+           "YANLIS_NUMARA",
+           "VEFAT",
+           "BELIRSIZ",
+           "FINANSAL_DESTEK",
+           "YAPILANDIRMA",
+           "TEMSILCI"
+          ]
+         }
+        },
+        "required": [
+         "musteri_no",
+         "sonuc_kodu"
+        ]
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "basarili false ise işlem yapılmadı.",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "basarili": {
+           "type": "boolean",
+           "description": "Görüşme kapatıldıysa true."
+          },
+          "hata_kodu": {
+           "type": "string",
+           "description": "Bölüm 11."
+          }
+         }
+        }
+       }
+      }
+     },
+     "500": {
+      "description": "E500: sistem hatası, hiçbir şey kaydedilmedi; tekrar denenebilir."
+     }
+    }
+   }
+  }
+ }
+}

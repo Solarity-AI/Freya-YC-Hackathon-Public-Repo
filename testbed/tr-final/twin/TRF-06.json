@@ -1,0 +1,161 @@
+{
+ "id": "TRF-06",
+ "title": "Dolandırıcılık sorusu; iki kart: biri söz (son tarih), biri itiraz",
+ "mode": "sim",
+ "case": {
+  "id": "TRF-06",
+  "variables": {
+   "musteri_no": "FB-240699",
+   "ad": "Burak",
+   "soyad": "Arslan",
+   "hitap": "Bey",
+   "now": "2026-11-03T10:00"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "02.06.1983",
+   "TCKN_SON4": "7751"
+  },
+  "products": [
+   {
+    "kart_id": "KRT-240699-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "5502",
+    "ekstre_borcu": 14200.0,
+    "asgari_odeme_tutari": 5680.0,
+    "son_odeme_tarihi": "2026-09-24",
+    "gecikme_gun_sayisi": 40
+   },
+   {
+    "kart_id": "KRT-240699-02",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "1187",
+    "ekstre_borcu": 3120.9,
+    "asgari_odeme_tutari": 1248.36,
+    "son_odeme_tarihi": "2026-10-26",
+    "gecikme_gun_sayisi": 8
+   }
+  ]
+ },
+ "expect": {
+  "outcome": "SOZ_ALINDI",
+  "reason": null,
+  "promises": [
+   {
+    "product_id": "KRT-240699-01",
+    "amount": 14200.0,
+    "date": "2026-11-05"
+   }
+  ],
+  "notes": [
+   {
+    "product_id": "KRT-240699-02",
+    "reason": "ITIRAZ"
+   }
+  ],
+  "callbacks": [],
+  "transfers": []
+ },
+ "turns": [
+  {
+   "say": "Bu bir dolandırıcılık olmasın?",
+   "x": {
+    "u_text": "Bu bir dolandırıcılık olmasın?",
+    "u_en": "This isn't a scam, is it?",
+    "u_act": "question",
+    "u_topic": "scam_question"
+   }
+  },
+  {
+   "say": "Evet benim.",
+   "x": {
+    "u_text": "Evet benim.",
+    "u_en": "Yes, it's me.",
+    "u_act": "yes",
+    "u_topic": "none"
+   }
+  },
+  {
+   "say": "İki altı seksen üç.",
+   "x": {
+    "u_text": "İki altı seksen üç.",
+    "u_en": "Two six eighty-three.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "1983-06-02",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "Yedi yedi beş bir.",
+   "x": {
+    "u_text": "Yedi yedi beş bir.",
+    "u_en": "Seven seven five one.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "7751",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "Bugün olmaz.",
+   "x": {
+    "u_text": "Bugün olmaz.",
+    "u_en": "Not today.",
+    "u_act": "no",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "none",
+    "u_dval": "",
+    "u_dwhich": "bare",
+    "u_kind": "no"
+   }
+  },
+  {
+   "say": "Tamam, perşembe öderim.",
+   "x": {
+    "u_text": "Tamam, perşembe öderim.",
+    "u_en": "Okay, I'll pay on Thursday.",
+    "u_act": "yes",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "weekday",
+    "u_dval": "Thursday",
+    "u_dwhich": "bare",
+    "u_kind": "yes"
+   }
+  },
+  {
+   "say": "Evet, onaylıyorum.",
+   "x": {
+    "u_text": "Evet, onaylıyorum.",
+    "u_en": "Yes, I confirm.",
+    "u_act": "yes",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "none",
+    "u_dval": "",
+    "u_dwhich": "bare",
+    "u_kind": "yes"
+   }
+  },
+  {
+   "say": "O karttaki harcamaları ben yapmadım, bankaya itiraz ettim zaten.",
+   "x": {
+    "u_text": "O karttaki harcamaları ben yapmadım, bankaya itiraz ettim zaten.",
+    "u_en": "I didn't make the charges on that card, I've already disputed them with the bank.",
+    "u_act": "answer",
+    "u_topic": "dispute",
+    "u_amt": "",
+    "u_dkind": "none",
+    "u_dval": "",
+    "u_dwhich": "bare",
+    "u_kind": "answer"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 24
+ }
+}

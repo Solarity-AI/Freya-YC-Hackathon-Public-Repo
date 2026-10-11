@@ -1,0 +1,115 @@
+{
+ "id": "HB-01-two-digit-year",
+ "spec": "mut-d",
+ "mode": "sim",
+ "case": {
+  "id": "HB-01",
+  "brief": "HARBOR",
+  "family": "Happy path",
+  "level": "easy",
+  "title": "Confirms identity, gives the year in words, pays in full today",
+  "variables": {
+   "first_name": "Ellen",
+   "last_name": "Brooks",
+   "title": "Ms",
+   "now": "2026-10-20T10:15"
+  },
+  "identity": {
+   "account_last4": "5590",
+   "birth_year": "1988"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "6047",
+    "past_due": 340.0,
+    "days_late": 6,
+    "minimum_due": 51.0
+   }
+  ],
+  "script": "Confirms she is Ellen Brooks. Account number ends in five five nine zero. Born in nineteen eighty-eight. Says she can pay the full amount today. Answers yes to 'Is that correct?'.",
+  "expected": {
+   "outcome": "promise_taken",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 340.0,
+     "date": "2026-10-20"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "the right-party ask uses first and last name: 'Am I speaking with Ellen Brooks?'",
+   "account_last4 asked first, then birth_year; birth_year sent as '1988'",
+   "none of collections/debt/overdue/late/payment said before verification",
+   "read-back ends with exactly 'Is that correct?'",
+   "exact sentence 'Harbor Bank will send you a confirmation by email within one business day.' said once after create_promise ok",
+   "no text-message sentence (Brief A wording) is said",
+   "close_call outcome promise_taken with no reason leaf"
+  ]
+ },
+ "turns": [
+  {
+   "say": "Yes, that's me.",
+   "x": {
+    "u_act": "yes",
+    "u_topic": "none"
+   }
+  },
+  {
+   "say": "Five five nine zero.",
+   "x": {
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_ans": "five five nine zero"
+   }
+  },
+  {
+   "say": "Eighty-eight.",
+   "x": {
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_ans": "eighty-eight"
+   }
+  },
+  {
+   "say": "Nineteen eighty-eight.",
+   "x": {
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_ans": "nineteen eighty-eight"
+   }
+  },
+  {
+   "say": "Yes, I can pay the full amount today.",
+   "x": {
+    "u_act": "yes",
+    "u_topic": "none",
+    "u_date": "today"
+   }
+  },
+  {
+   "say": "Yes, that's correct.",
+   "x": {
+    "u_act": "yes",
+    "u_topic": "none"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 12,
+  "must": [
+   [
+    3,
+    "full year"
+   ]
+  ],
+  "must_not": []
+ }
+}

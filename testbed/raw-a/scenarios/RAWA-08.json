@@ -1,0 +1,87 @@
+{
+ "id": "RH-RAWA-08",
+ "case": {
+  "id": "RAWA-08",
+  "variables": {
+   "first_name": "Hannah",
+   "last_name": "Schmidt",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1993-04-28",
+   "phone_last4": "3317"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "5512",
+    "past_due": 180.0,
+    "days_late": 5,
+    "minimum_payment": 54.0
+   }
+  ],
+  "expected": {
+   "outcome": "paid",
+   "reason": null,
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  }
+ },
+ "mode": "sim",
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "28 April 1993.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "28 April 1993"
+   }
+  },
+  {
+   "say": "3317.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "3317"
+   }
+  },
+  {
+   "say": "I already paid it in the app this morning.",
+   "x": {
+    "u_act": "answer",
+    "u_topic": "already_paid"
+   }
+  },
+  {
+   "say": "Thank you, goodbye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 12,
+  "must": [
+   [
+    -1,
+    "one business day"
+   ]
+  ],
+  "must_not": [
+   [
+    -1,
+    "promise is recorded"
+   ]
+  ]
+ },
+ "_script": "Verified. Says she paid it in the app this morning."
+}

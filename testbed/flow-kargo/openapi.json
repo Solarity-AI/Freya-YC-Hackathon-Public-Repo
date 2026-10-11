@@ -1,0 +1,10 @@
+{"openapi":"3.0.3","info":{"title":"Hizli Kargo","version":"1"},
+"paths":{
+"/uyeler/{uyeNo}/gonderiler":{"get":{"operationId":"gonderiListesi","parameters":[{"name":"uyeNo","in":"path","required":true,"schema":{"type":"string"}}],
+ "responses":{"200":{"description":"ok","content":{"application/json":{"schema":{"type":"object","properties":{"gonderiler":{"type":"array","items":{"type":"object","properties":{"takipNo":{"type":"string"},"ad":{"type":"string"},"aktif":{"type":"boolean"},"eposta":{"type":"string"}}}}}}}}},
+  "404":{"description":"yok","content":{"application/json":{"schema":{"type":"object","properties":{"hata":{"type":"string"}}}}}}}}},
+"/gonderiler/ucret":{"get":{"operationId":"ucretSorgula","parameters":[{"name":"takipNo","in":"query","required":true,"schema":{"type":"string"}}],
+ "responses":{"200":{"description":"ok","content":{"application/json":{"schema":{"type":"object","properties":{"ucretTl":{"type":"number"},"ucretUsd":{"type":"number"},"teslimTarihi":{"type":"string","format":"date"}}}}}}}}},
+"/faturalar/eposta":{"post":{"operationId":"faturaGonder","requestBody":{"content":{"application/json":{"schema":{"type":"object","required":["takipNo"],"properties":{"takipNo":{"type":"string"}}}}}},
+ "responses":{"200":{"description":"ok","content":{"application/json":{"schema":{"type":"object","properties":{"gonderildi":{"type":"boolean"}}}}}},"500":{"description":"hata"}}}}
+}}

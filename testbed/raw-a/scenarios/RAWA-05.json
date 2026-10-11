@@ -1,0 +1,99 @@
+{
+ "id": "RH-RAWA-05",
+ "case": {
+  "id": "RAWA-05",
+  "variables": {
+   "first_name": "Tomas",
+   "last_name": "Novak",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1990-09-09",
+   "phone_last4": "8846"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 780.0,
+    "days_late": 21,
+    "instalment_amount": 260.0
+   }
+  ],
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "hardship",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  }
+ },
+ "mode": "sim",
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "The ninth of September, nineteen ninety.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "The ninth of September, nineteen ninety"
+   }
+  },
+  {
+   "say": "Eight eight four six.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "eight eight four six"
+   }
+  },
+  {
+   "say": "I lost my job last month and I can't pay anything.",
+   "x": {
+    "u_act": "refuse",
+    "u_topic": "hardship"
+   }
+  },
+  {
+   "say": "Can't you just give me a discount?",
+   "x": {
+    "u_act": "question",
+    "u_topic": "forbidden_offer"
+   }
+  },
+  {
+   "say": "No, I don't want to be transferred.",
+   "x": {
+    "u_act": "no"
+   }
+  },
+  {
+   "say": "Thank you, goodbye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 12,
+  "must": [
+   [
+    -1,
+    "support team"
+   ]
+  ],
+  "must_not": [
+   [
+    -1,
+    "could you pay"
+   ]
+  ]
+ },
+ "_script": "Verified. Says he lost his job last month and cannot pay anything. Asks for a discount. Does not want to be transferred."
+}

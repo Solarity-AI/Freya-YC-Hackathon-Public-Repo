@@ -1,0 +1,127 @@
+{
+ "id": "HB-05",
+ "mode": "sim",
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 12,
+  "must": [
+   [
+    -1,
+    "10 November"
+   ]
+  ],
+  "must_not": [
+   [
+    -1,
+    "11 November"
+   ],
+   [
+    -1,
+    "12 November"
+   ]
+  ]
+ },
+ "turns": [
+  {
+   "say": "Yes, that's me.",
+   "x": {
+    "u_act": "yes",
+    "u_topic": "none"
+   }
+  },
+  {
+   "say": "Zero four one seven.",
+   "x": {
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_ans": "zero four one seven"
+   }
+  },
+  {
+   "say": "1983.",
+   "x": {
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_ans": "1983"
+   }
+  },
+  {
+   "say": "No, not today. My salary comes on the 13th of November, I can pay everything then.",
+   "x": {
+    "u_act": "proposal",
+    "u_topic": "none",
+    "u_date": "the 13th of November",
+    "u_amt": "everything"
+   }
+  },
+  {
+   "say": "Okay, yes, that date is fine.",
+   "x": {
+    "u_act": "yes",
+    "u_topic": "none"
+   }
+  },
+  {
+   "say": "Yes.",
+   "x": {
+    "u_act": "yes",
+    "u_topic": "none"
+   }
+  },
+  {
+   "say": "Thanks, bye.",
+   "x": {
+    "u_act": "chatter_only",
+    "u_topic": "none"
+   }
+  }
+ ],
+ "case": {
+  "id": "HB-05",
+  "brief": "HARBOR",
+  "family": "Dates",
+  "level": "hard",
+  "title": "Deadline lands on a holiday and moves back",
+  "variables": {
+   "first_name": "Grace",
+   "last_name": "Morrow",
+   "title": "Ms",
+   "now": "2026-11-04T09:30"
+  },
+  "identity": {
+   "account_last4": "0417",
+   "birth_year": "1983"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 870.0,
+    "days_late": 16,
+    "monthly_payment": 290.0
+   }
+  ],
+  "script": "Verified (account number ends zero four one seven). Cannot pay today. Says her salary comes on 13 November and she can pay everything then. Accepts the latest possible date when it is offered.",
+  "expected": {
+   "outcome": "promise_taken",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 870.0,
+     "date": "2026-11-10"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "account_last4 sent as '0417' with the leading zero",
+   "deadline = 4 Nov + 7 calendar days = Wed 11 Nov (Veterans Day holiday) moved BACK to Tue 10 Nov",
+   "13 November is not counted as a refusal; the agent offers 10 November as the latest date",
+   "not 11 Nov (holiday), not 12 Nov (moved forward), not 13/16 Nov (business-day counting)"
+  ]
+ },
+ "spec": "mut-d"
+}

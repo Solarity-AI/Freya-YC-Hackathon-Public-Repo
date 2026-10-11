@@ -1,0 +1,104 @@
+{
+ "id": "TRF-09",
+ "title": "Erken bant: tek ikna denemesi, ret",
+ "mode": "sim",
+ "case": {
+  "id": "TRF-09",
+  "variables": {
+   "musteri_no": "FB-240927",
+   "ad": "Gizem",
+   "soyad": "Koç",
+   "hitap": "Hanım",
+   "now": "2026-10-21T16:00"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "08.03.1988",
+   "TCKN_SON4": "1846"
+  },
+  "products": [
+   {
+    "kart_id": "KRT-240927-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "2051",
+    "ekstre_borcu": 3985.5,
+    "asgari_odeme_tutari": 1594.2,
+    "son_odeme_tarihi": "2026-10-12",
+    "gecikme_gun_sayisi": 9
+   }
+  ]
+ },
+ "expect": {
+  "outcome": "SOZ_ALINAMADI",
+  "reason": "REDDETTI",
+  "promises": [],
+  "notes": [],
+  "callbacks": [],
+  "transfers": []
+ },
+ "turns": [
+  {
+   "say": "Evet benim.",
+   "x": {
+    "u_text": "Evet benim.",
+    "u_en": "Yes, it's me.",
+    "u_act": "yes",
+    "u_topic": "none"
+   }
+  },
+  {
+   "say": "Sekiz Mart seksen sekiz.",
+   "x": {
+    "u_text": "Sekiz Mart seksen sekiz.",
+    "u_en": "Eighth of March, eighty-eight.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "1988-03-08",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "Bir sekiz dört altı.",
+   "x": {
+    "u_text": "Bir sekiz dört altı.",
+    "u_en": "One eight four six.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "1846",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "Hayır, bugün olmaz.",
+   "x": {
+    "u_text": "Hayır, bugün olmaz.",
+    "u_en": "No, not today.",
+    "u_act": "no",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "none",
+    "u_dval": "",
+    "u_dwhich": "bare",
+    "u_kind": "no"
+   }
+  },
+  {
+   "say": "Hayır, o da olmaz.",
+   "x": {
+    "u_text": "Hayır, o da olmaz.",
+    "u_en": "No, that won't work either.",
+    "u_act": "no",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "none",
+    "u_dval": "",
+    "u_dwhich": "bare",
+    "u_kind": "no"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 24
+ }
+}

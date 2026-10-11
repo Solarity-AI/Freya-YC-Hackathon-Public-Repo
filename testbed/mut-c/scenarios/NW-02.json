@@ -1,0 +1,111 @@
+{
+ "id": "MUTC-NW-02",
+ "spec": "mut-c",
+ "mode": "sim",
+ "case": {
+  "id": "NW-02",
+  "brief": "mut-c",
+  "family": "Third party",
+  "level": "hard",
+  "title": "Christmas Eve: the partner offers the observed Boxing Day",
+  "variables": {
+   "first_name": "Tomasz",
+   "last_name": "Wojcik",
+   "title": "Mr",
+   "now": "2026-12-24T16:00"
+  },
+  "identity": {
+   "date_of_birth": "1979-11-02",
+   "postcode": "B15 3TN"
+  },
+  "products": [
+   {
+    "type": "auto_loan",
+    "past_due": 610.0,
+    "days_late": 12,
+    "instalment_amount": 305.0
+   }
+  ],
+  "script": "His partner answers. Asks what it is about and offers to pay. Says Tomasz is back on Monday and can be called at nine in the morning. When asked for another time, says 'Tuesday, half past five in the afternoon'.",
+  "expected": {
+   "outcome": "no_contact",
+   "reason": "callback_booked",
+   "promises": [],
+   "notes": [],
+   "callbacks": [
+    {
+     "date": "2026-12-29",
+     "time": "17:30"
+    }
+   ],
+   "transfers": []
+  },
+  "checks": [
+   "nothing said beyond the opening sentence; no product, amount or reason",
+   "Monday 28 December refused: Boxing Day (26 Dec, a Saturday) moves to Monday 28",
+   "asks once for another time",
+   "callback 2026-12-29 17:30 (window end is inclusive)",
+   "verify_identity, get_account and add_note never called",
+   "closing sentence said"
+  ]
+ },
+ "turns": [
+  {
+   "say": "No, this is his partner. What's it about?",
+   "x": {
+    "u_act": "no",
+    "u_topic": "other_person"
+   }
+  },
+  {
+   "say": "I can pay it for him if you tell me how much.",
+   "x": {
+    "u_act": "question"
+   }
+  },
+  {
+   "say": "He's back on Monday, you can call him at nine in the morning.",
+   "x": {
+    "u_act": "proposal",
+    "u_topic": "unavailable",
+    "u_date": "Monday",
+    "u_time": "nine in the morning"
+   }
+  },
+  {
+   "say": "Tuesday, half past five in the afternoon.",
+   "x": {
+    "u_act": "proposal",
+    "u_date": "Tuesday",
+    "u_time": "half past five in the afternoon"
+   }
+  },
+  {
+   "say": "Okay, bye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 24,
+  "must": [
+   [
+    -1,
+    "Thank you for your time, and thank you for choosing Northwind Credit Union. Goodbye."
+   ]
+  ],
+  "must_not": [
+   [
+    -1,
+    "pounds"
+   ],
+   [
+    -1,
+    "auto loan"
+   ]
+  ]
+ }
+}

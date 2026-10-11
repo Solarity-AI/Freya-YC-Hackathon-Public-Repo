@@ -1,0 +1,209 @@
+[+0.1s] START build._run | build | argv=["testbed/tr-final/FreyaBank-Rehearsal", "https://univ-sunday-rebates-radical.trycloudflare.com", "--slot", "tr-rehearsal", "--spec-in", "runs/rh-trfinal/r20261011T152630Z/spec.json", "--no-smoke"] slot=tr-rehearsal run_dir=runs/tr-rehearsal/r20261011T155227Z model_default=claude-opus-5-5 effort_default=high facet_overrides={"effort": {"F5": "medium"}, "model": {}} critic=False started_at=2026-10-11T15:52:27Z commit=unknown input_form=case_folder mock_url=https://univ-sunday-rebates-radical.trycloudflare.com case=testbed/tr-final/FreyaBank-Rehearsal
+[+0.1s] START build._run | preflight ok | python=3.14 freya_url=https://staging-app.freyavoice.ai claude_auth=not needed
+[+0.1s] INPUT build._load_case_traced | akis.drawio | doc_kind=flow reader=drawing bytes=6972 chars=3461 status=read why=content+name+readme+type (score 14)
+[+0.1s] INPUT build._load_case_traced | analiz.docx | doc_kind=analysis reader=docx bytes=3575 chars=2312 status=read why=name+readme (score 6)
+[+0.1s] INPUT build._load_case_traced | BRIEF.md | doc_kind=brief reader=text bytes=13249 chars=12315 status=read why=file name
+[+0.1s] INPUT build._load_case_traced | duyurular.pdf | doc_kind=announcements reader=pdf bytes=48548 chars=1617 status=read why=name (score 3)
+[+0.1s] INPUT build._load_case_traced | ornek-konusma-1.md | doc_kind=example_conversation reader=text bytes=2638 chars=2479 status=read why=content+name+readme (score 15)
+[+0.1s] INPUT build._load_case_traced | ornek-konusma-2.md | doc_kind=example_conversation reader=text bytes=3076 chars=2907 status=read why=content+name+readme (score 15)
+[+0.1s] INPUT build._load_case_traced | ornek-konusma-3.md | doc_kind=example_conversation reader=text bytes=1728 chars=1621 status=read why=content+name+readme (score 15)
+[+0.1s] INPUT build._load_case_traced | ornek-konusma-4.md | doc_kind=example_conversation reader=text bytes=2877 chars=2722 status=read why=content+name+readme (score 15)
+[+0.1s] INPUT build._load_case_traced | ornek-konusma-5.md | doc_kind=example_conversation reader=text bytes=2661 chars=2510 status=read why=content+name+readme (score 15)
+[+0.1s] INPUT build._load_case_traced | ornek-konusma-6.md | doc_kind=example_conversation reader=text bytes=3751 chars=3544 status=read why=content+name+readme (score 15)
+[+0.1s] INPUT build._load_case_traced | README.md | doc_kind=readme reader=text bytes=2467 chars=2290 status=read why=file name
+[+0.1s] INPUT build._load_case_traced | servis-sozlesmesi.docx | doc_kind=service_contract reader=docx bytes=6200 chars=9316 status=read why=content+name+readme (score 16)
+[+0.1s] INPUT build._load_case_traced | soru-cevap.md | doc_kind=qa reader=text bytes=2638 chars=2431 status=read why=content+name+readme (score 17)
+[+0.1s] INPUT build._load_case_traced | test-musterileri.xlsx | doc_kind=test_customers reader=xlsx bytes=4973 chars=2441 status=read why=content+name+readme (score 20)
+[+0.2s] INPUT build._probe_mock | mock reachable | role=mock url=https://univ-sunday-rebates-radical.trycloudflare.com health={'ok': True, 'service': 'bank-mock', 'engine': '1.0.0', 'lang': 'tr', 'customers': 10, 'operations': [{'name': 'KimlikDogrula', 'role': 'verify', 'method': 'POST', 'path': '/kimlik/dogrula'}, {'name':
+[+0.5s] DECISION builder.contract.map_operations | tool role transfer_to_agent -> POST /cagri/aktar (x-freya-tool) | where=LOCAL
+[+0.5s] DECISION builder.contract.map_operations | tool role get_account -> POST /ekstre/borc-sorgula (x-freya-tool) | where=LOCAL
+[+0.5s] DECISION builder.contract.map_operations | tool role schedule_callback -> POST /geri-arama/planla (x-freya-tool) | where=LOCAL
+[+0.5s] DECISION builder.contract.map_operations | tool role close_call -> POST /gorusme/kapat (x-freya-tool) | where=LOCAL
+[+0.5s] DECISION builder.contract.map_operations | tool role verify_identity -> POST /kimlik/dogrula (x-freya-tool) | where=LOCAL
+[+0.5s] DECISION builder.contract.map_operations | tool role add_note -> POST /not/ekle (x-freya-tool) | where=LOCAL
+[+0.5s] DECISION builder.contract.map_operations | tool role create_promise -> POST /odeme-sozu/kaydet (x-freya-tool) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account.musteri_no -> request role customer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity.musteri_no -> request role customer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity.soru -> request role selector (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity.cevap -> request role answer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity response basarili -> role s (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity response hata_kodu -> role err (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity response dogrulandi -> role verified (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity response kalan_hak -> role left (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity response tum_sorular_tamam -> role all (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity response ipucu -> role hint (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account.musteri_no -> request role customer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account response basarili -> role s (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account response hata_kodu -> role err (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account response kartlar -> role products (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account item kart_id -> item role id (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account item urun -> item role type (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account item ekstre_borcu -> item role past_due (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account item gecikme_gun_sayisi -> item role days_late (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind create_promise.musteri_no -> request role customer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind create_promise.kart_id -> request role product (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind create_promise.tutar -> request role amount (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind create_promise.odeme_tarihi -> request role date (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind create_promise.soz_tipi -> request role reason (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind create_promise response basarili -> role s (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind create_promise response hata_kodu -> role err (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind create_promise response soz_no -> role pid (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind add_note.musteri_no -> request role customer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind add_note.kart_id -> request role product (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind add_note.not_tipi -> request role reason (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind add_note.aciklama -> request role text (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind add_note response basarili -> role s (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind add_note response hata_kodu -> role err (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind add_note response not_no -> role pid (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind schedule_callback.musteri_no -> request role customer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind schedule_callback.tarih -> request role date (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind schedule_callback.saat -> request role time (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind schedule_callback response basarili -> role s (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind schedule_callback response hata_kodu -> role err (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind schedule_callback response randevu_no -> role pid (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind transfer_to_agent.musteri_no -> request role customer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind transfer_to_agent.kuyruk -> request role queue (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind transfer_to_agent response basarili -> role s (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind transfer_to_agent response hata_kodu -> role err (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind close_call.musteri_no -> request role customer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind close_call.sonuc_kodu -> request role outcome (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind close_call.gerekce_kodu -> request role reason (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind close_call response basarili -> role s (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind close_call response hata_kodu -> role err (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity.musteri_no -> request role customer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity.soru -> request role selector (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity.cevap -> request role answer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity response basarili -> role s (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity response hata_kodu -> role err (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity response dogrulandi -> role verified (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity response kalan_hak -> role left (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity response tum_sorular_tamam -> role all (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind verify_identity response ipucu -> role hint (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account.musteri_no -> request role customer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account response basarili -> role s (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account response hata_kodu -> role err (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account response kartlar -> role products (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account item kart_id -> item role id (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account item urun -> item role type (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account item ekstre_borcu -> item role past_due (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind get_account item gecikme_gun_sayisi -> item role days_late (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind create_promise.musteri_no -> request role customer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind create_promise.kart_id -> request role product (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind create_promise.tutar -> request role amount (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind create_promise.odeme_tarihi -> request role date (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind create_promise.soz_tipi -> request role reason (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind create_promise response basarili -> role s (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind create_promise response hata_kodu -> role err (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind create_promise response soz_no -> role pid (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind add_note.musteri_no -> request role customer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind add_note.kart_id -> request role product (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind add_note.not_tipi -> request role reason (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind add_note.aciklama -> request role text (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind add_note response basarili -> role s (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind add_note response hata_kodu -> role err (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind add_note response not_no -> role pid (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind schedule_callback.musteri_no -> request role customer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind schedule_callback.tarih -> request role date (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind schedule_callback.saat -> request role time (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind schedule_callback response basarili -> role s (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind schedule_callback response hata_kodu -> role err (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind schedule_callback response randevu_no -> role pid (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind transfer_to_agent.musteri_no -> request role customer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind transfer_to_agent.kuyruk -> request role queue (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind transfer_to_agent response basarili -> role s (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind transfer_to_agent response hata_kodu -> role err (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind close_call.musteri_no -> request role customer (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind close_call.sonuc_kodu -> request role outcome (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind close_call.gerekce_kodu -> request role reason (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind close_call response basarili -> role s (x-freya-role) | where=LOCAL
+[+0.5s] DECISION builder.openapi_model.take | bind close_call response hata_kodu -> role err (x-freya-role) | where=LOCAL
+[+0.5s] CATALOG builder.contract.build_catalog | service contract bound | source=mock https://univ-sunday-rebates-radical.trycloudflare.com/openapi.json absent=[] extra=[] identity_design=selector synthetic=0 server=https://univ-sunday-rebates-radical.trycloudflare.com
+[+0.5s] INPUT build._case_catalog | runs/tr-rehearsal/r20261011T155227Z/openapi.json | role=tool_api source=mock https://univ-sunday-rebates-radical.trycloudflare.com/openapi.json mock_url=https://univ-sunday-rebates-radical.trycloudflare.com
+[+0.5s] CATALOG build._stage_inputs | tools bound | tools=["add_note", "close_call", "create_promise", "get_account", "schedule_callback", "transfer_to_agent", "verify_identity"] identity_mode=selector warnings=0 server=https://univ-sunday-rebates-radical.trycloudflare.com
+[+0.5s] SEGMENT build._stage_inputs | BRIEF.md | doc_kind=brief role=brief lines=222 sections=13 tables=3
+[+0.5s] SEGMENT build._stage_inputs | README.md | doc_kind=brief role=readme lines=35 sections=3 tables=1
+[+0.5s] SEGMENT build._stage_inputs | akis.drawio | doc_kind=brief role=flow lines=38 sections=1 tables=0
+[+0.5s] SEGMENT build._stage_inputs | analiz.docx | doc_kind=brief role=analysis lines=41 sections=8 tables=2
+[+0.5s] SEGMENT build._stage_inputs | duyurular.pdf | doc_kind=brief role=announcements lines=38 sections=1 tables=0
+[+0.5s] SEGMENT build._stage_inputs | servis-sozlesmesi.docx | doc_kind=brief role=service_contract lines=203 sections=27 tables=17
+[+0.5s] SEGMENT build._stage_inputs | soru-cevap.md | doc_kind=brief role=qa lines=55 sections=1 tables=0
+[+0.5s] SEGMENT build._stage_inputs | test-musterileri.xlsx | doc_kind=brief role=test_customers lines=38 sections=3 tables=3
+[+0.5s] SEGMENT build._stage_inputs | ornek-konusma-1.md | doc_kind=brief role=example_conversation lines=43 sections=1 tables=0
+[+0.5s] SEGMENT build._stage_inputs | ornek-konusma-2.md | doc_kind=brief role=example_conversation lines=55 sections=1 tables=0
+[+0.5s] SEGMENT build._stage_inputs | ornek-konusma-3.md | doc_kind=brief role=example_conversation lines=29 sections=1 tables=0
+[+0.5s] SEGMENT build._stage_inputs | ornek-konusma-4.md | doc_kind=brief role=example_conversation lines=45 sections=1 tables=0
+[+0.5s] SEGMENT build._stage_inputs | ornek-konusma-5.md | doc_kind=brief role=example_conversation lines=43 sections=1 tables=0
+[+0.5s] SEGMENT build._stage_inputs | ornek-konusma-6.md | doc_kind=brief role=example_conversation lines=55 sections=1 tables=0
+[+0.5s] STAGE build.stop | input | seconds=0.5
+[+0.5s] EXTRACT build.stage_spec | spec loaded from --spec-in (extraction skipped) | path=runs/rh-trfinal/r20261011T152630Z/spec.json
+[+0.5s] STAGE build.stop | extract | seconds=0.0
+[+0.6s] DECISION builder.pipeline.validate.validate | interpretation.decline_counting = per_question_consecutive (the brief never says identity declines add up across questions)
+[+0.6s] VALIDATE builder.pipeline.validate.validate | errors=0 warnings=2 defaults=0 fixes=0
+[+0.6s] VALIDATE build._validate_traced | warning: /intents/scam_question/keywords: '\\bdolandır\\w*' matches the intent's own negative 'Kartımla dolandırıcılık yapıldı, harcamalar benim değil.'
+[+0.6s] VALIDATE build._validate_traced | warning: /intents/customer_deceased/keywords: '\\bvefat et\\w*' matches the intent's own negative 'Annem vefat etti, o yüzden ödeyemedim.'
+[+0.6s] STAGE build.stop | validate | seconds=0.1
+[+0.6s] SPEC build._stage_spec_out | valid | sha256=a238ad53504259c8 intents=16 situations=17 bands=2
+[+0.6s] STAGE build.stop | spec_out | seconds=0.0
+[+1.4s] DECISION builder.compiler.render.topic_values | u_topic[neg] capped at 12; regex backstop covers scam_question, robot_question | where=LOCAL
+[+1.4s] DECISION builder.compiler.render.topic_values | u_topic[conf] capped at 12; regex backstop covers scam_question, robot_question | where=LOCAL
+[+1.4s] COMPILE builder.compiler.graph.compile_workflow | 35 nodes, 201 transitions, ctl code 86766 bytes | flags=bye=pass,write_chain=on,qnodes=off,uvars=reset,amount_tpl=plain,vchain=on
+[+1.4s] COMPILE build._run | workflow compiled | nodes=35 bytes=265663
+[+1.4s] STAGE build.stop | compile | seconds=0.8
+[+1.5s] DECISION builder.compiler.render.topic_values | u_topic[neg] capped at 12; regex backstop covers scam_question, robot_question | where=LOCAL
+[+1.5s] DECISION builder.compiler.render.topic_values | u_topic[conf] capped at 12; regex backstop covers scam_question, robot_question | where=LOCAL
+[+1.5s] COMPILE builder.compiler.graph.compile_workflow | 35 nodes, 201 transitions, ctl code 86766 bytes | flags=bye=pass,write_chain=on,qnodes=off,uvars=reset,amount_tpl=plain,vchain=on
+[+1.5s] DECISION builder.compiler.render.topic_values | u_topic[neg] capped at 12; regex backstop covers scam_question, robot_question | where=LOCAL
+[+1.5s] DECISION builder.compiler.render.topic_values | u_topic[conf] capped at 12; regex backstop covers scam_question, robot_question | where=LOCAL
+[+1.5s] COMPILE builder.compiler.graph.compile_workflow | 35 nodes, 201 transitions, ctl code 86766 bytes | flags=bye=pass,write_chain=on,qnodes=off,uvars=reset,amount_tpl=plain,vchain=on
+[+1.5s] LINT builder.compiler.lint.lint | 0 errors, 4 warnings | where=LOCAL
+[+1.5s] WARN builder.compiler.lint.lint | [code_size] ctl: projected code+data 123468 bytes at turn 40 (> 122880; platform limit 131072)
+[+1.5s] WARN builder.compiler.lint.lint | [code_turns] ctl: a long multi-product call reaches the 131072-byte code_exec limit at about customer turn 28 (< 40)
+[+1.5s] WARN builder.compiler.lint.lint | [code_size] ctl: code is 86766 bytes (> 82000)
+[+1.5s] WARN builder.compiler.lint.lint | [opening_sentence] /opening/line: first sentence does not say the call is recorded
+[+1.5s] LINT build._stage_lint | warn code_size @ctl: projected code+data 123468 bytes at turn 40 (> 122880; platform limit 131072)
+[+1.5s] LINT build._stage_lint | warn code_turns @ctl: a long multi-product call reaches the 131072-byte code_exec limit at about customer turn 28 (< 40)
+[+1.5s] LINT build._stage_lint | warn code_size @ctl: code is 86766 bytes (> 82000)
+[+1.5s] LINT build._stage_lint | warn opening_sentence @/opening/line: first sentence does not say the call is recorded
+[+1.5s] STAGE build.stop | lint | seconds=0.1
+[+2.4s] TWIN build._stage_twin | PASS GEN-happy | where=LOCAL failed=[]
+[+2.4s] TWIN build._stage_twin | PASS GEN-id-failed | where=LOCAL failed=[]
+[+2.4s] TWIN build._stage_twin | PASS GEN-refused | where=LOCAL failed=[]
+[+2.4s] TWIN build._stage_twin | PASS GEN-callback | where=LOCAL failed=[]
+[+2.4s] STAGE build.stop | twin | seconds=0.8
+[+4.8s] DEPLOY builder.deploy.deploy | dry run ok | where=ON-AGENT
+[+8.6s] FREYA builder.deploy.deploy | updated workflow a35f089d-a048-4242-a9c6-a9a98c725dda | agent_id=c7cbf3ab-0274-48eb-8ae7-d5cdc72ea9b3 version=2 where=ON-AGENT
+[+9.2s] EXPORT builder.deploy.export | exported workflow a35f089d-a048-4242-a9c6-a9a98c725dda | path=runs/tr-rehearsal/r20261011T155227Z/workflow.export.json where=ON-AGENT
+[+9.2s] DEPLOY builder.deploy.deploy | published version 2 of a35f089d-a048-4242-a9c6-a9a98c725dda | diff=0 where=ON-AGENT
+[+9.2s] FREYA build._stage_deploy | built on Freya | workflow_id=a35f089d-a048-4242-a9c6-a9a98c725dda agent_id=c7cbf3ab-0274-48eb-8ae7-d5cdc72ea9b3 version=2 created=False nodes=35 tools=7 where=ON-AGENT
+[+9.2s] EXPORT build._stage_deploy | export written | path=runs/tr-rehearsal/r20261011T155227Z/workflow.export.json
+[+9.2s] STAGE build.stop | deploy | seconds=6.8
+[+9.2s] END build.run | exit 0 | slot=tr-rehearsal exit=0 ended_at=2026-10-11T15:52:36Z build_s=9.2
+
+==================== SUMMARY ====================
+slot:            tr-rehearsal
+run_id:          r20261011T155227Z
+run_dir:         runs/tr-rehearsal/r20261011T155227Z
+started_at:      2026-10-11T15:52:27Z
+exit:            0
+stages:          {"compile": 0.8, "deploy": 6.8, "extract": 0.0, "input": 0.5, "lint": 0.1, "spec_out": 0.0, "twin": 0.8, "validate": 0.1}
+spec_errors:     0
+defaults_applied: 29
+residual_rules:  28
+nodes:           35
+tool_calls:      25
+tools:           ["add_note", "close_call", "create_promise", "get_account", "schedule_callback", "transfer_to_agent", "verify_identity"]
+lint_errors:     0
+lint_warnings:   4
+twin:            4/4
+deployed:        True
+workflow_id:     a35f089d-a048-4242-a9c6-a9a98c725dda
+agent_id:        c7cbf3ab-0274-48eb-8ae7-d5cdc72ea9b3
+version:         2
+export:          runs/tr-rehearsal/r20261011T155227Z/workflow.export.json
+readback_diff:   0
+ended_at:        2026-10-11T15:52:36Z
+build_s:         9.2
+budget:          {"elapsed_s": 9.2, "remaining_s": 1550.8, "skipped": [], "soft_remaining_s": 1190.8}
+elapsed_s:       9.2
+event_counts:    {"CATALOG": 2, "COMPILE": 4, "DECISION": 109, "DEPLOY": 2, "END": 1, "EXPORT": 2, "EXTRACT": 1, "FREYA": 2, "INPUT": 16, "LINT": 5, "SEGMENT": 14, "SPEC": 1, "STAGE": 8, "START": 2, "TWIN": 4, "VALIDATE": 3, "WARN": 4}
+=================================================

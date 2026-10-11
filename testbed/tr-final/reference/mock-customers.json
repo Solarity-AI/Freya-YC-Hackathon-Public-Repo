@@ -1,0 +1,203 @@
+[
+ {
+  "customer_id": "FB-240117",
+  "identity": {
+   "DOGUM_TARIHI": "14.02.1986",
+   "TCKN_SON4": "3058"
+  },
+  "kartlar": [
+   {
+    "kart_id": "KRT-240117-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "7319",
+    "ekstre_borcu": 8450.75,
+    "asgari_odeme_tutari": 3380.3,
+    "son_odeme_tarihi": "2026-10-15",
+    "gecikme_gun_sayisi": 6
+   }
+  ],
+  "faults": {}
+ },
+ {
+  "customer_id": "FB-240233",
+  "identity": {
+   "DOGUM_TARIHI": "03.01.1985",
+   "TCKN_SON4": "6614"
+  },
+  "kartlar": [
+   {
+    "kart_id": "KRT-240233-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "2290",
+    "ekstre_borcu": 5350.0,
+    "asgari_odeme_tutari": 2140.0,
+    "son_odeme_tarihi": "2026-10-05",
+    "gecikme_gun_sayisi": 22
+   }
+  ],
+  "faults": {}
+ },
+ {
+  "customer_id": "FB-240318",
+  "identity": {
+   "DOGUM_TARIHI": "21.07.1992",
+   "TCKN_SON4": "4402"
+  },
+  "kartlar": [
+   {
+    "kart_id": "KRT-240318-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "6045",
+    "ekstre_borcu": 12780.4,
+    "asgari_odeme_tutari": 5112.16,
+    "son_odeme_tarihi": "2026-10-15",
+    "gecikme_gun_sayisi": 12
+   }
+  ],
+  "faults": {}
+ },
+ {
+  "customer_id": "FB-240402",
+  "identity": {
+   "DOGUM_TARIHI": "09.04.1979",
+   "TCKN_SON4": "9127"
+  },
+  "kartlar": [
+   {
+    "kart_id": "KRT-240402-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "3376",
+    "ekstre_borcu": 2315.6,
+    "asgari_odeme_tutari": 926.24,
+    "son_odeme_tarihi": "2026-10-15",
+    "gecikme_gun_sayisi": 7
+   }
+  ],
+  "faults": {}
+ },
+ {
+  "customer_id": "FB-240561",
+  "identity": {
+   "DOGUM_TARIHI": "30.11.1990",
+   "TCKN_SON4": "0285"
+  },
+  "kartlar": [
+   {
+    "kart_id": "KRT-240561-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "8812",
+    "ekstre_borcu": 19640.0,
+    "asgari_odeme_tutari": 7856.0,
+    "son_odeme_tarihi": "2026-09-17",
+    "gecikme_gun_sayisi": 34
+   }
+  ],
+  "faults": {}
+ },
+ {
+  "customer_id": "FB-240699",
+  "identity": {
+   "DOGUM_TARIHI": "02.06.1983",
+   "TCKN_SON4": "7751"
+  },
+  "kartlar": [
+   {
+    "kart_id": "KRT-240699-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "5502",
+    "ekstre_borcu": 14200.0,
+    "asgari_odeme_tutari": 5680.0,
+    "son_odeme_tarihi": "2026-09-24",
+    "gecikme_gun_sayisi": 40
+   },
+   {
+    "kart_id": "KRT-240699-02",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "1187",
+    "ekstre_borcu": 3120.9,
+    "asgari_odeme_tutari": 1248.36,
+    "son_odeme_tarihi": "2026-10-26",
+    "gecikme_gun_sayisi": 8
+   }
+  ],
+  "faults": {}
+ },
+ {
+  "customer_id": "FB-240744",
+  "identity": {
+   "DOGUM_TARIHI": "04.08.1995",
+   "TCKN_SON4": "5530"
+  },
+  "kartlar": [
+   {
+    "kart_id": "KRT-240744-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "9064",
+    "ekstre_borcu": 4100.0,
+    "asgari_odeme_tutari": 1640.0,
+    "son_odeme_tarihi": "2026-10-15",
+    "gecikme_gun_sayisi": 6
+   }
+  ],
+  "faults": {
+   "OdemeSozuKaydet": "E500"
+  }
+ },
+ {
+  "customer_id": "FB-240927",
+  "identity": {
+   "DOGUM_TARIHI": "08.03.1988",
+   "TCKN_SON4": "1846"
+  },
+  "kartlar": [
+   {
+    "kart_id": "KRT-240927-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "2051",
+    "ekstre_borcu": 3985.5,
+    "asgari_odeme_tutari": 1594.2,
+    "son_odeme_tarihi": "2026-10-12",
+    "gecikme_gun_sayisi": 9
+   }
+  ],
+  "faults": {}
+ },
+ {
+  "customer_id": "FB-241142",
+  "identity": {
+   "DOGUM_TARIHI": "19.05.1993",
+   "TCKN_SON4": "8076"
+  },
+  "kartlar": [
+   {
+    "kart_id": "KRT-241142-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "3608",
+    "ekstre_borcu": 7260.25,
+    "asgari_odeme_tutari": 2904.1,
+    "son_odeme_tarihi": "2026-10-19",
+    "gecikme_gun_sayisi": 3
+   }
+  ],
+  "faults": {}
+ },
+ {
+  "customer_id": "FB-241250",
+  "identity": {
+   "DOGUM_TARIHI": "12.09.1968",
+   "TCKN_SON4": "4925"
+  },
+  "kartlar": [
+   {
+    "kart_id": "KRT-241250-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "5124",
+    "ekstre_borcu": 9875.0,
+    "asgari_odeme_tutari": 3950.0,
+    "son_odeme_tarihi": "2026-09-07",
+    "gecikme_gun_sayisi": 44
+   }
+  ],
+  "faults": {}
+ }
+]

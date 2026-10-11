@@ -1,0 +1,102 @@
+[+0.0s] START build._run | build | argv=["kit/briefs/brief-a.md", "kit/tools/openapi.json", "--no-deploy", "--slot", "rh-olda", "--spec-in", "tests/golden/spec-a.json"] slot=rh-olda run_dir=runs/rh-olda/r20261011T153037Z model_default=claude-opus-5-5 effort_default=high facet_overrides={"effort": {"F5": "medium"}, "model": {}} critic=False started_at=2026-10-11T15:30:37Z commit=unknown input_form=files mock_url=None
+[+0.0s] START build._run | preflight ok | python=3.14 freya_url=https://staging-app.freyavoice.ai claude_auth=not needed
+[+0.0s] INPUT build._stage_inputs | kit/briefs/brief-a.md | sha256=d57c049c89aec4615f5b939c5a96ee9bd194142d17045bc4036615cfbdf0f1c7 bytes=10174 role=brief
+[+0.0s] INPUT build._stage_inputs | kit/tools/openapi.json | sha256=9a8410b12e5c82b6c6a30e9ed7030574d6f919cafdb1e035cef7bd876b0badb8 bytes=10557 role=tool_api
+[+0.0s] DECISION builder.openapi_model.take | bind verify_identity.answer -> request role answer (exact name) | where=LOCAL
+[+0.0s] DECISION builder.openapi_model.take | bind verify_identity.field -> request role selector (enum field on the identity tool) | where=LOCAL
+[+0.0s] DECISION builder.openapi_model.take | bind verify_identity.customer_id -> request role customer (name pattern) | where=LOCAL
+[+0.0s] DECISION builder.openapi_model.take | bind verify_identity response ok -> role s (boolean success-like name) | where=LOCAL
+[+0.0s] DECISION builder.openapi_model.take | bind verify_identity response all_verified -> role all (all_* boolean) | where=LOCAL
+[+0.0s] DECISION builder.openapi_model.take | bind verify_identity response wrong_answers_left -> role left (*left*/*remaining* name) | where=LOCAL
+[+0.0s] DECISION builder.openapi_model.take | bind verify_identity response hint -> role hint (*hint* name) | where=LOCAL
+[+0.0s] DECISION builder.openapi_model.take | bind verify_identity response verified -> role verified (verified-like boolean) | where=LOCAL
+[+0.0s] DECISION builder.openapi_model.take | bind verify_identity response error -> role err (error-like name) | where=LOCAL
+[+0.0s] DECISION builder.openapi_model.take | bind get_account.customer_id -> request role customer (name pattern) | where=LOCAL
+[+0.0s] DECISION builder.openapi_model.take | bind get_account response ok -> role s (boolean success-like name) | where=LOCAL
+[+0.0s] DECISION builder.openapi_model.take | bind get_account response products -> role products (array of objects) | where=LOCAL
+[+0.0s] DECISION builder.openapi_model.take | bind get_account response error -> role err (error-like name) | where=LOCAL
+[+0.0s] DECISION builder.openapi_model.take | bind get_account item product_id -> item role id (id name) | where=LOCAL
+[+0.0s] DECISION builder.openapi_model.take | bind get_account item days_late -> item role days_late (days-late name) | where=LOCAL
+[+0.0s] DECISION builder.openapi_model.take | bind get_account item past_due -> item role past_due (past-due name) | where=LOCAL
+[+0.0s] DECISION builder.openapi_model.take | bind get_account item type -> item role type (type name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind create_promise.amount -> request role amount (exact name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind create_promise.date -> request role date (exact name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind create_promise.customer_id -> request role customer (name pattern) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind create_promise.product_id -> request role product (name pattern) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind create_promise response ok -> role s (boolean success-like name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind create_promise response error -> role err (error-like name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind create_promise response promise_id -> role pid (id-like name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind add_note.reason -> request role reason (exact name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind add_note.text -> request role text (exact name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind add_note.customer_id -> request role customer (name pattern) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind add_note.product_id -> request role product (name pattern) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind add_note response ok -> role s (boolean success-like name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind add_note response error -> role err (error-like name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind schedule_callback.date -> request role date (exact name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind schedule_callback.time -> request role time (exact name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind schedule_callback.customer_id -> request role customer (name pattern) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind schedule_callback response ok -> role s (boolean success-like name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind schedule_callback response error -> role err (error-like name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind transfer_to_agent.queue -> request role queue (exact name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind transfer_to_agent.customer_id -> request role customer (name pattern) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind transfer_to_agent response ok -> role s (boolean success-like name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind transfer_to_agent response error -> role err (error-like name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind close_call.outcome -> request role outcome (exact name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind close_call.reason -> request role reason (exact name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind close_call.customer_id -> request role customer (name pattern) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind close_call response ok -> role s (boolean success-like name) | where=LOCAL
+[+0.1s] DECISION builder.openapi_model.take | bind close_call response error -> role err (error-like name) | where=LOCAL
+[+0.1s] CATALOG builder.openapi_model.load | 7 tools bound from openapi.json | server=https://freya-bank-mock.freyavoice.workers.dev/v1 identity_mode=selector warnings=1
+[+0.1s] CATALOG build._stage_inputs | tools bound | tools=["add_note", "close_call", "create_promise", "get_account", "schedule_callback", "transfer_to_agent", "verify_identity"] identity_mode=selector warnings=1 server=https://freya-bank-mock.freyavoice.workers.dev/v1
+[+0.1s] SEGMENT build._stage_inputs | kit/briefs/brief-a.md | doc_kind=brief role=None lines=121 sections=13 tables=3
+[+0.1s] STAGE build.stop | input | seconds=0.0
+[+0.1s] EXTRACT build.stage_spec | spec loaded from --spec-in (extraction skipped) | path=tests/golden/spec-a.json
+[+0.1s] STAGE build.stop | extract | seconds=0.0
+[+0.1s] DECISION builder.pipeline.validate.validate | interpretation.decline_counting = per_question_consecutive (the brief never says identity declines add up across questions)
+[+0.1s] VALIDATE builder.pipeline.validate.validate | errors=0 warnings=0 defaults=0 fixes=0
+[+0.1s] STAGE build.stop | validate | seconds=0.1
+[+0.1s] SPEC build._stage_spec_out | valid | sha256=e366da16be275d9e intents=13 situations=17 bands=2
+[+0.1s] STAGE build.stop | spec_out | seconds=0.0
+[+0.9s] COMPILE builder.compiler.graph.compile_workflow | 28 nodes, 100 transitions, ctl code 84371 bytes | flags=bye=pass,write_chain=on,qnodes=off,uvars=reset,amount_tpl=plain,vchain=on
+[+0.9s] COMPILE build._run | workflow compiled | nodes=28 bytes=176692
+[+0.9s] STAGE build.stop | compile | seconds=0.8
+[+1.0s] COMPILE builder.compiler.graph.compile_workflow | 28 nodes, 100 transitions, ctl code 84371 bytes | flags=bye=pass,write_chain=on,qnodes=off,uvars=reset,amount_tpl=plain,vchain=on
+[+1.0s] COMPILE builder.compiler.graph.compile_workflow | 28 nodes, 100 transitions, ctl code 84371 bytes | flags=bye=pass,write_chain=on,qnodes=off,uvars=reset,amount_tpl=plain,vchain=on
+[+1.0s] LINT builder.compiler.lint.lint | 0 errors, 2 warnings | where=LOCAL
+[+1.0s] WARN builder.compiler.lint.lint | [code_turns] ctl: a long multi-product call reaches the 131072-byte code_exec limit at about customer turn 33 (< 40)
+[+1.0s] WARN builder.compiler.lint.lint | [code_size] ctl: code is 84371 bytes (> 82000)
+[+1.0s] LINT build._stage_lint | warn code_turns @ctl: a long multi-product call reaches the 131072-byte code_exec limit at about customer turn 33 (< 40)
+[+1.0s] LINT build._stage_lint | warn code_size @ctl: code is 84371 bytes (> 82000)
+[+1.0s] STAGE build.stop | lint | seconds=0.1
+[+1.8s] TWIN build._stage_twin | PASS GEN-happy | where=LOCAL failed=[]
+[+1.8s] TWIN build._stage_twin | PASS GEN-id-failed | where=LOCAL failed=[]
+[+1.8s] TWIN build._stage_twin | PASS GEN-refused | where=LOCAL failed=[]
+[+1.8s] TWIN build._stage_twin | PASS GEN-callback | where=LOCAL failed=[]
+[+1.8s] STAGE build.stop | twin | seconds=0.8
+[+1.8s] DEPLOY build._stage_deploy | skipped (--no-deploy)
+[+1.8s] STAGE build.stop | deploy | seconds=0.0
+[+1.8s] END build.run | exit 0 | slot=rh-olda exit=0 ended_at=2026-10-11T15:30:38Z build_s=1.8
+
+==================== SUMMARY ====================
+slot:            rh-olda
+run_id:          r20261011T153037Z
+run_dir:         runs/rh-olda/r20261011T153037Z
+started_at:      2026-10-11T15:30:37Z
+exit:            0
+stages:          {"compile": 0.8, "deploy": 0.0, "extract": 0.0, "input": 0.0, "lint": 0.1, "spec_out": 0.0, "twin": 0.8, "validate": 0.1}
+spec_errors:     0
+defaults_applied: 0
+residual_rules:  0
+nodes:           28
+tool_calls:      18
+tools:           ["close_call", "create_promise", "get_account", "schedule_callback", "transfer_to_agent", "verify_identity"]
+lint_errors:     0
+lint_warnings:   2
+twin:            4/4
+deployed:        False
+ended_at:        2026-10-11T15:30:38Z
+build_s:         1.8
+budget:          {"elapsed_s": 1.8, "remaining_s": 1558.2, "skipped": [], "soft_remaining_s": 1198.2}
+elapsed_s:       1.8
+event_counts:    {"CATALOG": 2, "COMPILE": 4, "DECISION": 45, "DEPLOY": 1, "END": 1, "EXTRACT": 1, "INPUT": 2, "LINT": 3, "SEGMENT": 1, "SPEC": 1, "STAGE": 8, "START": 2, "TWIN": 4, "VALIDATE": 1, "WARN": 2}
+=================================================

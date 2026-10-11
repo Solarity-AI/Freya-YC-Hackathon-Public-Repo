@@ -1,0 +1,144 @@
+{
+ "id": "MUTC-NW-05",
+ "spec": "mut-c",
+ "mode": "sim",
+ "case": {
+  "id": "NW-05",
+  "brief": "mut-c",
+  "family": "Amounts",
+  "level": "hard",
+  "title": "Christmas Eve: offers less than 25%, takes the floor",
+  "variables": {
+   "first_name": "Chloe",
+   "last_name": "Bennett",
+   "title": "Ms",
+   "now": "2026-12-24T09:30"
+  },
+  "identity": {
+   "date_of_birth": "1992-08-30",
+   "postcode": "CF10 1EP"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "5530",
+    "past_due": 1234.57,
+    "days_late": 15,
+    "minimum_payment": 61.73
+   }
+  ],
+  "script": "Verified. Says the full amount is too much and offers 250 pounds. If asked how much she can pay, says 'you tell me'. Accepts the amount and date the assistant then offers, and confirms.",
+  "expected": {
+   "outcome": "promise_to_pay",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 308.65,
+     "date": "2026-12-31",
+     "amount_cents": 30865,
+     "promise_date": "2026-12-31"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "250 refused: floor is 25% of 1234.57 rounded up = 308.65, not minimum_payment 61.73",
+   "floor offered once, with 'The rest stays outstanding.'",
+   "floor date = attempt-1 date: today is the last business day of this week (25 Dec holiday), so the last business day of next week = Thu 31 Dec (1 Jan holiday)",
+   "never asks how much she can pay",
+   "amount_cents 30865"
+  ]
+ },
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "The thirtieth of August 1992.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "The thirtieth of August 1992"
+   }
+  },
+  {
+   "say": "C F ten, one E P.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "C F ten, one E P"
+   }
+  },
+  {
+   "say": "That's too much. I can do 250 pounds.",
+   "x": {
+    "u_act": "proposal",
+    "u_topic": "too_much",
+    "u_amt": "250 pounds"
+   }
+  },
+  {
+   "say": "Okay, I can do that.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "Yes.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "Bye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 24,
+  "must": [
+   [
+    -1,
+    "308.65 pounds"
+   ],
+   [
+    -1,
+    "The rest stays outstanding."
+   ],
+   [
+    -1,
+    "31 December"
+   ],
+   [
+    -1,
+    "Thank you for your time, and thank you for choosing Northwind Credit Union. Goodbye."
+   ]
+  ],
+  "must_not": [
+   [
+    -1,
+    "1,234.57 pounds cannot"
+   ],
+   [
+    -1,
+    " on?"
+   ],
+   [
+    -1,
+    "61.73"
+   ],
+   [
+    -1,
+    "how much can you pay"
+   ]
+  ]
+ }
+}

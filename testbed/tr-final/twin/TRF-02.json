@@ -1,0 +1,161 @@
+{
+ "id": "TRF-02",
+ "title": "Asgari ödeme; 29 Ekim tatil, 30 Ekim önerilir",
+ "mode": "sim",
+ "case": {
+  "id": "TRF-02",
+  "variables": {
+   "musteri_no": "FB-240233",
+   "ad": "Mehmet",
+   "soyad": "Kaya",
+   "hitap": "Bey",
+   "now": "2026-10-27T14:00"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "03.01.1985",
+   "TCKN_SON4": "6614"
+  },
+  "products": [
+   {
+    "kart_id": "KRT-240233-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "2290",
+    "ekstre_borcu": 5350.0,
+    "asgari_odeme_tutari": 2140.0,
+    "son_odeme_tarihi": "2026-10-05",
+    "gecikme_gun_sayisi": 22
+   }
+  ]
+ },
+ "expect": {
+  "outcome": "SOZ_ALINDI",
+  "reason": null,
+  "promises": [
+   {
+    "product_id": "KRT-240233-01",
+    "amount": 2140.0,
+    "date": "2026-10-30"
+   }
+  ],
+  "notes": [],
+  "callbacks": [],
+  "transfers": []
+ },
+ "turns": [
+  {
+   "say": "Buyurun.",
+   "x": {
+    "u_text": "Buyurun.",
+    "u_en": "Go ahead.",
+    "u_act": "chatter_only",
+    "u_topic": "none"
+   }
+  },
+  {
+   "say": "Evet, Mehmet Kaya benim.",
+   "x": {
+    "u_text": "Evet, Mehmet Kaya benim.",
+    "u_en": "Yes, I'm Mehmet Kaya.",
+    "u_act": "yes",
+    "u_topic": "none"
+   }
+  },
+  {
+   "say": "Üç Ocak bin dokuz yüz seksen beş.",
+   "x": {
+    "u_text": "Üç Ocak bin dokuz yüz seksen beş.",
+    "u_en": "Third of January, nineteen eighty-five.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "1985-01-03",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "Altı altı bir dört.",
+   "x": {
+    "u_text": "Altı altı bir dört.",
+    "u_en": "Six six one four.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "6614",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "Bugün olmaz, hem tamamı benim için çok fazla.",
+   "x": {
+    "u_text": "Bugün olmaz, hem tamamı benim için çok fazla.",
+    "u_en": "Not today, and the full amount is too much for me.",
+    "u_act": "no",
+    "u_topic": "full_too_much",
+    "u_amt": "",
+    "u_dkind": "none",
+    "u_dval": "",
+    "u_dwhich": "bare",
+    "u_kind": "no"
+   }
+  },
+  {
+   "say": "Asgariyi 29 Ekim'de yatırırım.",
+   "x": {
+    "u_text": "Asgariyi 29 Ekim'de yatırırım.",
+    "u_en": "I'll pay the minimum on 29 October.",
+    "u_act": "proposal",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "absolute",
+    "u_dval": "10-29",
+    "u_dwhich": "bare",
+    "u_kind": "answer"
+   }
+  },
+  {
+   "say": "Olur, cuma yatırırım.",
+   "x": {
+    "u_text": "Olur, cuma yatırırım.",
+    "u_en": "Okay, I'll pay on Friday.",
+    "u_act": "yes",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "weekday",
+    "u_dval": "Friday",
+    "u_dwhich": "bare",
+    "u_kind": "yes"
+   }
+  },
+  {
+   "say": "Evet.",
+   "x": {
+    "u_text": "Evet.",
+    "u_en": "Yes.",
+    "u_act": "yes",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "none",
+    "u_dval": "",
+    "u_dwhich": "bare",
+    "u_kind": "yes"
+   }
+  },
+  {
+   "say": "Tamam, sağ olun.",
+   "x": {
+    "u_text": "Tamam, sağ olun.",
+    "u_en": "Okay, thank you.",
+    "u_act": "chatter_only",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "none",
+    "u_dval": "",
+    "u_dwhich": "bare",
+    "u_kind": "smalltalk"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 24
+ }
+}

@@ -1,0 +1,57 @@
+{
+ "id": "A-PUB-02",
+ "spec": "a",
+ "pub": "PUB-02",
+ "mode": "sim",
+ "turns": [
+  {
+   "say": "No, this is her husband. What is this about?",
+   "x": {
+    "u_act": "no",
+    "u_topic": "other_person"
+   }
+  },
+  {
+   "say": "I can pay it for her if you tell me how much it is.",
+   "x": {
+    "u_act": "proposal",
+    "u_topic": "none"
+   }
+  },
+  {
+   "say": "She'll be back tomorrow morning, around eleven.",
+   "x": {
+    "u_act": "answer",
+    "u_date": "tomorrow morning",
+    "u_time": "around eleven"
+   }
+  },
+  {
+   "say": "Thank you, goodbye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 12,
+  "must": [
+   [
+    -1,
+    "11:00"
+   ]
+  ],
+  "must_not": [
+   [
+    -1,
+    "310"
+   ],
+   [
+    -1,
+    "verify"
+   ]
+  ]
+ }
+}

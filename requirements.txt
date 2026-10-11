@@ -1,0 +1,7 @@
+claude-agent-sdk==0.2.165
+jsonschema==4.26.0
+pytest==9.1.1
+pyyaml
+# Case-folder input (builder/ingest.py) needs nothing more: Word/Excel/PowerPoint/draw.io are read with the standard
+# library. PDF text comes from poppler's `pdftotext` (brew install poppler) or, if installed, pypdf. openpyxl is
+# used only when the stdlib Excel reader fails; macOS `textutil` reads legacy .doc/.rtf/.odt.

@@ -1,0 +1,759 @@
+{
+ "catalog_version": 1,
+ "openapi_sha256": "9a8410b12e5c82b6c6a30e9ed7030574d6f919cafdb1e035cef7bd876b0badb8",
+ "server": "https://freya-bank-mock.freyavoice.workers.dev/v1",
+ "identity_mode": "selector",
+ "tools": {
+  "verify_identity": {
+   "method": "POST",
+   "path": "/verify_identity",
+   "url": "https://freya-bank-mock.freyavoice.workers.dev/v1/verify_identity",
+   "summary": "Check one security answer. Three wrong answers in total end the check.",
+   "request": {
+    "customer_id": {
+     "type": "string",
+     "required": true,
+     "enum": [],
+     "format": "",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    },
+    "field": {
+     "type": "string",
+     "required": true,
+     "enum": [
+      "date_of_birth",
+      "phone_last4"
+     ],
+     "format": "",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    },
+    "answer": {
+     "type": "string",
+     "required": true,
+     "enum": [],
+     "format": "",
+     "pattern": "",
+     "description": "For date_of_birth: the date as YYYY-MM-DD. Callers say dates in words, the agent converts. An unreadable value is rejected with ok=false and is not counted as a wrong answer. For phone_last4: four digits.",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    }
+   },
+   "required": [
+    "customer_id",
+    "field",
+    "answer"
+   ],
+   "response": {
+    "ok": {
+     "type": "boolean",
+     "path": "data.ok",
+     "enum": [],
+     "description": ""
+    },
+    "error": {
+     "type": "string",
+     "path": "data.error",
+     "enum": [],
+     "description": ""
+    },
+    "verified": {
+     "type": "boolean",
+     "path": "data.verified",
+     "enum": [],
+     "description": ""
+    },
+    "wrong_answers_left": {
+     "type": "integer",
+     "path": "data.wrong_answers_left",
+     "enum": [],
+     "description": ""
+    },
+    "all_verified": {
+     "type": "boolean",
+     "path": "data.all_verified",
+     "enum": [],
+     "description": ""
+    },
+    "hint": {
+     "type": "string",
+     "path": "data.hint",
+     "enum": [
+      "day_month_swapped"
+     ],
+     "description": ""
+    }
+   },
+   "roles": {
+    "request": {
+     "customer": "customer_id",
+     "selector": "field",
+     "answer": "answer"
+    },
+    "response": {
+     "s": "ok",
+     "err": "error",
+     "verified": "verified",
+     "left": "wrong_answers_left",
+     "all": "all_verified",
+     "hint": "hint"
+    },
+    "item": {}
+   },
+   "success": {
+    "role": "s",
+    "kind": "bool_true",
+    "values": [
+     "true",
+     "True"
+    ]
+   },
+   "write": false,
+   "max_retries": 0
+  },
+  "get_account": {
+   "method": "POST",
+   "path": "/get_account",
+   "url": "https://freya-bank-mock.freyavoice.workers.dev/v1/get_account",
+   "summary": "The late products. Refused until both questions are passed.",
+   "request": {
+    "customer_id": {
+     "type": "string",
+     "required": true,
+     "enum": [],
+     "format": "",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    }
+   },
+   "required": [
+    "customer_id"
+   ],
+   "response": {
+    "ok": {
+     "type": "boolean",
+     "path": "data.ok",
+     "enum": [],
+     "description": ""
+    },
+    "error": {
+     "type": "string",
+     "path": "data.error",
+     "enum": [],
+     "description": ""
+    },
+    "products": {
+     "type": "array",
+     "path": "data.products",
+     "enum": [],
+     "description": "",
+     "items": {
+      "product_id": {
+       "type": "string",
+       "enum": [],
+       "description": ""
+      },
+      "type": {
+       "type": "string",
+       "enum": [
+        "credit_card",
+        "personal_loan",
+        "car_loan"
+       ],
+       "description": ""
+      },
+      "card_last4": {
+       "type": "string",
+       "enum": [],
+       "description": "credit cards only"
+      },
+      "past_due": {
+       "type": "number",
+       "enum": [],
+       "description": ""
+      },
+      "days_late": {
+       "type": "integer",
+       "enum": [],
+       "description": ""
+      },
+      "minimum_payment": {
+       "type": "number",
+       "enum": [],
+       "description": "credit cards only"
+      },
+      "instalment_amount": {
+       "type": "number",
+       "enum": [],
+       "description": "loans only"
+      }
+     }
+    }
+   },
+   "roles": {
+    "request": {
+     "customer": "customer_id"
+    },
+    "response": {
+     "s": "ok",
+     "err": "error",
+     "products": "products"
+    },
+    "item": {
+     "id": "product_id",
+     "type": "type",
+     "past_due": "past_due",
+     "days_late": "days_late"
+    }
+   },
+   "success": {
+    "role": "s",
+    "kind": "bool_true",
+    "values": [
+     "true",
+     "True"
+    ]
+   },
+   "write": false,
+   "max_retries": 1
+  },
+  "create_promise": {
+   "method": "POST",
+   "path": "/create_promise",
+   "url": "https://freya-bank-mock.freyavoice.workers.dev/v1/create_promise",
+   "summary": "Record a payment promise. One per product.",
+   "request": {
+    "customer_id": {
+     "type": "string",
+     "required": true,
+     "enum": [],
+     "format": "",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    },
+    "product_id": {
+     "type": "string",
+     "required": true,
+     "enum": [],
+     "format": "",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    },
+    "amount": {
+     "type": "number",
+     "required": true,
+     "enum": [],
+     "format": "",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    },
+    "date": {
+     "type": "string",
+     "required": true,
+     "enum": [],
+     "format": "date",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "%Y-%m-%d",
+     "scale": 1
+    }
+   },
+   "required": [
+    "customer_id",
+    "product_id",
+    "amount",
+    "date"
+   ],
+   "response": {
+    "ok": {
+     "type": "boolean",
+     "path": "data.ok",
+     "enum": [],
+     "description": ""
+    },
+    "error": {
+     "type": "string",
+     "path": "data.error",
+     "enum": [],
+     "description": ""
+    },
+    "promise_id": {
+     "type": "string",
+     "path": "data.promise_id",
+     "enum": [],
+     "description": ""
+    }
+   },
+   "roles": {
+    "request": {
+     "customer": "customer_id",
+     "product": "product_id",
+     "amount": "amount",
+     "date": "date"
+    },
+    "response": {
+     "s": "ok",
+     "err": "error",
+     "pid": "promise_id"
+    },
+    "item": {}
+   },
+   "success": {
+    "role": "s",
+    "kind": "bool_true",
+    "values": [
+     "true",
+     "True"
+    ]
+   },
+   "write": true,
+   "max_retries": 0
+  },
+  "add_note": {
+   "method": "POST",
+   "path": "/add_note",
+   "url": "https://freya-bank-mock.freyavoice.workers.dev/v1/add_note",
+   "summary": "Brief B: record why a product ended without a promise.",
+   "request": {
+    "customer_id": {
+     "type": "string",
+     "required": true,
+     "enum": [],
+     "format": "",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    },
+    "product_id": {
+     "type": "string",
+     "required": true,
+     "enum": [],
+     "format": "",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    },
+    "reason": {
+     "type": "string",
+     "required": true,
+     "enum": [
+      "refused",
+      "hardship",
+      "dispute",
+      "paid",
+      "service_error"
+     ],
+     "format": "",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    },
+    "text": {
+     "type": "string",
+     "required": false,
+     "enum": [],
+     "format": "",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    }
+   },
+   "required": [
+    "customer_id",
+    "product_id",
+    "reason"
+   ],
+   "response": {
+    "ok": {
+     "type": "boolean",
+     "path": "data.ok",
+     "enum": [],
+     "description": ""
+    },
+    "error": {
+     "type": "string",
+     "path": "data.error",
+     "enum": [],
+     "description": ""
+    }
+   },
+   "roles": {
+    "request": {
+     "customer": "customer_id",
+     "product": "product_id",
+     "reason": "reason",
+     "text": "text"
+    },
+    "response": {
+     "s": "ok",
+     "err": "error"
+    },
+    "item": {}
+   },
+   "success": {
+    "role": "s",
+    "kind": "bool_true",
+    "values": [
+     "true",
+     "True"
+    ]
+   },
+   "write": true,
+   "max_retries": 0
+  },
+  "schedule_callback": {
+   "method": "POST",
+   "path": "/schedule_callback",
+   "url": "https://freya-bank-mock.freyavoice.workers.dev/v1/schedule_callback",
+   "summary": "Book a callback.",
+   "request": {
+    "customer_id": {
+     "type": "string",
+     "required": true,
+     "enum": [],
+     "format": "",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    },
+    "date": {
+     "type": "string",
+     "required": true,
+     "enum": [],
+     "format": "date",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "%Y-%m-%d",
+     "scale": 1
+    },
+    "time": {
+     "type": "string",
+     "required": true,
+     "enum": [],
+     "format": "",
+     "pattern": "",
+     "description": "HH:MM",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "%H:%M",
+     "scale": 1
+    }
+   },
+   "required": [
+    "customer_id",
+    "date",
+    "time"
+   ],
+   "response": {
+    "ok": {
+     "type": "boolean",
+     "path": "data.ok",
+     "enum": [],
+     "description": ""
+    },
+    "error": {
+     "type": "string",
+     "path": "data.error",
+     "enum": [],
+     "description": ""
+    }
+   },
+   "roles": {
+    "request": {
+     "customer": "customer_id",
+     "date": "date",
+     "time": "time"
+    },
+    "response": {
+     "s": "ok",
+     "err": "error"
+    },
+    "item": {}
+   },
+   "success": {
+    "role": "s",
+    "kind": "bool_true",
+    "values": [
+     "true",
+     "True"
+    ]
+   },
+   "write": true,
+   "max_retries": 0
+  },
+  "transfer_to_agent": {
+   "method": "POST",
+   "path": "/transfer_to_agent",
+   "url": "https://freya-bank-mock.freyavoice.workers.dev/v1/transfer_to_agent",
+   "summary": "Hand the call to a person.",
+   "request": {
+    "customer_id": {
+     "type": "string",
+     "required": true,
+     "enum": [],
+     "format": "",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    },
+    "queue": {
+     "type": "string",
+     "required": true,
+     "enum": [
+      "restructuring",
+      "general",
+      "support"
+     ],
+     "format": "",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    }
+   },
+   "required": [
+    "customer_id",
+    "queue"
+   ],
+   "response": {
+    "ok": {
+     "type": "boolean",
+     "path": "data.ok",
+     "enum": [],
+     "description": ""
+    },
+    "error": {
+     "type": "string",
+     "path": "data.error",
+     "enum": [],
+     "description": ""
+    }
+   },
+   "roles": {
+    "request": {
+     "customer": "customer_id",
+     "queue": "queue"
+    },
+    "response": {
+     "s": "ok",
+     "err": "error"
+    },
+    "item": {}
+   },
+   "success": {
+    "role": "s",
+    "kind": "bool_true",
+    "values": [
+     "true",
+     "True"
+    ]
+   },
+   "write": true,
+   "max_retries": 0
+  },
+  "close_call": {
+   "method": "POST",
+   "path": "/close_call",
+   "url": "https://freya-bank-mock.freyavoice.workers.dev/v1/close_call",
+   "summary": "End the call. Always the last tool call. Nothing is accepted after it.",
+   "request": {
+    "customer_id": {
+     "type": "string",
+     "required": true,
+     "enum": [],
+     "format": "",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    },
+    "outcome": {
+     "type": "string",
+     "required": true,
+     "enum": [
+      "promise",
+      "paid",
+      "transferred",
+      "no_promise",
+      "not_verified",
+      "not_reached"
+     ],
+     "format": "",
+     "pattern": "",
+     "description": "",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    },
+    "reason": {
+     "type": "string",
+     "required": false,
+     "enum": [],
+     "format": "",
+     "pattern": "",
+     "description": "Required for every outcome except promise and paid. See the table in the brief.",
+     "min_length": 0,
+     "max_length": 0,
+     "example": "",
+     "wire_format": "",
+     "scale": 1
+    }
+   },
+   "required": [
+    "customer_id",
+    "outcome"
+   ],
+   "response": {
+    "ok": {
+     "type": "boolean",
+     "path": "data.ok",
+     "enum": [],
+     "description": ""
+    },
+    "error": {
+     "type": "string",
+     "path": "data.error",
+     "enum": [],
+     "description": ""
+    }
+   },
+   "roles": {
+    "request": {
+     "customer": "customer_id",
+     "outcome": "outcome",
+     "reason": "reason"
+    },
+    "response": {
+     "s": "ok",
+     "err": "error"
+    },
+    "item": {}
+   },
+   "success": {
+    "role": "s",
+    "kind": "bool_true",
+    "values": [
+     "true",
+     "True"
+    ]
+   },
+   "write": true,
+   "max_retries": 0
+  }
+ },
+ "enums": {
+  "identity_field": [
+   "date_of_birth",
+   "phone_last4"
+  ],
+  "hint": [
+   "day_month_swapped"
+  ],
+  "product_type": [
+   "credit_card",
+   "personal_loan",
+   "car_loan"
+  ],
+  "note_reason": [
+   "refused",
+   "hardship",
+   "dispute",
+   "paid",
+   "service_error"
+  ],
+  "queue": [
+   "restructuring",
+   "general",
+   "support"
+  ],
+  "outcome": [
+   "promise",
+   "paid",
+   "transferred",
+   "no_promise",
+   "not_verified",
+   "not_reached"
+  ],
+  "close_reason": []
+ },
+ "reasonless_outcomes_hint": [
+  "promise",
+  "paid"
+ ],
+ "warnings": [
+  "close_call.reason has no enum: free string bound from the brief's outcome table"
+ ]
+}

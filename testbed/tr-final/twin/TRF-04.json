@@ -1,0 +1,120 @@
+{
+ "id": "TRF-04",
+ "title": "Gün-ay ters ipucu; sonra 'dün ödedim'",
+ "mode": "sim",
+ "case": {
+  "id": "TRF-04",
+  "variables": {
+   "musteri_no": "FB-240402",
+   "ad": "Can",
+   "soyad": "Öztürk",
+   "hitap": "Bey",
+   "now": "2026-10-22T11:00"
+  },
+  "identity": {
+   "DOGUM_TARIHI": "09.04.1979",
+   "TCKN_SON4": "9127"
+  },
+  "products": [
+   {
+    "kart_id": "KRT-240402-01",
+    "urun": "KREDI_KARTI",
+    "kart_son4": "3376",
+    "ekstre_borcu": 2315.6,
+    "asgari_odeme_tutari": 926.24,
+    "son_odeme_tarihi": "2026-10-15",
+    "gecikme_gun_sayisi": 7
+   }
+  ]
+ },
+ "expect": {
+  "outcome": "ODEME_YAPILMIS",
+  "reason": null,
+  "promises": [],
+  "notes": [
+   {
+    "product_id": "KRT-240402-01",
+    "reason": "ODENDI_BEYANI"
+   }
+  ],
+  "callbacks": [],
+  "transfers": []
+ },
+ "turns": [
+  {
+   "say": "Benim, buyurun.",
+   "x": {
+    "u_text": "Benim, buyurun.",
+    "u_en": "It's me, go ahead.",
+    "u_act": "yes",
+    "u_topic": "none"
+   }
+  },
+  {
+   "say": "Dört dokuz yetmiş dokuz.",
+   "x": {
+    "u_text": "Dört dokuz yetmiş dokuz.",
+    "u_en": "Four nine seventy-nine.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "1979-09-04",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "Dokuz Nisan bin dokuz yüz yetmiş dokuz.",
+   "x": {
+    "u_text": "Dokuz Nisan bin dokuz yüz yetmiş dokuz.",
+    "u_en": "Ninth of April, nineteen seventy-nine.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "1979-04-09",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "Dokuz bir iki yedi.",
+   "x": {
+    "u_text": "Dokuz bir iki yedi.",
+    "u_en": "Nine one two seven.",
+    "u_act": "answer",
+    "u_topic": "none",
+    "u_val": "9127",
+    "u_done": "complete"
+   }
+  },
+  {
+   "say": "Ben onu dün internet bankacılığından ödedim ama.",
+   "x": {
+    "u_text": "Ben onu dün internet bankacılığından ödedim ama.",
+    "u_en": "But I paid that yesterday through internet banking.",
+    "u_act": "answer",
+    "u_topic": "already_paid",
+    "u_amt": "",
+    "u_dkind": "none",
+    "u_dval": "",
+    "u_dwhich": "bare",
+    "u_kind": "answer"
+   }
+  },
+  {
+   "say": "Tamam.",
+   "x": {
+    "u_text": "Tamam.",
+    "u_en": "Okay.",
+    "u_act": "yes",
+    "u_topic": "none",
+    "u_amt": "",
+    "u_dkind": "none",
+    "u_dval": "",
+    "u_dwhich": "bare",
+    "u_kind": "yes"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 24
+ }
+}

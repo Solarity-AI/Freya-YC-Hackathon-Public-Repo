@@ -1,0 +1,596 @@
+[
+  {
+    "id": "HB-01",
+    "brief": "HARBOR",
+    "family": "Happy path",
+    "level": "easy",
+    "title": "Confirms identity, gives the year in words, pays in full today",
+    "variables": {
+      "first_name": "Ellen",
+      "last_name": "Brooks",
+      "title": "Ms",
+      "now": "2026-10-20T10:15"
+    },
+    "identity": {
+      "account_last4": "5590",
+      "birth_year": "1988"
+    },
+    "products": [
+      {
+        "type": "credit_card",
+        "card_last4": "6047",
+        "past_due": 340.0,
+        "days_late": 6,
+        "minimum_due": 51.0
+      }
+    ],
+    "script": "Confirms she is Ellen Brooks. Account number ends in five five nine zero. Born in nineteen eighty-eight. Says she can pay the full amount today. Answers yes to 'Is that correct?'.",
+    "expected": {
+      "outcome": "promise_taken",
+      "reason": null,
+      "promises": [
+        {
+          "product_id": "p1",
+          "amount": 340.0,
+          "date": "2026-10-20"
+        }
+      ],
+      "notes": [],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "the right-party ask uses first and last name: 'Am I speaking with Ellen Brooks?'",
+      "account_last4 asked first, then birth_year; birth_year sent as '1988'",
+      "none of collections/debt/overdue/late/payment said before verification",
+      "read-back ends with exactly 'Is that correct?'",
+      "exact sentence 'Harbor Bank will send you a confirmation by email within one business day.' said once after create_promise ok",
+      "no text-message sentence (Brief A wording) is said",
+      "close_call outcome promise_taken with no reason leaf"
+    ]
+  },
+  {
+    "id": "HB-02",
+    "brief": "HARBOR",
+    "family": "Third party",
+    "level": "medium",
+    "title": "Husband answers and asks for a callback",
+    "variables": {
+      "first_name": "Nora",
+      "last_name": "Lindqvist",
+      "title": "Ms",
+      "now": "2026-10-22T16:40"
+    },
+    "identity": {
+      "account_last4": "7731",
+      "birth_year": "1975"
+    },
+    "products": [
+      {
+        "type": "personal_loan",
+        "past_due": 612.0,
+        "days_late": 19,
+        "monthly_payment": 204.0
+      }
+    ],
+    "script": "The person who answers is her husband. Asks what the call is about, offers to pay it himself, then says 'call her back tomorrow at eleven'.",
+    "expected": {
+      "outcome": "no_contact",
+      "reason": "third_party",
+      "promises": [],
+      "notes": [],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "schedule_callback is never called, although the husband asks for one",
+      "the agent does not ask when Nora can be reached",
+      "nothing beyond the opening sentence is disclosed: no reason, product, amount or debt",
+      "verify_identity and get_account never called",
+      "close_call (no_contact, third_party); the retired NCT-CBK / callback value is not used"
+    ]
+  },
+  {
+    "id": "HB-03",
+    "brief": "HARBOR",
+    "family": "Identity",
+    "level": "medium",
+    "title": "Gives the card number instead of the account number",
+    "variables": {
+      "first_name": "Victor",
+      "last_name": "Hale",
+      "title": "Mr",
+      "now": "2026-10-23T11:30"
+    },
+    "identity": {
+      "account_last4": "3308",
+      "birth_year": "1979"
+    },
+    "products": [
+      {
+        "type": "credit_card",
+        "card_last4": "9154",
+        "past_due": 455.0,
+        "days_late": 12,
+        "minimum_due": 68.25
+      }
+    ],
+    "script": "Confirms the name. For the account number gives 9154 (his card), then 3380, then 3308. For the year of birth says nineteen ninety-seven.",
+    "expected": {
+      "outcome": "identity_failed",
+      "reason": "failed",
+      "promises": [],
+      "notes": [],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "three wrong answers counted across both questions (two on the account, one on the year) end the check",
+      "the year question is asked after the account question passes",
+      "no product, amount or debt disclosed",
+      "customer told to call the number on the back of the card or visit a branch",
+      "get_account never called"
+    ]
+  },
+  {
+    "id": "HB-04",
+    "brief": "HARBOR",
+    "family": "Dates",
+    "level": "hard",
+    "title": "Friday at month end: attempt 1 moves to next week, then asks for a person",
+    "variables": {
+      "first_name": "Samuel",
+      "last_name": "Okafor",
+      "title": "Mr",
+      "now": "2026-10-30T15:00"
+    },
+    "identity": {
+      "account_last4": "2046",
+      "birth_year": "1990"
+    },
+    "products": [
+      {
+        "type": "personal_loan",
+        "past_due": 525.0,
+        "days_late": 18,
+        "monthly_payment": 175.0
+      }
+    ],
+    "script": "Verified; gives the year first as 'ninety', then 'nineteen ninety' when asked for the full year. Says no, he cannot pay today. Accepts the agent's first proposal. Confirms. After the confirmation sentence, says 'now I want to speak to a real person about the fees'.",
+    "expected": {
+      "outcome": "transferred",
+      "reason": "agent",
+      "promises": [
+        {
+          "product_id": "p1",
+          "amount": 525.0,
+          "date": "2026-11-06"
+        }
+      ],
+      "notes": [],
+      "callbacks": [],
+      "transfers": [
+        {
+          "queue": "agent"
+        }
+      ]
+    },
+    "checks": [
+      "the two-digit year 'ninety' is not sent; the agent asks for the full year and it is not counted as wrong",
+      "attempt 1 proposes 525.00 on Friday 6 November (today is the last business day of this week)",
+      "6 November is also the late-band deadline (30 Oct + 7 calendar days, a business day)",
+      "the person request is transferred at once to queue 'agent' without asking whether the agent can help first",
+      "the recorded promise stays; close_call (transferred, agent); no add_note"
+    ]
+  },
+  {
+    "id": "HB-05",
+    "brief": "HARBOR",
+    "family": "Dates",
+    "level": "hard",
+    "title": "Deadline lands on a holiday and moves back",
+    "variables": {
+      "first_name": "Grace",
+      "last_name": "Morrow",
+      "title": "Ms",
+      "now": "2026-11-04T09:30"
+    },
+    "identity": {
+      "account_last4": "0417",
+      "birth_year": "1983"
+    },
+    "products": [
+      {
+        "type": "personal_loan",
+        "past_due": 870.0,
+        "days_late": 16,
+        "monthly_payment": 290.0
+      }
+    ],
+    "script": "Verified (account number ends zero four one seven). Cannot pay today. Says her salary comes on 13 November and she can pay everything then. Accepts the latest possible date when it is offered.",
+    "expected": {
+      "outcome": "promise_taken",
+      "reason": null,
+      "promises": [
+        {
+          "product_id": "p1",
+          "amount": 870.0,
+          "date": "2026-11-10"
+        }
+      ],
+      "notes": [],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "account_last4 sent as '0417' with the leading zero",
+      "deadline = 4 Nov + 7 calendar days = Wed 11 Nov (Veterans Day holiday) moved BACK to Tue 10 Nov",
+      "13 November is not counted as a refusal; the agent offers 10 November as the latest date",
+      "not 11 Nov (holiday), not 12 Nov (moved forward), not 13/16 Nov (business-day counting)"
+    ]
+  },
+  {
+    "id": "HB-06",
+    "brief": "HARBOR",
+    "family": "Holiday",
+    "level": "medium",
+    "title": "Day before a holiday: 'tomorrow' is a holiday",
+    "variables": {
+      "first_name": "Amir",
+      "last_name": "Haddad",
+      "title": "Mr",
+      "now": "2026-11-10T14:00"
+    },
+    "identity": {
+      "account_last4": "8862",
+      "birth_year": "1969"
+    },
+    "products": [
+      {
+        "type": "credit_card",
+        "card_last4": "7712",
+        "past_due": 260.0,
+        "days_late": 9,
+        "minimum_due": 40.0
+      }
+    ],
+    "script": "Verified. Cannot pay today, says he can pay the full amount tomorrow. Accepts the next business day when it is offered.",
+    "expected": {
+      "outcome": "promise_taken",
+      "reason": null,
+      "promises": [
+        {
+          "product_id": "p1",
+          "amount": 260.0,
+          "date": "2026-11-12"
+        }
+      ],
+      "notes": [],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "the agent does not accept Wednesday 11 November (Harbor Bank holiday)",
+      "the agent offers Thursday 12 November, the next business day",
+      "early-band deadline 24 November is not reached"
+    ]
+  },
+  {
+    "id": "HB-07",
+    "brief": "HARBOR",
+    "family": "Multi-product",
+    "level": "hard",
+    "title": "Before the memo: card at an amount between the old and new floor, loan refused",
+    "variables": {
+      "first_name": "Lucia",
+      "last_name": "Ferrante",
+      "title": "Ms",
+      "now": "2026-11-12T10:00"
+    },
+    "identity": {
+      "account_last4": "1290",
+      "birth_year": "1985"
+    },
+    "products": [
+      {
+        "type": "credit_card",
+        "card_last4": "4433",
+        "past_due": 800.0,
+        "days_late": 10,
+        "minimum_due": 120.0
+      },
+      {
+        "type": "personal_loan",
+        "past_due": 900.0,
+        "days_late": 25,
+        "monthly_payment": 300.0
+      }
+    ],
+    "script": "Verified. Cannot pay both today. For the card offers 150 dollars next Friday. Flatly refuses to pay anything on the personal loan, whatever is offered. Confirms the read-back.",
+    "expected": {
+      "outcome": "promise_taken",
+      "reason": null,
+      "promises": [
+        {
+          "product_id": "p1",
+          "amount": 150.0,
+          "date": "2026-11-13"
+        }
+      ],
+      "notes": [
+        {
+          "product_id": "p2",
+          "reason": "refused"
+        }
+      ],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "both products stated before any ask; one 'Can you pay all of them today?'",
+      "the call is before 16 November, so the card floor is minimum_due 120.00 and 150.00 is accepted (the memo floor of 200.00 does NOT apply yet)",
+      "'next Friday' said on Thursday 12 Nov is Friday 13 Nov (first such day after today), not 20 Nov",
+      "personal loan (late band): attempt 1 = 900.00 on Fri 13 Nov, attempt 2 = 300.00 on deadline Thu 19 Nov, then stop",
+      "add_note(p2, refused); close_call (promise_taken)"
+    ]
+  },
+  {
+    "id": "HB-08",
+    "brief": "HARBOR",
+    "family": "Amounts",
+    "level": "hard",
+    "title": "After the memo: the card floor is 25% of the past-due amount",
+    "variables": {
+      "first_name": "Peter",
+      "last_name": "Vance",
+      "title": "Mr",
+      "now": "2026-11-19T11:00"
+    },
+    "identity": {
+      "account_last4": "6615",
+      "birth_year": "1992"
+    },
+    "products": [
+      {
+        "type": "credit_card",
+        "card_last4": "3071",
+        "past_due": 1200.0,
+        "days_late": 22,
+        "minimum_due": 180.0
+      }
+    ],
+    "script": "Verified. Says the full amount is too much right now. If asked how much he can pay, says 'you tell me'. Accepts the first smaller amount offered.",
+    "expected": {
+      "outcome": "promise_taken",
+      "reason": null,
+      "promises": [
+        {
+          "product_id": "p1",
+          "amount": 300.0,
+          "date": "2026-11-20"
+        }
+      ],
+      "notes": [],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "the call is after 16 November: floor = max(180.00, 25% of 1200.00) = 300.00, not 180.00",
+      "the agent never asks how much he can pay",
+      "the floor is offered once on the attempt 1 date, Friday 20 November, with 'The remaining balance stays overdue.'",
+      "deadline = 19 Nov + 7 = Thu 26 Nov (Thanksgiving) -> Wed 25 Nov"
+    ]
+  },
+  {
+    "id": "HB-09",
+    "brief": "HARBOR",
+    "family": "Multi-product",
+    "level": "hard",
+    "title": "One date for both, the loan deadline rolls back over two holidays",
+    "variables": {
+      "first_name": "Hannah",
+      "last_name": "Clarke",
+      "title": "Ms",
+      "now": "2026-11-20T12:00"
+    },
+    "identity": {
+      "account_last4": "4508",
+      "birth_year": "1977"
+    },
+    "products": [
+      {
+        "type": "credit_card",
+        "card_last4": "8120",
+        "past_due": 400.0,
+        "days_late": 5,
+        "minimum_due": 60.0
+      },
+      {
+        "type": "auto_loan",
+        "past_due": 660.0,
+        "days_late": 30,
+        "monthly_payment": 220.0
+      }
+    ],
+    "script": "Verified. Cannot pay today. Wants to pay both in full on Monday the 30th. Accepts when told the auto loan has an earlier latest date. Confirms once.",
+    "expected": {
+      "outcome": "promise_taken",
+      "reason": null,
+      "promises": [
+        {
+          "product_id": "p1",
+          "amount": 400.0,
+          "date": "2026-11-30"
+        },
+        {
+          "product_id": "p2",
+          "amount": 660.0,
+          "date": "2026-11-25"
+        }
+      ],
+      "notes": [],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "auto loan is spoken as 'auto loan'",
+      "card (early): deadline 20 Nov + 14 = Fri 4 Dec, so 30 Nov is kept",
+      "auto loan (late): 20 Nov + 7 = Fri 27 Nov (memo holiday) -> Thu 26 Nov (Thanksgiving) -> Wed 25 Nov",
+      "the read-back names both dates and says the loan uses its latest date",
+      "two create_promise calls, one read-back, one 'Is that correct?'"
+    ]
+  },
+  {
+    "id": "HB-10",
+    "brief": "HARBOR",
+    "family": "Hardship",
+    "level": "medium",
+    "title": "Hospital stay, declines Customer Care",
+    "variables": {
+      "first_name": "Robert",
+      "last_name": "Engel",
+      "title": "Mr",
+      "now": "2026-11-23T10:45"
+    },
+    "identity": {
+      "account_last4": "9934",
+      "birth_year": "1958"
+    },
+    "products": [
+      {
+        "type": "auto_loan",
+        "past_due": 1440.0,
+        "days_late": 35,
+        "monthly_payment": 480.0
+      }
+    ],
+    "script": "Verified. Says he was in hospital for three weeks and cannot pay anything right now. Asks whether the fees can be waived. Does not want to be transferred.",
+    "expected": {
+      "outcome": "no_promise",
+      "reason": "hardship",
+      "promises": [],
+      "notes": [
+        {
+          "product_id": "p1",
+          "reason": "hardship"
+        }
+      ],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "one sentence of sympathy; no persuasion attempt although the band is late",
+      "Customer Care offered once; transfer_to_agent not called",
+      "no waiver, discount or payment plan offered ('I'm afraid I can't offer that.')",
+      "add_note(p1, hardship) on this single-product call, before close_call",
+      "close_call (no_promise, hardship)"
+    ]
+  },
+  {
+    "id": "HB-11",
+    "brief": "HARBOR",
+    "family": "Dispute / paid",
+    "level": "hard",
+    "title": "Loan already paid, card disputed: the closing reason skips the paid product",
+    "variables": {
+      "first_name": "Daniel",
+      "last_name": "Price",
+      "title": "Mr",
+      "now": "2026-11-24T15:20"
+    },
+    "identity": {
+      "account_last4": "2781",
+      "birth_year": "1981"
+    },
+    "products": [
+      {
+        "type": "personal_loan",
+        "past_due": 410.0,
+        "days_late": 12,
+        "monthly_payment": 205.0
+      },
+      {
+        "type": "credit_card",
+        "card_last4": "5502",
+        "past_due": 260.0,
+        "days_late": 8,
+        "minimum_due": 65.0
+      }
+    ],
+    "script": "Verified. About the personal loan: says he paid it yesterday in the app. About the credit card: says he never had a Harbor Bank credit card, it is not his.",
+    "expected": {
+      "outcome": "no_promise",
+      "reason": "dispute",
+      "promises": [],
+      "notes": [
+        {
+          "product_id": "p1",
+          "reason": "paid"
+        },
+        {
+          "product_id": "p2",
+          "reason": "dispute"
+        }
+      ],
+      "callbacks": [],
+      "transfers": []
+    },
+    "checks": [
+      "'Thank you. Payments can take up to two (2) business days to appear.' said for the loan (spoken as 'two business days')",
+      "the call continues to the card after the paid claim",
+      "add_note(p1, paid) and add_note(p2, dispute)",
+      "close_call (no_promise, dispute): the first product whose note is not 'paid' is p2; not (already_paid) and not (no_promise, paid)"
+    ]
+  },
+  {
+    "id": "HB-12",
+    "brief": "HARBOR",
+    "family": "Restructuring",
+    "level": "hard",
+    "title": "Month end: card agreed but not yet recorded, then a restructuring request on the loan",
+    "variables": {
+      "first_name": "Marta",
+      "last_name": "Silva",
+      "title": "Ms",
+      "now": "2026-11-30T10:00"
+    },
+    "identity": {
+      "account_last4": "3157",
+      "birth_year": "1986"
+    },
+    "products": [
+      {
+        "type": "credit_card",
+        "card_last4": "2266",
+        "past_due": 300.0,
+        "days_late": 31,
+        "minimum_due": 75.0
+      },
+      {
+        "type": "auto_loan",
+        "past_due": 1950.0,
+        "days_late": 41,
+        "monthly_payment": 650.0
+      }
+    ],
+    "script": "Verified. Cannot pay both today. Agrees to pay the card in full today. For the auto loan asks whether the monthly payments can be made smaller.",
+    "expected": {
+      "outcome": "transferred",
+      "reason": "restructuring",
+      "promises": [],
+      "notes": [],
+      "callbacks": [],
+      "transfers": [
+        {
+          "queue": "restructuring"
+        }
+      ]
+    },
+    "checks": [
+      "the card promise was agreed but not read back or recorded before the request, so it is NOT recorded",
+      "transfer_to_agent queue 'restructuring'; the agent does not describe a plan",
+      "no add_note at all on this call",
+      "close_call (transferred, restructuring)"
+    ]
+  }
+]

@@ -1,0 +1,125 @@
+{
+ "id": "MUTC-NW-07",
+ "spec": "mut-c",
+ "mode": "sim",
+ "case": {
+  "id": "NW-07",
+  "brief": "mut-c",
+  "family": "Dispute / paid",
+  "level": "hard",
+  "title": "Card already paid, overdraft disputed",
+  "variables": {
+   "first_name": "Hannah",
+   "last_name": "Schofield",
+   "title": "Ms",
+   "now": "2026-11-25T17:10"
+  },
+  "identity": {
+   "date_of_birth": "1993-04-28",
+   "postcode": "NE1 7RU"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "9015",
+    "past_due": 180.0,
+    "days_late": 14,
+    "minimum_payment": 9.0
+   },
+   {
+    "type": "overdraft",
+    "past_due": 352.1,
+    "days_late": 52
+   }
+  ],
+  "script": "Verified. Cannot pay all today. Says she paid the card in the app yesterday evening. About the overdraft: says she closed that account years ago and it is not hers.",
+  "expected": {
+   "outcome": "no_promise_to_pay",
+   "reason": "dispute",
+   "promises": [],
+   "notes": [
+    {
+     "product_id": "p1",
+     "reason": "already_paid"
+    },
+    {
+     "product_id": "p2",
+     "reason": "dispute"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "says payments can take two business days to appear",
+   "the paid claim does not end the call",
+   "note reasons use the new enum value 'already_paid'",
+   "close reason is the first non-paid product's reason: dispute",
+   "no create_promise"
+  ]
+ },
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "28 April 1993.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "28 April 1993"
+   }
+  },
+  {
+   "say": "N E one, seven R U.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "N E one, seven R U"
+   }
+  },
+  {
+   "say": "No, I can't pay all of that today. I already paid the card in the app yesterday evening.",
+   "x": {
+    "u_act": "no",
+    "u_topic": "already_paid"
+   }
+  },
+  {
+   "say": "The overdraft isn't mine, I closed that account years ago.",
+   "x": {
+    "u_act": "answer",
+    "u_topic": "dispute"
+   }
+  },
+  {
+   "say": "Okay.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  },
+  {
+   "say": "Bye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 24,
+  "must": [
+   [
+    -1,
+    "two business days"
+   ],
+   [
+    -1,
+    "Thank you for your time, and thank you for choosing Northwind Credit Union. Goodbye."
+   ]
+  ],
+  "must_not": []
+ }
+}

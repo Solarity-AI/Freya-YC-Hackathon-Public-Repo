@@ -1,0 +1,81 @@
+{
+ "id": "A-PUB-04",
+ "spec": "a",
+ "pub": "PUB-04",
+ "mode": "sim",
+ "twin": {
+  "bool_style": "title",
+  "list_style": "pyrepr",
+  "flat_keys": "node"
+ },
+ "turns": [
+  {
+   "say": "Yes, this is Lena Hoffmann.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "The thirtieth of January, nineteen eighty-four.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "The thirtieth of January, nineteen eighty-four"
+   }
+  },
+  {
+   "say": "Two two one nine.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "two two one nine"
+   }
+  },
+  {
+   "say": "Not today. My salary arrives on 6 November, so I can pay then.",
+   "x": {
+    "u_act": "proposal",
+    "u_date": "6 November"
+   }
+  },
+  {
+   "say": "Sorry, am I talking to a robot?",
+   "x": {
+    "u_act": "question",
+    "u_topic": "robot"
+   }
+  },
+  {
+   "say": "Okay, the 23rd of October works.",
+   "x": {
+    "u_act": "yes",
+    "u_date": "the 23rd of October"
+   }
+  },
+  {
+   "say": "Yes, I confirm.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "Thank you, goodbye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 12,
+  "must": [
+   [
+    -1,
+    "digital assistant"
+   ],
+   [
+    -1,
+    "23 October"
+   ]
+  ]
+ }
+}

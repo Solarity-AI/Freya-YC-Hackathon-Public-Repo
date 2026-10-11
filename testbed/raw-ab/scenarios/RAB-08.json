@@ -1,0 +1,102 @@
+{
+ "id": "RAB-08",
+ "spec": "raw-ab",
+ "mode": "sim",
+ "about": "Verified. When asked whether she can pay everything today, says she has been in hospital for three weeks and cannot pay anything. Declines the support team. Names no date and no amount.",
+ "case": {
+  "id": "RAB-08",
+  "brief": "raw-ab",
+  "family": "Hardship",
+  "level": "medium",
+  "title": "Hospital stay, declines support; both products noted hardship",
+  "variables": {
+   "first_name": "Nadia",
+   "last_name": "Haddad",
+   "title": "Ms",
+   "now": "2026-10-19T14:00"
+  },
+  "identity": {
+   "date_of_birth": "1995-06-17",
+   "phone_last4": "3049"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 450.0,
+    "days_late": 4,
+    "instalment_amount": 150.0
+   },
+   {
+    "type": "credit_card",
+    "card_last4": "8820",
+    "past_due": 230.0,
+    "days_late": 9,
+    "minimum_payment": 69.0
+   }
+  ],
+  "script": "Verified. When asked whether she can pay everything today, says she has been in hospital for three weeks and cannot pay anything. Declines the support team. Names no date and no amount.",
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "hardship",
+   "promises": [],
+   "notes": [
+    {
+     "product_id": "p1",
+     "reason": "hardship"
+    },
+    {
+     "product_id": "p2",
+     "reason": "hardship"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  }
+ },
+ "turns": [
+  {
+   "say": "Yes, speaking.",
+   "x": {
+    "u_act": "yes"
+   }
+  },
+  {
+   "say": "The seventeenth of June, 1995.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "The seventeenth of June, 1995"
+   }
+  },
+  {
+   "say": "3049.",
+   "x": {
+    "u_act": "answer",
+    "u_ans": "3049"
+   }
+  },
+  {
+   "say": "I've been in hospital for three weeks. I can't pay anything.",
+   "x": {
+    "u_act": "no",
+    "u_topic": "hardship"
+   }
+  },
+  {
+   "say": "No, thank you.",
+   "x": {
+    "u_act": "no"
+   }
+  },
+  {
+   "say": "Thank you, goodbye.",
+   "x": {
+    "u_act": "chatter_only"
+   }
+  }
+ ],
+ "transcript": {
+  "no_banned_before_verified": true,
+  "one_line_per_turn": true,
+  "max_hops": 20
+ }
+}
