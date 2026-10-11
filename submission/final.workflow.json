@@ -1,7 +1,7 @@
 {
- "workflow_id": "a6f68e58-d97c-4234-b071-1c9de36bd241",
- "agent_id": "61a33b52-9fd0-45be-939e-75661d3b8149",
- "updated_at": "2026-10-11T19:01:53.417Z",
+ "workflow_id": "39ca8c60-ab21-4c10-b25c-76a75ad7ebec",
+ "agent_id": "976c8a7c-88b5-4f40-a875-8f16847f4513",
+ "updated_at": "2026-10-11T19:38:17.283Z",
  "workflow": {
   "nodes": {
    "ctl": {
@@ -683,9 +683,6 @@
             "type": "object",
             "properties": {
              "aiFlow": {
-              "enum": [
-               "CardOps"
-              ],
               "type": "string",
               "default": "{{b_f_cards_list_data_aiFlow}}"
              },
@@ -712,7 +709,7 @@
          }
         }
        },
-       "description": "The customer's cards the assistant may talk about. Start from this service."
+       "description": "Returns the customer's cards that the assistant may talk about. Only active cards are returned."
       }
      }
     ],
@@ -819,7 +816,7 @@
          }
         }
        },
-       "description": "Statement and due dates, debt per currency for one card."
+       "description": "Statement and due dates, debt per currency for a card."
       }
      }
     ],
@@ -1286,7 +1283,7 @@
          }
         }
        },
-       "description": "Changes the statement week. Call it only after the caller has agreed to the dates from statement.week.decide."
+       "description": "Changes the statement week. Call only after the caller agreed to the dates from statement.week.decide."
       }
      }
     ],
@@ -1401,7 +1398,7 @@
          }
         }
        },
-       "description": "Preview only: which statement date, due date and day the card would get with the requested week. Does not change the card."
+       "description": "Preview only: the statement date, due date and day the card would get with the requested week. Does not change the card."
       }
      }
     ],

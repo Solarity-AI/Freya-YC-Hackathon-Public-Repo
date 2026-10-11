@@ -1,243 +1,119 @@
-# Final build trace (Freya Bank statement debt case). Two builder runs, no hand edits:
-# 1) full run at cc210da: contract -> Claude flow extraction -> compile -> deploy (spec saved as runs/final/r20261011T184001Z/spec.json = submission/final.spec.json)
-# 2) run at fd2b519 with --spec-in of that same spec (runtime fix only; no new model call for the flow) -> deploy version 3 of workflow a6f68e58-d97c-4234-b071-1c9de36bd241
-
-########## RUN 1 ##########
-[+0.0s] START build._run | build | argv=["final-case/FreyaBank", "https://freya-final-mock-ali.yilmazali325.workers.dev", "--mode", "flow", "--slot", "final"] slot=final run_dir=runs/final/r20261011T184001Z model_default=claude-opus-5-5 effort_default=high facet_overrides={"effort": {"F5": "medium"}, "model": {}} critic=False started_at=2026-10-11T18:40:01Z commit=unknown input_form=case_folder mock_url=https://freya-final-mock-ali.yilmazali325.workers.dev case=final-case/FreyaBank
-[+0.0s] START build._run | preflight ok | python=3.14 freya_url=https://staging-app.freyavoice.ai claude_auth=keychain
-[+0.0s] DECISION build._run | mode flow (--mode flow)
-[+0.1s] INPUT build._load_case_traced | cloudflare-mock/example/worker.js | doc_kind=skipped reader=skipped bytes=1791 chars=0 status=skipped why=unsupported file type '.js': skipped
-[+0.1s] INPUT build._load_case_traced | cloudflare-mock/example/wrangler.toml | doc_kind=skipped reader=skipped bytes=75 chars=0 status=skipped why=unsupported file type '.toml': skipped
-[+0.1s] INPUT build._load_case_traced | BRIEF.md | doc_kind=brief reader=text bytes=4568 chars=4566 status=read why=file name
-[+0.1s] INPUT build._load_case_traced | cloudflare-mock/example/example-response.json | doc_kind=service_contract reader=data bytes=87 chars=85 status=read why=readme (score 12)
-[+0.1s] INPUT build._load_case_traced | cloudflare-mock/README.md | doc_kind=readme reader=text bytes=3204 chars=3202 status=read why=file name
-[+0.1s] INPUT build._load_case_traced | example-scenarios.md | doc_kind=example_conversation reader=text bytes=7005 chars=6991 status=read why=content+name (score 4)
-[+0.1s] INPUT build._load_case_traced | README.md | doc_kind=readme reader=text bytes=1300 chars=1300 status=read why=file name
-[+0.1s] INPUT build._load_case_traced | sources/documents/2025-08-14-cards-faq.md | doc_kind=qa reader=text bytes=4843 chars=4837 status=read why=content+name (score 5)
-[+0.1s] INPUT build._load_case_traced | sources/documents/2026-09-10-ivr-prompt-sheet.md | doc_kind=other reader=text bytes=8060 chars=7833 status=read why=no signal
-[+0.1s] INPUT build._load_case_traced | sources/documents/2026-10-01-service-contract.md | doc_kind=service_contract reader=text bytes=19610 chars=19570 status=read why=name (score 6)
-[+0.1s] INPUT build._load_case_traced | sources/emails/2026-09-24-kickoff-questions.txt | doc_kind=qa reader=text bytes=8102 chars=8037 status=read why=content+name (score 5)
-[+0.1s] INPUT build._load_case_traced | sources/emails/2026-10-09-decisions-recap.txt | doc_kind=other reader=text bytes=4012 chars=3963 status=read why=no signal
-[+0.1s] INPUT build._load_case_traced | sources/emails/attachments/2026-09-02-statement-debt-analysis.md | doc_kind=analysis reader=text bytes=16393 chars=15844 status=read why=name (score 3)
-[+0.1s] INPUT build._load_case_traced | sources/emails/attachments/2026-10-08-statement-debt-analysis.md | doc_kind=analysis reader=text bytes=28973 chars=28068 status=read why=name (score 3)
-[+0.1s] INPUT build._load_case_traced | sources/meetings/2026-10-07-analysis-session-transcript.txt | doc_kind=example_conversation reader=text bytes=31908 chars=31350 status=read why=name (score 3)
-[+0.1s] INPUT build._load_case_traced | statement-debt-call-flow.pdf | doc_kind=flow reader=pdf bytes=49629 chars=6675 status=read why=name (score 3)
-[+0.1s] INPUT build._load_case_traced | test-environment/test-customers.json | doc_kind=test_customers reader=data bytes=707267 chars=706815 status=read why=name (score 6)
-[+0.1s] INPUT build._load_case_traced | test-environment/test-customers.md | doc_kind=test_customers reader=text bytes=7691 chars=7534 status=read why=content+name (score 8)
-[+0.1s] WARN build._load_case_traced | input: cloudflare-mock/example/worker.js: unsupported file type '.js': skipped
-[+0.1s] WARN build._load_case_traced | input: cloudflare-mock/example/wrangler.toml: unsupported file type '.toml': skipped
-[+0.4s] INPUT build._probe_mock | mock reachable | role=mock url=https://freya-final-mock-ali.yilmazali325.workers.dev health={'ok': True, 'customers': 34, 'services': ['cards.list', 'cards.balance', 'statement.week.get', 'statement.week.decide', 'statement.week.change', 'contact.email.get', 'statement.pdf.send']}
-[+0.4s] CATALOG builder.contract._source_doc | deriving the tool API from the contract text | docs=["cloudflare-mock/example/example-response.json", "sources/documents/2026-10-01-service-contract.md"]
-[+79.1s] MODEL builder.llm.call_json | contract | model=claude-opus-5-5 effort=high ok=True attempt=1 seconds=78.8 usage={"cache_creation_input_tokens": 0, "cache_read_input_tokens": 12868, "input_tokens": 2, "output_tokens": 10611} cost_usd=0.21480160000000004 errors=0
-[+79.2s] WARN builder.contract.derive_operations | contract names 'rootCause' but no operation field / enum carries it
-[+79.2s] WARN builder.contract.derive_operations | contract names 'errorOrigin' but no operation field / enum carries it
-[+79.2s] WARN builder.contract.derive_operations | contract names 'INVALID_ARGUMENTS_ERROR' but no operation field / enum carries it
-[+79.2s] WARN builder.contract.derive_operations | contract names 'FB_IVR_CHANNEL_102' but no operation field / enum carries it
-[+79.2s] WARN builder.contract.derive_operations | contract names 'FB_IVR_CHANNEL_120' but no operation field / enum carries it
-[+79.2s] WARN builder.contract.derive_operations | contract names 'FB_IVR_CHANNEL_121' but no operation field / enum carries it
-[+79.2s] WARN builder.contract.derive_operations | contract names 'FB_IVR_CHANNEL_107' but no operation field / enum carries it
-[+79.2s] WARN builder.contract.derive_operations | contract names 'isMainCard' but no operation field / enum carries it
-[+79.2s] WARN builder.contract.derive_operations | contract names 'statementDebt' but no operation field / enum carries it
-[+79.2s] WARN builder.contract.derive_operations | contract names 'minPayment' but no operation field / enum carries it
-[+79.2s] WARN builder.contract.derive_operations | contract names 'remainingDebt' but no operation field / enum carries it
-[+79.2s] WARN builder.contract.derive_operations | contract names 'remainingMinPayment' but no operation field / enum carries it
-[+79.2s] WARN builder.contract.derive_operations | contract names 'totalDebt' but no operation field / enum carries it
-[+79.2s] WARN builder.contract.derive_operations | contract names 'currentPeriodExpense' but no operation field / enum carries it
-[+79.2s] WARN builder.contract.derive_operations | contract names 'transferAmount' but no operation field / enum carries it
-[+79.2s] WARN builder.contract.derive_operations | contract names 'remainAutomaticPaymentAmount' but no operation field / enum carries it
-[+79.2s] INPUT build._flow_from_case | service contract read | role=tool_api source=LLM from cloudflare-mock/example/example-response.json, sources/documents/2026-10-01-service-contract.md operations=8
-[+79.2s] CATALOG build._run_flow | cards_balance POST /cards.balance | params=[] body=["call.ani", "call.lang", "data.cardNumber"] response=["data", "result"]
-[+79.2s] CATALOG build._run_flow | cards_list POST /cards.list | params=[] body=["call.ani", "call.lang", "data.aiFlow", "data.customerNo"] response=["data", "result"]
-[+79.2s] CATALOG build._run_flow | contact_email_get POST /contact.email.get | params=[] body=["call.ani", "call.lang", "data.customerNo", "data.intAddressInfoType"] response=["data", "result"]
-[+79.2s] CATALOG build._run_flow | statement_pdf_send POST /statement.pdf.send | params=[] body=["call.ani", "call.lang", "data.cardNumber", "data.currencyType", "data.customerNo", "data.emailAddress", "data.statementDate"] response=["data", "result"]
-[+79.2s] CATALOG build._run_flow | statement_week_change POST /statement.week.change | params=[] body=["call.ani", "call.lang", "data.cardNumber", "data.newStatementWeek", "data.statementDay"] response=["data", "result"]
-[+79.2s] CATALOG build._run_flow | statement_week_decide POST /statement.week.decide | params=[] body=["call.ani", "call.lang", "data.cardNumber", "data.newStatementWeek", "data.statementDay"] response=["data", "result"]
-[+79.2s] CATALOG build._run_flow | statement_week_get POST /statement.week.get | params=[] body=["call.ani", "call.lang", "data.cardNumber"] response=["data", "result"]
-[+79.2s] CATALOG build._run_flow | token POST /oauth2/token | params=[] body=["client_id", "client_secret", "grant_type", "scope"] response=["access_token", "token_type", "expires_in"]
-[+79.2s] STAGE build.stop | input | seconds=79.1
-[+694.3s] MODEL builder.llm.call_json | flow | model=claude-opus-5-5 effort=high ok=True attempt=1 seconds=615.1 usage={"cache_creation_input_tokens": 93841, "cache_read_input_tokens": 4088, "input_tokens": 2, "output_tokens": 74692} cost_usd=2.2453936 errors=0
-[+694.3s] SPEC build._run_flow | flow spec | language=tr nodes=63 global_intents=22 variables=["customerNumber", "now"]
-[+694.3s] DECISION build._run_flow | Identity: the flow drawing's 'second factor' box is not built (Burcu 28 Sep, 8 Oct analysis §2). The customer number comes from the call, and the caller is never asked for a code.
-[+694.3s] DECISION build._run_flow | Card selection follows the 8 Oct analysis §3.2 and the 9 Oct recap: name, then last four digits, then last six digits, then the full card number. This replaces the 2 Sep version (full number right after the last four). The documents' 'at most two example names' cannot be enforced exactly. The select node names the eligible cards through <options>.
-[+694.3s] DECISION build._run_flow | Cards with isMainCard false (supplementary) are not eligible and are filtered out of the selection (8 Oct §3.3). No eligible card, or the cards.list 404 FB_IVR_CHANNEL_102 warning, leads to the no-eligible-card line and the main menu, not to an agent.
-[+694.3s] DECISION build._run_flow | Currency names are always spoken in full (Türk Lirası, Dolar, Euro, İngiliz Sterlini) through currency_words (9 Oct recap point 6, 8 Oct §4.9), including where the dictated sentences say TL/USD. The suffixes 'TL'dir' and 'USD'dir' are dropped because a placeholder cannot carry a suffix.
-[+694.3s] DECISION build._run_flow | TL reading cases follow the 8 Oct §4.3 rules. Debt means remainingDebt > 0. Nothing paid: remainingMinPayment > 0 and >= minPayment. Minimum paid: remainingMinPayment <= 0. Less than minimum: remainingMinPayment > 0 and < minPayment. Foreign currencies (USD, EUR, GBP) have one pattern each, read only when remainingDebt > 0.
-[+694.3s] DECISION build._run_flow | The no-debt sentence uses all 14 combinations from the 8 Oct §4.5 table. A currency counts as clear when its block exists and remainingDebt <= 0 (negative or zero amounts are never read as debt). A missing block is left out of the sentence (8 Oct, overriding the TBD in 2 Sep).
-[+694.3s] DECISION build._run_flow | The no-debt branch is used when the top-level statementPaymentStatus is NO_DEBT or no currency has remainingDebt > 0. It reads the 8 Oct §4.7 sentence; the future-period TL total is read only when > 0 (customer 92311921 has -1896, which is never read). Then it asks about another card or goes to the main menu, with no offer (8 Oct §4.7 and the drawing; Deniz's proposal to offer here was not agreed)
-[+694.3s] DECISION build._run_flow | Date-based branches use $today (8 Oct §4.10). Statement cut today: say it is cut tonight at 00.00 and give the total debt. Due date passed: say it has passed and give the total debt, with the auto-payment remainder only when automaticPaymentFlag is Y and the amount is > 0 (§4.6; no line was dictated, so the wording is ours). Due date today: 'bugündür'. Past-due also requires nextLastPayDate >= tod
-[+694.3s] DECISION build._run_flow | The transferAmount line (§4.4) is not built. It is an open point and no sentence was drafted.
-[+694.3s] DECISION build._run_flow | contact.email.get runs before the offer (8 Oct §5.2). If it fails, the call goes to an agent with the service-error line (8 Oct §6 and §10; test customer 92335586). Registered e-mail means ibanEmail is non-empty and communicationType is not Phone.
-[+694.3s] DECISION build._run_flow | There is no service flag for 'statement week change still allowed', so the week change is always offered. The limit is once per calendar year (Kerem 7 Oct in the 8 Oct analysis). This replaces the IVR sheet's 'ayda bir / yılda üç' and the 2025 website FAQ's 'three times a year'. STW-091/092 are not used because the contract has no such refusal codes.
-[+694.3s] DECISION build._run_flow | Statement week wording comes from the 8 Oct analysis §7, not the IVR prompt sheet. Burcu said the IVR prompts are not 'how it should be'. Week numbers are spoken as ordinal words ('birinci haftası') instead of '1.', following Burcu's TTS note. For joint statements, the linked/main card note comes before the confirmation question (8 Oct step 5). The current week cannot be chosen: the caller is told
-[+694.3s] DECISION build._run_flow | statement.week.change counts as successful only when result.returnCode is '1', exitState is 'OK' and responseCode is 0 (contract §5.5). The dates read after the change come from the statement.week.decide preview. Any of the three week services failing gives the statement-week agent line.
-[+694.3s] DECISION build._run_flow | E-mail is sent only to the registered address (Selin Q3, 8 Oct §6), so the website FAQ's 'any address you give us' is overridden. Only the last cut statement can be sent (statementDate from cards.balance). currencyType is sent as 'TL' because the documents do not say which currency's PDF to send. The address is read from ttsEmail. The rule for shortening long addresses cannot be implemented withou
-[+694.3s] DECISION build._run_flow | After a successful send the call goes to the main menu (8 Oct §6 step 4), so the 'up to three resends' case cannot occur in this flow.
-[+694.3s] DECISION build._run_flow | Out-of-scope questions follow the 9 Oct recap, which is later than the 8 Oct direct hand-off: the assistant first asks 'Size bu konuda yardımcı olamıyorum. Sizi ana menüye aktarmamı ister misiniz?'. Yes goes to the main menu. No resumes the question the caller was on, using a 'stage' variable set before each question.
-[+694.3s] DECISION build._run_flow | Angry caller: up to three calming replies, then an agent on the fourth complaint (Selin's 9 Oct correction of 'two'). This is counted with calm1/calm2/calm3 and the flow resumes where it was. The assistant never answers insults.
-[+694.3s] DECISION build._run_flow | Silence: the documents want two short re-asks and then 'Sesinizi alamadığım için görüşmeyi sonlandırıyorum.' (8 Oct §8.2). The flow has no separate silence hook, so silence uses the runtime re-ask (max_reasks 2). When re-asks run out, the call goes to on_unclear with the three-tries line from 8 Oct §8.1.
-[+694.3s] DECISION build._run_flow | Main-menu wording is 'Sizi ana menüye yönlendiriyorum.' (8 Oct §8.4). 'Sizi ana menüye aktarıyorum.' is used where the documents dictate it: no eligible card, three tries used up, non-Turkish speaker.
-[+694.3s] DECISION build._run_flow | Third-party requests end with a security line and the call goes back to the IVR login step, with no information about the other person's cards (Burcu Q8, 8 Oct §8.6).
-[+694.3s] DECISION build._run_flow | Payment requests and how-to-pay questions go to an agent (Kerem Q2). The website FAQ's payment-channel answers are not used. The FAQ answers kept as globals are only those not contradicted by later bank decisions.
-[+694.3s] DECISION build._run_flow | Only-one-figure requests and cutting in during the reading are not modelled separately; the full reading is always given. A caller who asks for e-mail at the 'another card' question goes straight to the address confirmation without the offer.
-[+694.3s] DECISION build._run_flow | The OAuth token operation is not called. The test environment does not check tokens and no client credentials are in the documents. call.ani is not available as a call variable, so only call.lang 'tr' is sent; the test environment ignores call metadata.
-[+694.3s] DECISION build._run_flow | assistant_self: the documents never give the assistant a name, so it introduces itself as 'Freya Bank sesli asistanı'. The opening includes 'Bilgilerinizi kontrol ediyorum.' because the first step is a service call.
-[+694.3s] STAGE build.stop | spec | seconds=615.2
-[+694.4s] COMPILE build._run_flow | flow workflow compiled | nodes=13 bytes=50398 ctl_code=22014
-[+694.4s] STAGE build.stop | compile | seconds=0.1
-[+694.4s] LINT build._run_flow | flow workflow: 0 errors
-[+694.4s] STAGE build.stop | lint | seconds=0.0
-[+695.6s] DEPLOY builder.deploy.deploy | dry run ok | where=ON-AGENT
-[+704.3s] FREYA builder.deploy.deploy | updated workflow a6f68e58-d97c-4234-b071-1c9de36bd241 | agent_id=61a33b52-9fd0-45be-939e-75661d3b8149 version=2 where=ON-AGENT
-[+705.6s] EXPORT builder.deploy.export | exported workflow a6f68e58-d97c-4234-b071-1c9de36bd241 | path=runs/final/r20261011T184001Z/workflow.export.json where=ON-AGENT
-[+705.6s] DEPLOY builder.deploy.deploy | published version 2 of a6f68e58-d97c-4234-b071-1c9de36bd241 | diff=0 where=ON-AGENT
-[+705.6s] FREYA build._stage_deploy | built on Freya | workflow_id=a6f68e58-d97c-4234-b071-1c9de36bd241 agent_id=61a33b52-9fd0-45be-939e-75661d3b8149 version=2 created=False nodes=13 tools=7 where=ON-AGENT
-[+705.6s] EXPORT build._stage_deploy | export written | path=runs/final/r20261011T184001Z/workflow.export.json
-[+705.6s] STAGE build.stop | deploy | seconds=11.2
-[+709.9s] FREYA build.smoke_turn | smoke chat turn ok | reply=Merhaba, ben Freya Bank sesli asistanı. call_id=a97b0dc8-ef64-4744-9003-99ad27ee753b where=ON-AGENT
-[+709.9s] STAGE build.stop | smoke | seconds=4.4
-[+709.9s] END build.run | exit 0 | slot=final exit=0 ended_at=2026-10-11T18:51:51Z build_s=709.9
-
-==================== SUMMARY ====================
-slot:            final
-run_id:          r20261011T184001Z
-run_dir:         runs/final/r20261011T184001Z
-started_at:      2026-10-11T18:40:01Z
-exit:            0
-stages:          {"compile": 0.1, "deploy": 11.2, "input": 79.1, "lint": 0.0, "smoke": 4.4, "spec": 615.2}
-nodes:           13
-tool_calls:      7
-tools:           ["f_cards_balance", "f_cards_list", "f_contact_email_get", "f_statement_pdf_send", "f_statement_week_change", "f_statement_week_decide", "f_statement_week_get"]
-lint_errors:     0
-deployed:        True
-workflow_id:     a6f68e58-d97c-4234-b071-1c9de36bd241
-agent_id:        61a33b52-9fd0-45be-939e-75661d3b8149
-version:         2
-export:          runs/final/r20261011T184001Z/workflow.export.json
-readback_diff:   0
-smoke:           ok
-ended_at:        2026-10-11T18:51:51Z
-build_s:         709.9
-budget:          {"elapsed_s": 709.9, "remaining_s": 850.1, "skipped": [], "soft_remaining_s": 490.1}
-elapsed_s:       709.9
-event_counts:    {"CATALOG": 9, "COMPILE": 1, "DECISION": 25, "DEPLOY": 2, "END": 1, "EXPORT": 2, "FREYA": 3, "INPUT": 20, "LINT": 1, "MODEL": 2, "SPEC": 1, "STAGE": 6, "START": 2, "WARN": 18}
-=================================================
-
-########## RUN 2 ##########
-[+0.0s] START build._run | build | argv=["final-case/FreyaBank", "https://freya-final-mock-ali.yilmazali325.workers.dev", "--mode", "flow", "--spec-in", "runs/final/r20261011T184001Z/spec.json", "--slot", "final"] slot=final run_dir=runs/final/r20261011T190009Z model_default=claude-opus-5-5 effort_default=high facet_overrides={"effort": {"F5": "medium"}, "model": {}} critic=False started_at=2026-10-11T19:00:09Z commit=unknown input_form=case_folder mock_url=https://freya-final-mock-ali.yilmazali325.workers.dev case=final-case/FreyaBank
-[+0.0s] START build._run | preflight ok | python=3.14 freya_url=https://staging-app.freyavoice.ai claude_auth=not needed
-[+0.0s] DECISION build._run | mode flow (--mode flow)
-[+0.1s] INPUT build._load_case_traced | cloudflare-mock/example/worker.js | doc_kind=skipped reader=skipped bytes=1791 chars=0 status=skipped why=unsupported file type '.js': skipped
-[+0.1s] INPUT build._load_case_traced | cloudflare-mock/example/wrangler.toml | doc_kind=skipped reader=skipped bytes=75 chars=0 status=skipped why=unsupported file type '.toml': skipped
-[+0.1s] INPUT build._load_case_traced | BRIEF.md | doc_kind=brief reader=text bytes=4568 chars=4566 status=read why=file name
-[+0.1s] INPUT build._load_case_traced | cloudflare-mock/example/example-response.json | doc_kind=service_contract reader=data bytes=87 chars=85 status=read why=readme (score 12)
-[+0.1s] INPUT build._load_case_traced | cloudflare-mock/README.md | doc_kind=readme reader=text bytes=3204 chars=3202 status=read why=file name
-[+0.1s] INPUT build._load_case_traced | example-scenarios.md | doc_kind=example_conversation reader=text bytes=7005 chars=6991 status=read why=content+name (score 4)
-[+0.1s] INPUT build._load_case_traced | README.md | doc_kind=readme reader=text bytes=1300 chars=1300 status=read why=file name
-[+0.1s] INPUT build._load_case_traced | sources/documents/2025-08-14-cards-faq.md | doc_kind=qa reader=text bytes=4843 chars=4837 status=read why=content+name (score 5)
-[+0.1s] INPUT build._load_case_traced | sources/documents/2026-09-10-ivr-prompt-sheet.md | doc_kind=other reader=text bytes=8060 chars=7833 status=read why=no signal
-[+0.1s] INPUT build._load_case_traced | sources/documents/2026-10-01-service-contract.md | doc_kind=service_contract reader=text bytes=19610 chars=19570 status=read why=name (score 6)
-[+0.1s] INPUT build._load_case_traced | sources/emails/2026-09-24-kickoff-questions.txt | doc_kind=qa reader=text bytes=8102 chars=8037 status=read why=content+name (score 5)
-[+0.1s] INPUT build._load_case_traced | sources/emails/2026-10-09-decisions-recap.txt | doc_kind=other reader=text bytes=4012 chars=3963 status=read why=no signal
-[+0.1s] INPUT build._load_case_traced | sources/emails/attachments/2026-09-02-statement-debt-analysis.md | doc_kind=analysis reader=text bytes=16393 chars=15844 status=read why=name (score 3)
-[+0.1s] INPUT build._load_case_traced | sources/emails/attachments/2026-10-08-statement-debt-analysis.md | doc_kind=analysis reader=text bytes=28973 chars=28068 status=read why=name (score 3)
-[+0.1s] INPUT build._load_case_traced | sources/meetings/2026-10-07-analysis-session-transcript.txt | doc_kind=example_conversation reader=text bytes=31908 chars=31350 status=read why=name (score 3)
-[+0.1s] INPUT build._load_case_traced | statement-debt-call-flow.pdf | doc_kind=flow reader=pdf bytes=49629 chars=6675 status=read why=name (score 3)
-[+0.1s] INPUT build._load_case_traced | test-environment/test-customers.json | doc_kind=test_customers reader=data bytes=707267 chars=706815 status=read why=name (score 6)
-[+0.1s] INPUT build._load_case_traced | test-environment/test-customers.md | doc_kind=test_customers reader=text bytes=7691 chars=7534 status=read why=content+name (score 8)
-[+0.1s] WARN build._load_case_traced | input: cloudflare-mock/example/worker.js: unsupported file type '.js': skipped
-[+0.1s] WARN build._load_case_traced | input: cloudflare-mock/example/wrangler.toml: unsupported file type '.toml': skipped
+[+0.1s] START build._run | build | argv=["../case", "https://freya-final-mock-ali.yilmazali325.workers.dev", "--mode", "flow", "--spec-in", "submission/final.spec.json", "--slot", "final"] slot=final run_dir=/private/tmp/freya-final/repo/runs/final/r20261011T193652Z model_default=claude-opus-5-5 effort_default=high facet_overrides={"effort": {"F5": "medium"}, "model": {}} critic=False started_at=2026-10-11T19:36:52Z commit=8904f94f707f10436829eb7ec9a3622bf6b1d576+dirty input_form=case_folder mock_url=https://freya-final-mock-ali.yilmazali325.workers.dev case=../case
+[+0.1s] START build._run | preflight ok | python=3.14 freya_url=https://staging-app.freyavoice.ai claude_auth=not needed
+[+0.1s] DECISION build._run | mode flow (--mode flow)
+[+0.2s] INPUT build._load_case_traced | cloudflare-mock/example/worker.js | doc_kind=skipped reader=skipped bytes=1791 chars=0 status=skipped why=unsupported file type '.js': skipped
+[+0.2s] INPUT build._load_case_traced | cloudflare-mock/example/wrangler.toml | doc_kind=skipped reader=skipped bytes=75 chars=0 status=skipped why=unsupported file type '.toml': skipped
+[+0.2s] INPUT build._load_case_traced | BRIEF.md | doc_kind=brief reader=text bytes=4568 chars=4566 status=read why=file name
+[+0.2s] INPUT build._load_case_traced | cloudflare-mock/example/example-response.json | doc_kind=service_contract reader=data bytes=87 chars=85 status=read why=readme (score 12)
+[+0.2s] INPUT build._load_case_traced | cloudflare-mock/README.md | doc_kind=readme reader=text bytes=3204 chars=3202 status=read why=file name
+[+0.2s] INPUT build._load_case_traced | example-scenarios.md | doc_kind=example_conversation reader=text bytes=7005 chars=6991 status=read why=content+name (score 4)
+[+0.2s] INPUT build._load_case_traced | README.md | doc_kind=readme reader=text bytes=1300 chars=1300 status=read why=file name
+[+0.2s] INPUT build._load_case_traced | sources/documents/2025-08-14-cards-faq.md | doc_kind=qa reader=text bytes=4843 chars=4837 status=read why=content+name (score 5)
+[+0.2s] INPUT build._load_case_traced | sources/documents/2026-09-10-ivr-prompt-sheet.md | doc_kind=other reader=text bytes=8060 chars=7833 status=read why=no signal
+[+0.2s] INPUT build._load_case_traced | sources/documents/2026-10-01-service-contract.md | doc_kind=service_contract reader=text bytes=19610 chars=19570 status=read why=name (score 6)
+[+0.2s] INPUT build._load_case_traced | sources/emails/2026-09-24-kickoff-questions.txt | doc_kind=qa reader=text bytes=8102 chars=8037 status=read why=content+name (score 5)
+[+0.2s] INPUT build._load_case_traced | sources/emails/2026-10-09-decisions-recap.txt | doc_kind=other reader=text bytes=4012 chars=3963 status=read why=no signal
+[+0.2s] INPUT build._load_case_traced | sources/emails/attachments/2026-09-02-statement-debt-analysis.md | doc_kind=analysis reader=text bytes=16393 chars=15844 status=read why=name (score 3)
+[+0.2s] INPUT build._load_case_traced | sources/emails/attachments/2026-10-08-statement-debt-analysis.md | doc_kind=analysis reader=text bytes=28973 chars=28068 status=read why=name (score 3)
+[+0.2s] INPUT build._load_case_traced | sources/meetings/2026-10-07-analysis-session-transcript.txt | doc_kind=example_conversation reader=text bytes=31908 chars=31350 status=read why=name (score 3)
+[+0.2s] INPUT build._load_case_traced | statement-debt-call-flow.pdf | doc_kind=flow reader=pdf bytes=49629 chars=6675 status=read why=name (score 3)
+[+0.2s] INPUT build._load_case_traced | test-environment/test-customers.json | doc_kind=test_customers reader=data bytes=707267 chars=706815 status=read why=name (score 6)
+[+0.2s] INPUT build._load_case_traced | test-environment/test-customers.md | doc_kind=test_customers reader=text bytes=7691 chars=7534 status=read why=content+name (score 8)
+[+0.2s] WARN build._load_case_traced | input: cloudflare-mock/example/worker.js: unsupported file type '.js': skipped
+[+0.2s] WARN build._load_case_traced | input: cloudflare-mock/example/wrangler.toml: unsupported file type '.toml': skipped
 [+0.3s] INPUT build._probe_mock | mock reachable | role=mock url=https://freya-final-mock-ali.yilmazali325.workers.dev health={'ok': True, 'customers': 34, 'services': ['cards.list', 'cards.balance', 'statement.week.get', 'statement.week.decide', 'statement.week.change', 'contact.email.get', 'statement.pdf.send']}
 [+0.3s] CATALOG builder.contract._source_doc | deriving the tool API from the contract text | docs=["cloudflare-mock/example/example-response.json", "sources/documents/2026-10-01-service-contract.md"]
-[+102.0s] MODEL builder.llm.call_json | contract | model=claude-opus-5-5 effort=high ok=True attempt=1 seconds=101.8 usage={"cache_creation_input_tokens": 0, "cache_read_input_tokens": 12868, "input_tokens": 2, "output_tokens": 13268} cost_usd=0.2679416 errors=0
-[+102.0s] WARN builder.contract.derive_operations | contract names 'rootCause' but no operation field / enum carries it
-[+102.0s] WARN builder.contract.derive_operations | contract names 'errorOrigin' but no operation field / enum carries it
-[+102.0s] WARN builder.contract.derive_operations | contract names 'INVALID_ARGUMENTS_ERROR' but no operation field / enum carries it
-[+102.0s] WARN builder.contract.derive_operations | contract names 'FB_IVR_CHANNEL_102' but no operation field / enum carries it
-[+102.0s] WARN builder.contract.derive_operations | contract names 'FB_IVR_CHANNEL_120' but no operation field / enum carries it
-[+102.0s] WARN builder.contract.derive_operations | contract names 'FB_IVR_CHANNEL_121' but no operation field / enum carries it
-[+102.0s] WARN builder.contract.derive_operations | contract names 'FB_IVR_CHANNEL_107' but no operation field / enum carries it
-[+102.0s] WARN builder.contract.derive_operations | contract names 'isMainCard' but no operation field / enum carries it
-[+102.0s] WARN builder.contract.derive_operations | contract names 'statementDebt' but no operation field / enum carries it
-[+102.0s] WARN builder.contract.derive_operations | contract names 'minPayment' but no operation field / enum carries it
-[+102.0s] WARN builder.contract.derive_operations | contract names 'remainingDebt' but no operation field / enum carries it
-[+102.0s] WARN builder.contract.derive_operations | contract names 'remainingMinPayment' but no operation field / enum carries it
-[+102.0s] WARN builder.contract.derive_operations | contract names 'totalDebt' but no operation field / enum carries it
-[+102.0s] WARN builder.contract.derive_operations | contract names 'currentPeriodExpense' but no operation field / enum carries it
-[+102.0s] WARN builder.contract.derive_operations | contract names 'transferAmount' but no operation field / enum carries it
-[+102.0s] WARN builder.contract.derive_operations | contract names 'remainAutomaticPaymentAmount' but no operation field / enum carries it
-[+102.0s] INPUT build._flow_from_case | service contract read | role=tool_api source=LLM from cloudflare-mock/example/example-response.json, sources/documents/2026-10-01-service-contract.md operations=8
-[+102.0s] CATALOG build._run_flow | cards_balance POST /cards.balance | params=[] body=["call.ani", "call.lang", "data.cardNumber"] response=["data", "result"]
-[+102.0s] CATALOG build._run_flow | cards_list POST /cards.list | params=[] body=["call.ani", "call.lang", "data.aiFlow", "data.customerNo"] response=["data", "result"]
-[+102.0s] CATALOG build._run_flow | contact_email_get POST /contact.email.get | params=[] body=["call.ani", "call.lang", "data.customerNo", "data.intAddressInfoType"] response=["data", "result"]
-[+102.0s] CATALOG build._run_flow | statement_pdf_send POST /statement.pdf.send | params=[] body=["call.ani", "call.lang", "data.cardNumber", "data.currencyType", "data.customerNo", "data.emailAddress", "data.statementDate"] response=["data", "result"]
-[+102.0s] CATALOG build._run_flow | statement_week_change POST /statement.week.change | params=[] body=["call.ani", "call.lang", "data.cardNumber", "data.newStatementWeek", "data.statementDay"] response=["data", "result"]
-[+102.0s] CATALOG build._run_flow | statement_week_decide POST /statement.week.decide | params=[] body=["call.ani", "call.lang", "data.cardNumber", "data.newStatementWeek", "data.statementDay"] response=["data", "result"]
-[+102.0s] CATALOG build._run_flow | statement_week_get POST /statement.week.get | params=[] body=["call.ani", "call.lang", "data.cardNumber"] response=["data", "result"]
-[+102.0s] CATALOG build._run_flow | token POST /oauth2/token | params=[] body=["client_id", "client_secret", "grant_type", "scope"] response=["access_token", "token_type", "expires_in"]
-[+102.0s] STAGE build.stop | input | seconds=102.0
-[+102.0s] EXTRACT build._run_flow | flow spec loaded from --spec-in | path=runs/final/r20261011T184001Z/spec.json
-[+102.0s] SPEC build._run_flow | flow spec | language=tr nodes=63 global_intents=22 variables=["customerNumber", "now"]
-[+102.0s] DECISION build._run_flow | Identity: the flow drawing's 'second factor' box is not built (Burcu 28 Sep, 8 Oct analysis §2). The customer number comes from the call, and the caller is never asked for a code.
-[+102.0s] DECISION build._run_flow | Card selection follows the 8 Oct analysis §3.2 and the 9 Oct recap: name, then last four digits, then last six digits, then the full card number. This replaces the 2 Sep version (full number right after the last four). The documents' 'at most two example names' cannot be enforced exactly. The select node names the eligible cards through <options>.
-[+102.0s] DECISION build._run_flow | Cards with isMainCard false (supplementary) are not eligible and are filtered out of the selection (8 Oct §3.3). No eligible card, or the cards.list 404 FB_IVR_CHANNEL_102 warning, leads to the no-eligible-card line and the main menu, not to an agent.
-[+102.0s] DECISION build._run_flow | Currency names are always spoken in full (Türk Lirası, Dolar, Euro, İngiliz Sterlini) through currency_words (9 Oct recap point 6, 8 Oct §4.9), including where the dictated sentences say TL/USD. The suffixes 'TL'dir' and 'USD'dir' are dropped because a placeholder cannot carry a suffix.
-[+102.0s] DECISION build._run_flow | TL reading cases follow the 8 Oct §4.3 rules. Debt means remainingDebt > 0. Nothing paid: remainingMinPayment > 0 and >= minPayment. Minimum paid: remainingMinPayment <= 0. Less than minimum: remainingMinPayment > 0 and < minPayment. Foreign currencies (USD, EUR, GBP) have one pattern each, read only when remainingDebt > 0.
-[+102.0s] DECISION build._run_flow | The no-debt sentence uses all 14 combinations from the 8 Oct §4.5 table. A currency counts as clear when its block exists and remainingDebt <= 0 (negative or zero amounts are never read as debt). A missing block is left out of the sentence (8 Oct, overriding the TBD in 2 Sep).
-[+102.0s] DECISION build._run_flow | The no-debt branch is used when the top-level statementPaymentStatus is NO_DEBT or no currency has remainingDebt > 0. It reads the 8 Oct §4.7 sentence; the future-period TL total is read only when > 0 (customer 92311921 has -1896, which is never read). Then it asks about another card or goes to the main menu, with no offer (8 Oct §4.7 and the drawing; Deniz's proposal to offer here was not agreed)
-[+102.0s] DECISION build._run_flow | Date-based branches use $today (8 Oct §4.10). Statement cut today: say it is cut tonight at 00.00 and give the total debt. Due date passed: say it has passed and give the total debt, with the auto-payment remainder only when automaticPaymentFlag is Y and the amount is > 0 (§4.6; no line was dictated, so the wording is ours). Due date today: 'bugündür'. Past-due also requires nextLastPayDate >= tod
-[+102.0s] DECISION build._run_flow | The transferAmount line (§4.4) is not built. It is an open point and no sentence was drafted.
-[+102.0s] DECISION build._run_flow | contact.email.get runs before the offer (8 Oct §5.2). If it fails, the call goes to an agent with the service-error line (8 Oct §6 and §10; test customer 92335586). Registered e-mail means ibanEmail is non-empty and communicationType is not Phone.
-[+102.0s] DECISION build._run_flow | There is no service flag for 'statement week change still allowed', so the week change is always offered. The limit is once per calendar year (Kerem 7 Oct in the 8 Oct analysis). This replaces the IVR sheet's 'ayda bir / yılda üç' and the 2025 website FAQ's 'three times a year'. STW-091/092 are not used because the contract has no such refusal codes.
-[+102.0s] DECISION build._run_flow | Statement week wording comes from the 8 Oct analysis §7, not the IVR prompt sheet. Burcu said the IVR prompts are not 'how it should be'. Week numbers are spoken as ordinal words ('birinci haftası') instead of '1.', following Burcu's TTS note. For joint statements, the linked/main card note comes before the confirmation question (8 Oct step 5). The current week cannot be chosen: the caller is told
-[+102.0s] DECISION build._run_flow | statement.week.change counts as successful only when result.returnCode is '1', exitState is 'OK' and responseCode is 0 (contract §5.5). The dates read after the change come from the statement.week.decide preview. Any of the three week services failing gives the statement-week agent line.
-[+102.0s] DECISION build._run_flow | E-mail is sent only to the registered address (Selin Q3, 8 Oct §6), so the website FAQ's 'any address you give us' is overridden. Only the last cut statement can be sent (statementDate from cards.balance). currencyType is sent as 'TL' because the documents do not say which currency's PDF to send. The address is read from ttsEmail. The rule for shortening long addresses cannot be implemented withou
-[+102.0s] DECISION build._run_flow | After a successful send the call goes to the main menu (8 Oct §6 step 4), so the 'up to three resends' case cannot occur in this flow.
-[+102.0s] DECISION build._run_flow | Out-of-scope questions follow the 9 Oct recap, which is later than the 8 Oct direct hand-off: the assistant first asks 'Size bu konuda yardımcı olamıyorum. Sizi ana menüye aktarmamı ister misiniz?'. Yes goes to the main menu. No resumes the question the caller was on, using a 'stage' variable set before each question.
-[+102.0s] DECISION build._run_flow | Angry caller: up to three calming replies, then an agent on the fourth complaint (Selin's 9 Oct correction of 'two'). This is counted with calm1/calm2/calm3 and the flow resumes where it was. The assistant never answers insults.
-[+102.0s] DECISION build._run_flow | Silence: the documents want two short re-asks and then 'Sesinizi alamadığım için görüşmeyi sonlandırıyorum.' (8 Oct §8.2). The flow has no separate silence hook, so silence uses the runtime re-ask (max_reasks 2). When re-asks run out, the call goes to on_unclear with the three-tries line from 8 Oct §8.1.
-[+102.0s] DECISION build._run_flow | Main-menu wording is 'Sizi ana menüye yönlendiriyorum.' (8 Oct §8.4). 'Sizi ana menüye aktarıyorum.' is used where the documents dictate it: no eligible card, three tries used up, non-Turkish speaker.
-[+102.0s] DECISION build._run_flow | Third-party requests end with a security line and the call goes back to the IVR login step, with no information about the other person's cards (Burcu Q8, 8 Oct §8.6).
-[+102.0s] DECISION build._run_flow | Payment requests and how-to-pay questions go to an agent (Kerem Q2). The website FAQ's payment-channel answers are not used. The FAQ answers kept as globals are only those not contradicted by later bank decisions.
-[+102.0s] DECISION build._run_flow | Only-one-figure requests and cutting in during the reading are not modelled separately; the full reading is always given. A caller who asks for e-mail at the 'another card' question goes straight to the address confirmation without the offer.
-[+102.0s] DECISION build._run_flow | The OAuth token operation is not called. The test environment does not check tokens and no client credentials are in the documents. call.ani is not available as a call variable, so only call.lang 'tr' is sent; the test environment ignores call metadata.
-[+102.0s] DECISION build._run_flow | assistant_self: the documents never give the assistant a name, so it introduces itself as 'Freya Bank sesli asistanı'. The opening includes 'Bilgilerinizi kontrol ediyorum.' because the first step is a service call.
-[+102.0s] STAGE build.stop | spec | seconds=0.0
-[+102.1s] COMPILE build._run_flow | flow workflow compiled | nodes=13 bytes=50525 ctl_code=22112
-[+102.1s] STAGE build.stop | compile | seconds=0.1
-[+102.1s] LINT build._run_flow | flow workflow: 0 errors
-[+102.1s] STAGE build.stop | lint | seconds=0.0
-[+103.2s] DEPLOY builder.deploy.deploy | dry run ok | where=ON-AGENT
-[+107.1s] FREYA builder.deploy.deploy | updated workflow a6f68e58-d97c-4234-b071-1c9de36bd241 | agent_id=61a33b52-9fd0-45be-939e-75661d3b8149 version=3 where=ON-AGENT
-[+107.6s] EXPORT builder.deploy.export | exported workflow a6f68e58-d97c-4234-b071-1c9de36bd241 | path=runs/final/r20261011T190009Z/workflow.export.json where=ON-AGENT
-[+107.6s] DEPLOY builder.deploy.deploy | published version 3 of a6f68e58-d97c-4234-b071-1c9de36bd241 | diff=0 where=ON-AGENT
-[+107.6s] FREYA build._stage_deploy | built on Freya | workflow_id=a6f68e58-d97c-4234-b071-1c9de36bd241 agent_id=61a33b52-9fd0-45be-939e-75661d3b8149 version=3 created=False nodes=13 tools=7 where=ON-AGENT
-[+107.6s] EXPORT build._stage_deploy | export written | path=runs/final/r20261011T190009Z/workflow.export.json
-[+107.6s] STAGE build.stop | deploy | seconds=5.5
-[+111.0s] FREYA build.smoke_turn | smoke chat turn ok | reply=Merhaba, ben Freya Bank sesli asistanı. call_id=7556d153-d0ab-4e00-ac3d-81ce8f777ffe where=ON-AGENT
-[+111.0s] STAGE build.stop | smoke | seconds=3.4
-[+111.0s] END build.run | exit 0 | slot=final exit=0 ended_at=2026-10-11T19:02:00Z build_s=111.0
+[+81.8s] MODEL builder.llm.call_json | contract | model=claude-opus-5-5 effort=high ok=True attempt=1 seconds=81.5 usage={"cache_creation_input_tokens": 325, "cache_read_input_tokens": 12531, "input_tokens": 2, "output_tokens": 11069} cost_usd=0.22649420000000003 errors=0
+[+81.8s] WARN builder.contract.derive_operations | contract names 'rootCause' but no operation field / enum carries it
+[+81.8s] WARN builder.contract.derive_operations | contract names 'errorOrigin' but no operation field / enum carries it
+[+81.8s] WARN builder.contract.derive_operations | contract names 'INVALID_ARGUMENTS_ERROR' but no operation field / enum carries it
+[+81.8s] WARN builder.contract.derive_operations | contract names 'FB_IVR_CHANNEL_102' but no operation field / enum carries it
+[+81.8s] WARN builder.contract.derive_operations | contract names 'FB_IVR_CHANNEL_120' but no operation field / enum carries it
+[+81.8s] WARN builder.contract.derive_operations | contract names 'FB_IVR_CHANNEL_121' but no operation field / enum carries it
+[+81.8s] WARN builder.contract.derive_operations | contract names 'FB_IVR_CHANNEL_107' but no operation field / enum carries it
+[+81.8s] WARN builder.contract.derive_operations | contract names 'isMainCard' but no operation field / enum carries it
+[+81.8s] WARN builder.contract.derive_operations | contract names 'statementDebt' but no operation field / enum carries it
+[+81.8s] WARN builder.contract.derive_operations | contract names 'minPayment' but no operation field / enum carries it
+[+81.8s] WARN builder.contract.derive_operations | contract names 'remainingDebt' but no operation field / enum carries it
+[+81.8s] WARN builder.contract.derive_operations | contract names 'remainingMinPayment' but no operation field / enum carries it
+[+81.8s] WARN builder.contract.derive_operations | contract names 'totalDebt' but no operation field / enum carries it
+[+81.8s] WARN builder.contract.derive_operations | contract names 'currentPeriodExpense' but no operation field / enum carries it
+[+81.8s] WARN builder.contract.derive_operations | contract names 'transferAmount' but no operation field / enum carries it
+[+81.8s] WARN builder.contract.derive_operations | contract names 'remainAutomaticPaymentAmount' but no operation field / enum carries it
+[+81.8s] INPUT build._flow_from_case | service contract read | role=tool_api source=LLM from cloudflare-mock/example/example-response.json, sources/documents/2026-10-01-service-contract.md operations=8
+[+81.8s] CATALOG build._run_flow | cards_balance POST /cards.balance | params=[] body=["call.ani", "call.lang", "data.cardNumber"] response=["data", "result"]
+[+81.8s] CATALOG build._run_flow | cards_list POST /cards.list | params=[] body=["call.ani", "call.lang", "data.aiFlow", "data.customerNo"] response=["data", "result"]
+[+81.8s] CATALOG build._run_flow | contact_email_get POST /contact.email.get | params=[] body=["call.ani", "call.lang", "data.customerNo", "data.intAddressInfoType"] response=["data", "result"]
+[+81.8s] CATALOG build._run_flow | statement_pdf_send POST /statement.pdf.send | params=[] body=["call.ani", "call.lang", "data.cardNumber", "data.currencyType", "data.customerNo", "data.emailAddress", "data.statementDate"] response=["data", "result"]
+[+81.8s] CATALOG build._run_flow | statement_week_change POST /statement.week.change | params=[] body=["call.ani", "call.lang", "data.cardNumber", "data.newStatementWeek", "data.statementDay"] response=["data", "result"]
+[+81.8s] CATALOG build._run_flow | statement_week_decide POST /statement.week.decide | params=[] body=["call.ani", "call.lang", "data.cardNumber", "data.newStatementWeek", "data.statementDay"] response=["data", "result"]
+[+81.8s] CATALOG build._run_flow | statement_week_get POST /statement.week.get | params=[] body=["call.ani", "call.lang", "data.cardNumber"] response=["data", "result"]
+[+81.8s] CATALOG build._run_flow | token POST /oauth2/token | params=[] body=["client_id", "client_secret", "grant_type", "scope"] response=["access_token", "token_type", "expires_in"]
+[+81.8s] STAGE build.stop | input | seconds=81.8
+[+81.8s] EXTRACT build._run_flow | flow spec loaded from --spec-in | path=submission/final.spec.json
+[+81.8s] SPEC build._run_flow | flow spec | language=tr nodes=63 global_intents=22 variables=["customerNumber", "now"]
+[+81.8s] DECISION build._run_flow | Identity: the flow drawing's 'second factor' box is not built (Burcu 28 Sep, 8 Oct analysis §2). The customer number comes from the call, and the caller is never asked for a code.
+[+81.8s] DECISION build._run_flow | Card selection follows the 8 Oct analysis §3.2 and the 9 Oct recap: name, then last four digits, then last six digits, then the full card number. This replaces the 2 Sep version (full number right after the last four). The documents' 'at most two example names' cannot be enforced exactly. The select node names the eligible cards through <options>.
+[+81.8s] DECISION build._run_flow | Cards with isMainCard false (supplementary) are not eligible and are filtered out of the selection (8 Oct §3.3). No eligible card, or the cards.list 404 FB_IVR_CHANNEL_102 warning, leads to the no-eligible-card line and the main menu, not to an agent.
+[+81.8s] DECISION build._run_flow | Currency names are always spoken in full (Türk Lirası, Dolar, Euro, İngiliz Sterlini) through currency_words (9 Oct recap point 6, 8 Oct §4.9), including where the dictated sentences say TL/USD. The suffixes 'TL'dir' and 'USD'dir' are dropped because a placeholder cannot carry a suffix.
+[+81.8s] DECISION build._run_flow | TL reading cases follow the 8 Oct §4.3 rules. Debt means remainingDebt > 0. Nothing paid: remainingMinPayment > 0 and >= minPayment. Minimum paid: remainingMinPayment <= 0. Less than minimum: remainingMinPayment > 0 and < minPayment. Foreign currencies (USD, EUR, GBP) have one pattern each, read only when remainingDebt > 0.
+[+81.8s] DECISION build._run_flow | The no-debt sentence uses all 14 combinations from the 8 Oct §4.5 table. A currency counts as clear when its block exists and remainingDebt <= 0 (negative or zero amounts are never read as debt). A missing block is left out of the sentence (8 Oct, overriding the TBD in 2 Sep).
+[+81.8s] DECISION build._run_flow | The no-debt branch is used when the top-level statementPaymentStatus is NO_DEBT or no currency has remainingDebt > 0. It reads the 8 Oct §4.7 sentence; the future-period TL total is read only when > 0 (customer 92311921 has -1896, which is never read). Then it asks about another card or goes to the main menu, with no offer (8 Oct §4.7 and the drawing; Deniz's proposal to offer here was not agreed)
+[+81.8s] DECISION build._run_flow | Date-based branches use $today (8 Oct §4.10). Statement cut today: say it is cut tonight at 00.00 and give the total debt. Due date passed: say it has passed and give the total debt, with the auto-payment remainder only when automaticPaymentFlag is Y and the amount is > 0 (§4.6; no line was dictated, so the wording is ours). Due date today: 'bugündür'. Past-due also requires nextLastPayDate >= tod
+[+81.8s] DECISION build._run_flow | The transferAmount line (§4.4) is not built. It is an open point and no sentence was drafted.
+[+81.8s] DECISION build._run_flow | contact.email.get runs before the offer (8 Oct §5.2). If it fails, the call goes to an agent with the service-error line (8 Oct §6 and §10; test customer 92335586). Registered e-mail means ibanEmail is non-empty and communicationType is not Phone.
+[+81.8s] DECISION build._run_flow | There is no service flag for 'statement week change still allowed', so the week change is always offered. The limit is once per calendar year (Kerem 7 Oct in the 8 Oct analysis). This replaces the IVR sheet's 'ayda bir / yılda üç' and the 2025 website FAQ's 'three times a year'. STW-091/092 are not used because the contract has no such refusal codes.
+[+81.8s] DECISION build._run_flow | Statement week wording comes from the 8 Oct analysis §7, not the IVR prompt sheet. Burcu said the IVR prompts are not 'how it should be'. Week numbers are spoken as ordinal words ('birinci haftası') instead of '1.', following Burcu's TTS note. For joint statements, the linked/main card note comes before the confirmation question (8 Oct step 5). The current week cannot be chosen: the caller is told
+[+81.8s] DECISION build._run_flow | statement.week.change counts as successful only when result.returnCode is '1', exitState is 'OK' and responseCode is 0 (contract §5.5). The dates read after the change come from the statement.week.decide preview. Any of the three week services failing gives the statement-week agent line.
+[+81.8s] DECISION build._run_flow | E-mail is sent only to the registered address (Selin Q3, 8 Oct §6), so the website FAQ's 'any address you give us' is overridden. Only the last cut statement can be sent (statementDate from cards.balance). currencyType is sent as 'TL' because the documents do not say which currency's PDF to send. The address is read from ttsEmail. The rule for shortening long addresses cannot be implemented withou
+[+81.8s] DECISION build._run_flow | After a successful send the call goes to the main menu (8 Oct §6 step 4), so the 'up to three resends' case cannot occur in this flow.
+[+81.8s] DECISION build._run_flow | Out-of-scope questions follow the 9 Oct recap, which is later than the 8 Oct direct hand-off: the assistant first asks 'Size bu konuda yardımcı olamıyorum. Sizi ana menüye aktarmamı ister misiniz?'. Yes goes to the main menu. No resumes the question the caller was on, using a 'stage' variable set before each question.
+[+81.8s] DECISION build._run_flow | Angry caller: up to three calming replies, then an agent on the fourth complaint (Selin's 9 Oct correction of 'two'). This is counted with calm1/calm2/calm3 and the flow resumes where it was. The assistant never answers insults.
+[+81.8s] DECISION build._run_flow | Silence: the documents want two short re-asks and then 'Sesinizi alamadığım için görüşmeyi sonlandırıyorum.' (8 Oct §8.2). The flow has no separate silence hook, so silence uses the runtime re-ask (max_reasks 2). When re-asks run out, the call goes to on_unclear with the three-tries line from 8 Oct §8.1.
+[+81.8s] DECISION build._run_flow | Main-menu wording is 'Sizi ana menüye yönlendiriyorum.' (8 Oct §8.4). 'Sizi ana menüye aktarıyorum.' is used where the documents dictate it: no eligible card, three tries used up, non-Turkish speaker.
+[+81.8s] DECISION build._run_flow | Third-party requests end with a security line and the call goes back to the IVR login step, with no information about the other person's cards (Burcu Q8, 8 Oct §8.6).
+[+81.8s] DECISION build._run_flow | Payment requests and how-to-pay questions go to an agent (Kerem Q2). The website FAQ's payment-channel answers are not used. The FAQ answers kept as globals are only those not contradicted by later bank decisions.
+[+81.8s] DECISION build._run_flow | Only-one-figure requests and cutting in during the reading are not modelled separately; the full reading is always given. A caller who asks for e-mail at the 'another card' question goes straight to the address confirmation without the offer.
+[+81.8s] DECISION build._run_flow | The OAuth token operation is not called. The test environment does not check tokens and no client credentials are in the documents. call.ani is not available as a call variable, so only call.lang 'tr' is sent; the test environment ignores call metadata.
+[+81.8s] DECISION build._run_flow | assistant_self: the documents never give the assistant a name, so it introduces itself as 'Freya Bank sesli asistanı'. The opening includes 'Bilgilerinizi kontrol ediyorum.' because the first step is a service call.
+[+81.8s] STAGE build.stop | spec | seconds=0.0
+[+81.9s] COMPILE build._run_flow | flow workflow compiled | nodes=13 bytes=50513 ctl_code=22112
+[+81.9s] STAGE build.stop | compile | seconds=0.1
+[+81.9s] LINT build._run_flow | flow workflow: 0 errors
+[+81.9s] STAGE build.stop | lint | seconds=0.0
+[+82.8s] DEPLOY builder.deploy.deploy | dry run ok | where=ON-AGENT
+[+83.7s] FREYA builder.deploy.deploy | created workflow 39ca8c60-ab21-4c10-b25c-76a75ad7ebec | agent_id=976c8a7c-88b5-4f40-a875-8f16847f4513 version= where=ON-AGENT
+[+86.2s] FREYA builder.deploy.deploy | second save (agent_config patch + publish) version 1 | where=ON-AGENT
+[+86.6s] EXPORT builder.deploy.export | exported workflow 39ca8c60-ab21-4c10-b25c-76a75ad7ebec | path=/private/tmp/freya-final/repo/runs/final/r20261011T193652Z/workflow.export.json where=ON-AGENT
+[+86.6s] DEPLOY builder.deploy.deploy | published version 1 of 39ca8c60-ab21-4c10-b25c-76a75ad7ebec | diff=0 where=ON-AGENT
+[+86.6s] FREYA build._stage_deploy | built on Freya | workflow_id=39ca8c60-ab21-4c10-b25c-76a75ad7ebec agent_id=976c8a7c-88b5-4f40-a875-8f16847f4513 version=1 created=True nodes=13 tools=7 where=ON-AGENT
+[+86.6s] EXPORT build._stage_deploy | export written | path=/private/tmp/freya-final/repo/runs/final/r20261011T193652Z/workflow.export.json
+[+86.6s] STAGE build.stop | deploy | seconds=4.8
+[+89.6s] FREYA build.smoke_turn | smoke chat turn ok | reply=Merhaba, ben Freya Bank sesli asistanı. call_id=f9956e82-3383-44b5-b17e-c711dab937f6 where=ON-AGENT
+[+89.6s] STAGE build.stop | smoke | seconds=2.9
+[+89.6s] END build.run | exit 0 | slot=final exit=0 ended_at=2026-10-11T19:38:22Z build_s=89.6
 
 ==================== SUMMARY ====================
 slot:            final
-run_id:          r20261011T190009Z
-run_dir:         runs/final/r20261011T190009Z
-started_at:      2026-10-11T19:00:09Z
+run_id:          r20261011T193652Z
+run_dir:         /private/tmp/freya-final/repo/runs/final/r20261011T193652Z
+started_at:      2026-10-11T19:36:52Z
 exit:            0
-stages:          {"compile": 0.1, "deploy": 5.5, "input": 102.0, "lint": 0.0, "smoke": 3.4, "spec": 0.0}
+stages:          {"compile": 0.1, "deploy": 4.8, "input": 81.8, "lint": 0.0, "smoke": 2.9, "spec": 0.0}
 nodes:           13
 tool_calls:      7
 tools:           ["f_cards_balance", "f_cards_list", "f_contact_email_get", "f_statement_pdf_send", "f_statement_week_change", "f_statement_week_decide", "f_statement_week_get"]
 lint_errors:     0
 deployed:        True
-workflow_id:     a6f68e58-d97c-4234-b071-1c9de36bd241
-agent_id:        61a33b52-9fd0-45be-939e-75661d3b8149
-version:         3
-export:          runs/final/r20261011T190009Z/workflow.export.json
+workflow_id:     39ca8c60-ab21-4c10-b25c-76a75ad7ebec
+agent_id:        976c8a7c-88b5-4f40-a875-8f16847f4513
+version:         1
+export:          /private/tmp/freya-final/repo/runs/final/r20261011T193652Z/workflow.export.json
 readback_diff:   0
 smoke:           ok
-ended_at:        2026-10-11T19:02:00Z
-build_s:         111.0
-budget:          {"elapsed_s": 111.0, "remaining_s": 1449.0, "skipped": [], "soft_remaining_s": 1089.0}
-elapsed_s:       111.0
-event_counts:    {"CATALOG": 9, "COMPILE": 1, "DECISION": 25, "DEPLOY": 2, "END": 1, "EXPORT": 2, "EXTRACT": 1, "FREYA": 3, "INPUT": 20, "LINT": 1, "MODEL": 1, "SPEC": 1, "STAGE": 6, "START": 2, "WARN": 18}
+ended_at:        2026-10-11T19:38:22Z
+build_s:         89.6
+budget:          {"elapsed_s": 89.6, "remaining_s": 1470.4, "skipped": [], "soft_remaining_s": 1110.4}
+elapsed_s:       89.6
+event_counts:    {"CATALOG": 9, "COMPILE": 1, "DECISION": 25, "DEPLOY": 2, "END": 1, "EXPORT": 2, "EXTRACT": 1, "FREYA": 4, "INPUT": 20, "LINT": 1, "MODEL": 1, "SPEC": 1, "STAGE": 6, "START": 2, "WARN": 18}
 =================================================
